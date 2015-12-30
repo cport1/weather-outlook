@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/cport1/weather-outlook/issues"
   },
-  "homepage": "https://github.com/cport1/weather-outlook#readme"
+  "homepage": "https://github.com/cport1/weather-outlook#readme",
+  "dependencies": {
+    "minimist": "^1.2.0"
+  }
 }
