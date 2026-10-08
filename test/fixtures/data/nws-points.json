@@ -1,0 +1,63 @@
+{
+  "id": "https://api.weather.gov/points/37.7749,-122.4194",
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [-122.4194, 37.7749]
+  },
+  "properties": {
+    "@id": "https://api.weather.gov/points/37.7749,-122.4194",
+    "@type": "wx:Point",
+    "cwa": "MTR",
+    "type": "land",
+    "forecastOffice": "https://api.weather.gov/offices/MTR",
+    "gridId": "MTR",
+    "gridX": 85,
+    "gridY": 105,
+    "forecast": "https://api.weather.gov/gridpoints/MTR/85,105/forecast",
+    "forecastHourly": "https://api.weather.gov/gridpoints/MTR/85,105/forecast/hourly",
+    "forecastGridData": "https://api.weather.gov/gridpoints/MTR/85,105",
+    "observationStations": "https://api.weather.gov/gridpoints/MTR/85,105/stations",
+    "relativeLocation": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-123.0322294, 37.7272391]
+      },
+      "properties": {
+        "city": "San Francisco",
+        "state": "CA",
+        "distance": {
+          "unitCode": "wmoUnit:m",
+          "value": 0
+        },
+        "bearing": {
+          "unitCode": "wmoUnit:degree_(angle)",
+          "value": 0
+        }
+      }
+    },
+    "forecastZone": "https://api.weather.gov/zones/forecast/CAZ006",
+    "county": "https://api.weather.gov/zones/county/CAC075",
+    "fireWeatherZone": "https://api.weather.gov/zones/fire/CAZ006",
+    "timeZone": "America/Los_Angeles",
+    "radarStation": "KMUX",
+    "astronomicalData": {
+      "sunrise": "2026-10-07T07:10:57-07:00",
+      "sunset": "2026-10-07T18:43:50-07:00",
+      "transit": "2026-10-07T12:57:23-07:00",
+      "civilTwilightBegin": "2026-10-07T06:44:47-07:00",
+      "civilTwilightEnd": "2026-10-07T19:09:59-07:00",
+      "nauticalTwilightBegin": "2026-10-07T06:14:25-07:00",
+      "nauticalTwilightEnd": "2026-10-07T19:40:22-07:00",
+      "astronomicalTwilightBegin": "2026-10-07T05:43:57-07:00",
+      "astronomicalTwilightEnd": "2026-10-07T20:10:49-07:00"
+    },
+    "nwr": {
+      "transmitter": "KDX54",
+      "sameCode": "006075",
+      "areaBroadcast": "https://api.weather.gov/radio/KDX54/broadcast",
+      "pointBroadcast": "https://api.weather.gov/points/37.7749,-122.4194/radio"
+    }
+  }
+}
