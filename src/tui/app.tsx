@@ -33,7 +33,7 @@ import { type AppState, VIEW_LABEL, VIEWS } from "./store.ts";
 import { T, theme, toHexStr } from "./theme.ts";
 import { Credits, closeCredits, toggleCredits } from "./views/credits.tsx";
 import { HazardsView } from "./views/hazards.tsx";
-import { MapView } from "./views/map.tsx";
+import { type MapControls, MapView } from "./views/map.tsx";
 import { type RadarControls, RadarView, toggleSatellite } from "./views/radar.tsx";
 
 extend({ cell_canvas: CellCanvas });
@@ -132,7 +132,7 @@ function Footer(props: { state: AppState }) {
   };
   const hints = () =>
     props.state.view === "map"
-      ? "←↑↓→ pan  +/- zoom  c center  0 reset  S/F/H/Q/A layers"
+      ? "drag/←↑↓→ pan  wheel/+- zoom  g goto  i inspect  c center  ? layers"
       : props.state.view === "radar"
         ? "space play/pause  ,/. step  +/- zoom  v satellite"
         : props.state.view === "alerts"
@@ -598,7 +598,12 @@ const HELP: Array<[string, string]> = [
   ["←↑↓→ / hjkl", "pan map"],
   ["+ / -", "zoom map"],
   ["c", "center map on location"],
-  ["S F H Q A", "map layers: storms fires hotspots quakes alerts"],
+  ["S F H Q A", "map hazard layers"],
+  ["T W P C", "map temp/wind/rain/cloud"],
+  ["N O L", "night · aurora · cities"],
+  ["g", "map: fly to a place"],
+  ["i / click", "inspect hazards (tab ⏎)"],
+  ["drag / wheel", "pan / zoom at pointer"],
   ["?", "toggle help"],
   ["!", "data credits"],
   ["q / ctrl+c", "quit"],
@@ -639,10 +644,14 @@ export function App(props: Props): JSX.Element {
   const { state, setState } = props;
 
   let radar: RadarControls | undefined;
+  let map: MapControls | undefined;
 
   useKeyboard((key) => {
     const n = key.name;
-    if (n === "q" || (key.ctrl && n === "c")) return props.quit();
+    if (key.ctrl && n === "c") return props.quit();
+    // The map gets first look so its prompt/inspect modes and shift-letter layers win.
+    if (state.view === "map" && !state.showHelp && map?.key(key)) return;
+    if (n === "q" && !key.shift) return props.quit();
     if (n === "?") return setState("showHelp", (v) => !v);
     if (n === "!") return toggleCredits();
     if (n === "escape") {
@@ -668,29 +677,6 @@ export function App(props: Props): JSX.Element {
       if (n === "." || n === ">") return radar?.step(1);
       if (n === "+" || n === "=") return setState("radarZoom", (z) => Math.min(60, z * 1.5));
       if (n === "-" || n === "_") return setState("radarZoom", (z) => Math.max(6, z / 1.5));
-    }
-    if (state.view === "map" && key.shift) {
-      const toggle = { s: "storms", f: "fires", h: "hotspots", q: "quakes", a: "alerts" } as const;
-      const layer = toggle[n as keyof typeof toggle];
-      if (layer) return setState("layers", layer, (v) => !v);
-    }
-    if (state.view === "map") {
-      const step = 30 / state.camera.zoom;
-      if (n === "left" || n === "h")
-        setState("camera", "lon", (l) => ((l - step + 540) % 360) - 180);
-      if (n === "right" || n === "l")
-        setState("camera", "lon", (l) => ((l + step + 540) % 360) - 180);
-      if (n === "up" || n === "k") setState("camera", "lat", (l) => Math.min(80, l + step / 2));
-      if (n === "down" || n === "j") setState("camera", "lat", (l) => Math.max(-80, l - step / 2));
-      if (n === "+" || n === "=") setState("camera", "zoom", (z) => Math.min(64, z * 2));
-      if (n === "-" || n === "_") setState("camera", "zoom", (z) => Math.max(1, z / 2));
-      if (n === "0") setState("camera", { lon: state.location.lon, lat: 0, zoom: 1 });
-      if (n === "c")
-        setState("camera", {
-          lon: state.location.lon,
-          lat: state.location.lat,
-          zoom: Math.max(4, state.camera.zoom),
-        });
     }
     if (state.view === "alerts") {
       const len = state.report?.alerts.length ?? 0;
@@ -735,7 +721,13 @@ export function App(props: Props): JSX.Element {
                 <RadarView state={state} http={props.http} controls={(c) => (radar = c)} />
               </Match>
               <Match when={state.view === "map"}>
-                <MapView state={state} />
+                <MapView
+                  state={state}
+                  setState={setState}
+                  http={props.http}
+                  refresh={props.refresh}
+                  controls={(c) => (map = c)}
+                />
               </Match>
               <Match when={state.view === "hazards"}>
                 <HazardsView state={state} />

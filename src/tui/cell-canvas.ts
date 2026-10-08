@@ -22,6 +22,8 @@ export interface DrawApi {
   text(x: number, y: number, s: string, fg?: RGB, bg?: RGB): void;
   grid(cells: Cell[][], x?: number, y?: number): void;
   fill(bg: RGB): void;
+  /** Ask for another frame soon (for short animations on a non-live canvas). */
+  requestFrame(): void;
 }
 
 const cache = new Map<string, RGBA>();
@@ -41,6 +43,7 @@ export function rgba(c: RGB | undefined, alpha = 1): RGBA {
 
 export class CellCanvas extends Renderable {
   private _draw: CellCanvasOptions["draw"];
+  private frameTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor(ctx: RenderContext, options: CellCanvasOptions) {
     super(ctx, options);
@@ -93,6 +96,13 @@ export class CellCanvas extends Renderable {
       },
       fill(bg) {
         buffer.fillRect(ox, oy, w, h, rgba(bg));
+      },
+      requestFrame: () => {
+        if (this.frameTimer) return;
+        this.frameTimer = setTimeout(() => {
+          this.frameTimer = undefined;
+          this.requestRender();
+        }, 16);
       },
     };
     draw(api, w, h, deltaTime);

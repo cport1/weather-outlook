@@ -26,6 +26,30 @@ const t = await testRender(() => <App http={http} state={state} setState={setSta
 // SATELLITE=1 turns on the radar satellite base; CREDITS=1 opens the credits overlay.
 if (process.env.SATELLITE) toggleSatellite();
 if (process.env.CREDITS) toggleCredits();
+// KEYS drives the view before capture, space-separated: TAB / ENTER / ESCAPE / ARROW_UP…,
+// S-x (shift+x), click:x,y  scroll:x,y,up  drag:x1,y1,x2,y2  wait:ms, or literal text.
+// e.g. KEYS="S-t + + wait:3000" VIEW=map bun scripts/snapshot.tsx
+async function play(script: string) {
+  const keys = t.mockInput as unknown as {
+    pressKey(k: string, mods?: { shift?: boolean }): void;
+    typeText(s: string): Promise<void>;
+  };
+  for (const tok of script.split(" ").filter(Boolean)) {
+    const [cmd, arg = ""] = tok.split(":");
+    const n = arg.split(",").map(Number);
+    if (cmd === "wait") await Bun.sleep(Number(arg));
+    else if (cmd === "click") await t.mockMouse.click(n[0] ?? 0, n[1] ?? 0);
+    else if (cmd === "scroll") await t.mockMouse.scroll(n[0] ?? 0, n[1] ?? 0, arg.endsWith("down") ? "down" : "up");
+    else if (cmd === "drag") await t.mockMouse.drag(n[0] ?? 0, n[1] ?? 0, n[2] ?? 0, n[3] ?? 0);
+    else if (/^[A-Z_0-9]{2,}$/.test(tok)) keys.pressKey(tok);
+    else if (tok.startsWith("S-")) keys.pressKey(tok.slice(2), { shift: true });
+    else await keys.typeText(tok.replaceAll("_", " "));
+    for (let i = 0; i < 3; i++) await t.renderOnce();
+  }
+  // Let camera transitions finish.
+  await Bun.sleep(700);
+  for (let i = 0; i < 3; i++) await t.renderOnce();
+}
 const only = process.env.VIEW;
 const htmlOut = process.env.HTML;
 const pages: string[] = [];
@@ -38,6 +62,8 @@ for (const v of VIEWS) {
   if (only && only !== v) continue;
   setState("view", v);
   await t.renderOnce();
+  await t.renderOnce();
+  if (process.env.KEYS) await play(process.env.KEYS);
   if (htmlOut) {
     // Give async views (radar) time to load, then tick animated canvases a few frames.
     await t.renderOnce();
