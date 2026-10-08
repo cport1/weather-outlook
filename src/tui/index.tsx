@@ -25,6 +25,8 @@ export interface DashboardOptions {
   savedLocations?: Location[];
   /** Primary forecast source (`--provider`); defaults to Open-Meteo. */
   provider?: ResolvedProvider;
+  /** NASA FIRMS MAP_KEY (config or env) for VIIRS hotspots. */
+  firmsKey?: string;
 }
 
 /**
@@ -125,7 +127,10 @@ export async function runDashboard(opts: DashboardOptions): Promise<void> {
     hazardsAt = state.location;
     try {
       const near = { lat: state.location.lat, lon: state.location.lon };
-      setState("hazards", await fetchHazards(opts.http, { near, alertZones: 40 }));
+      setState(
+        "hazards",
+        await fetchHazards(opts.http, { near, alertZones: 40, firmsKey: opts.firmsKey }),
+      );
     } catch {
       // Individual providers already degrade gracefully; nothing to surface here.
     }

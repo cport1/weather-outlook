@@ -11,6 +11,7 @@ import {
   configPath,
   configUnits,
   findLocation,
+  getKey,
   getSetting,
   loadConfig,
   normalizeSetting,
@@ -95,7 +96,11 @@ const hazards = defineCommand({
     color: colorArg,
   },
   async run({ args }) {
-    const result = await fetchHazards(makeHttp(), { hotspots: args.hotspots });
+    const cfg = await effectiveConfig();
+    const result = await fetchHazards(makeHttp(), {
+      hotspots: args.hotspots,
+      firmsKey: getKey(cfg, "FIRMS_MAP_KEY"),
+    });
     if (args.json) {
       process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
       return;
@@ -380,6 +385,7 @@ const main = defineCommand({
           l.location ? [{ ...l.location, source: "config" as const }] : [],
         ),
         images: images === "off" || images === "0" || images === "false" ? "off" : "auto",
+        firmsKey: getKey(cfg, "FIRMS_MAP_KEY"),
         provider,
       };
       await runDashboard(dashOpts as Parameters<typeof runDashboard>[0]);

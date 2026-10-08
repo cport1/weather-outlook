@@ -68,9 +68,9 @@ export function parseFirmsCsv(csv: string, minConfidence = 50): Fire[] {
   for (const [n, line] of lines.entries()) {
     const c = line.split(",");
     const conf = c[iConf] ?? "";
-    // MODIS confidence is 0-100; VIIRS uses l/n/h.
+    // MODIS confidence is 0-100; VIIRS uses l/n/h, or low/nominal/high in the C2 files.
     const numeric = Number(conf);
-    const ok = Number.isFinite(numeric) ? numeric >= minConfidence : conf !== "l";
+    const ok = Number.isFinite(numeric) ? numeric >= minConfidence : !/^l(ow)?$/i.test(conf.trim());
     if (!ok) continue;
     const t = c[iTime] ?? "0000";
     out.push({
@@ -87,7 +87,33 @@ export function parseFirmsCsv(csv: string, minConfidence = 50): Fire[] {
   return out;
 }
 
-export async function fetchFirmsHotspots(http: HttpClient): Promise<Fire[]> {
+/** FIRMS area API (needs a free MAP_KEY): NOAA-20 VIIRS, 375 m resolution vs MODIS's 1 km. */
+export function firmsAreaUrl(mapKey: string, source = "VIIRS_NOAA20_NRT", days = 1): string {
+  return `https://firms.modaps.eosdis.nasa.gov/api/area/csv/${encodeURIComponent(mapKey)}/${source}/world/${days}`;
+}
+
+/**
+ * Global 24h hotspots. With a FIRMS MAP_KEY this uses VIIRS via the area API;
+ * without one (or if the key is rejected) it falls back to the keyless MODIS file.
+ */
+export async function fetchFirmsHotspots(
+  http: HttpClient,
+  mapKey?: string,
+  onKeyError?: (message: string) => void,
+): Promise<Fire[]> {
+  if (mapKey) {
+    try {
+      const csv = await http.text(firmsAreaUrl(mapKey), { ttlMs: 60 * 60_000, timeoutMs: 45_000 });
+      // Bad keys and rate limits come back as 200 with a plain-text message, not CSV.
+      if (!csv.startsWith("latitude,"))
+        throw new Error(csv.trim().split("\n")[0] || "unexpected response");
+      return parseFirmsCsv(csv);
+    } catch (err) {
+      onKeyError?.(
+        `FIRMS_MAP_KEY: ${err instanceof Error ? err.message : String(err)} (using keyless MODIS)`,
+      );
+    }
+  }
   const csv = await http.text(FIRMS_MODIS_GLOBAL, { ttlMs: 60 * 60_000, timeoutMs: 30_000 });
   return parseFirmsCsv(csv);
 }
