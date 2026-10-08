@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/cport1/weather-outlook/compare/v2.0.0...v2.1.0) (2026-10-08)
+
+
+### Features
+
+* **launcher:** run without Bun by downloading the release binary on first use ([d247581](https://github.com/cport1/weather-outlook/commit/d2475815def808e25823a21341566e2339ca17f8)), closes [#52](https://github.com/cport1/weather-outlook/issues/52)
+
 ## [2.0.0](https://github.com/cport1/weather-outlook/compare/v2.0.0-alpha.3...v2.0.0) (2026-10-08)
 
 
