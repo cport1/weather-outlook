@@ -1,5 +1,6 @@
 // Renders the dashboard headlessly and prints each view as plain text.
 // Usage: bun scripts/snapshot.tsx [place] [width] [height]
+// place "fixture" renders offline fixture data; THEME=daylight|solarized|mono picks a theme.
 import { testRender } from "@opentui/solid";
 import envPaths from "env-paths";
 import { trackProviders } from "../src/attribution.ts";
@@ -11,14 +12,22 @@ import { App } from "../src/tui/app.tsx";
 import { createAppStore, VIEWS } from "../src/tui/store.ts";
 import { toggleCredits } from "../src/tui/views/credits.tsx";
 import { toggleSatellite } from "../src/tui/views/radar.tsx";
+import { setTheme, resolveThemeName } from "../src/tui/theme.ts";
 import { createHttpClient } from "../src/util/http.ts";
+import { DENVER, fixtureHazards, fixtureReport, offlineHttp } from "../test/fixtures/report.ts";
 
 const [place = "Denver", w = "120", h = "36"] = process.argv.slice(2);
-const http = trackProviders(createHttpClient(new DiskCache(envPaths("weather-outlook", { suffix: "" }).cache)));
-const location = await resolveLocation(http, place);
-const report = await buildReport(http, location, "imperial");
+setTheme(resolveThemeName(process.env.THEME));
+const offline = place === "fixture";
+const http = offline ? offlineHttp : trackProviders(createHttpClient(new DiskCache(envPaths("weather-outlook", { suffix: "" }).cache)));
+// LOC="lat,lon,Name" moves the offline fixture (handy for day/night/twilight skies).
+const [flat, flon, fname] = (process.env.LOC ?? "").split(",");
+const fixtureLoc = flat && flon ? { ...DENVER, name: fname ?? "Elsewhere", lat: Number(flat), lon: Number(flon), timezone: undefined } : DENVER;
+const report = offline ? fixtureReport({ now: new Date(), location: fixtureLoc, condition: (process.env.COND as never) || undefined }) : await buildReport(http, await resolveLocation(http, place), "imperial");
+const location = report.location;
 const [state, setState] = createAppStore({ location, units: "imperial", motion: Boolean(process.env.MOTION), simulate: process.env.SIMULATE });
-setState({ report, hazards: await fetchHazards(http), loading: false, lastUpdated: Date.now() });
+const hazards = offline ? fixtureHazards(new Date()) : await fetchHazards(http);
+setState({ report: process.env.SPLASH ? undefined : report, hazards, loading: false, lastUpdated: Date.now() });
 const t = await testRender(() => <App http={http} state={state} setState={setState} refresh={() => {}} quit={() => {}} />, {
   width: Number(w),
   height: Number(h),

@@ -1,0 +1,429 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`80x24 now view 1`] = `
+" ◆ weather-outlook Denver, Colorado, US · 2:00 PM     1 Now  2  3  4  5  6  7!  
+ ╭─ now ──────────────────────────────────────────────────────────────────────╮ 
+ │  █████╗   ██╗    ███████╗      \\  /                                        │ 
+ │ ██╔══██╗ ███║    ██╔════╝    _ /"".-.                                      │ 
+ │ ╚█████╔╝ ╚██║    █████╗        \\_(   ).                                    │ 
+ │ ██╔══██╗  ██║    ██╔══╝        /(___(__)                                   │ 
+ │ ╚█████╔╝  ██║    ██║                                                       │ 
+ │  ╚════╝   ╚═╝    ╚═╝                                                       │ 
+ │ Partly cloudy feels 79°F                                                   │ 
+ │ high 86°F low 63°F                                                         │ 
+ │                                                                            │ 
+ │ wind        ↗ 11 mph SW gusts 19 mph                                       │ 
+ │ humidity    38%                                                            │ 
+ │ dew point   53°F · pleasant                                                │ 
+ │ pressure    30.01 inHg ↗ rising                                            │ 
+ │ visibility  10 mi                                                          │ 
+ │ cloud cover 35%                                                            │ 
+ │ UV index    7                                                              │ 
+ │ air (AQI)   64                                                             │ 
+ │ sun         5:44 AM → 8:26 PM                                              │ 
+ │ moon        ● New Moon 3%                                                  │ 
+ │                                                                            │ 
+ ╰────────────────────────────────────────────────────────────────────────────╯ 
+ tab/1-7 views │ / search ? help q quit                        updated just now 
+"
+`;
+
+exports[`80x24 hourly view 1`] = `
+" ◆ weather-outlook Denver, Colorado, US · 2:00 PM  1  2 Hourly  3  4  5  6  7!  
+ ╭─ next 48 hours ────────────────────────────────────────────────────────────╮ 
+ │ ◀ Wed 2pm ▶   t temp  p precip  w wind  h humidity  v UV                   │ 
+ │ temp         ⠓⠒⠒⠲⠢⠤⣀                  ⢀⡠⠤⠒⠚⠊⠉⠉⠉⠙⠒⠒⠤⡀                  ⢀⡠⡤⠤ │ 
+ │ 85°F ~83°           ⠙⠑⠖⡤⣀⡀        ⢀⡠⠤⠒⠁            ⠈⠑⠢⠤⣀⡀         ⢀⡠⠔⠙⠉    │ 
+ │                         ⠈⠘⠑⠖⠖⠲⠒⠖⠒⠉⠁                     ⠘⠑⠖⠖⢤⠤⠔⠖⠒⠚⠁        │ 
+ │ precip       ▂▃▃▃▄▄                                                        │ 
+ │ 63% 0.05 in  ██████▆▆▆▆▆▅▅▄▄▃▂▂▁                                ▁▂▃▃▄▄▅▅▆▆ │ 
+ │ wind         ⣁⣁⣈⣈⣀⣁⣁⣈⣀⣂⣂⠠⠠ ⠄⡀⢀               ⡀⡀⢀ ⠄⠄⠐⠐ ⠂⠁⠈ ⠁⣁⣈⣈⣀⣁⣁⣈⣀⣁⣁⣐⣐⣀⣂⠠ │ 
+ │ ↗ 12 mph                ⠉⠉⠉⠉⠉⠒⠒⠓⠓⠚⠪⠤⠥⠥⠬⠤⠥⠥⠬⠬⠤⠤⠤⠤⠔⠒⠒⠒⠒⠊⠉⠉⠉⠉⠉              ⠉ │ 
+ │ humidity                ⣀⣀⣀⣀⣀⠤⢄⣀⣀⣀⣀⡀                   ⣀⣀⣀⣀⣀⠤⢄⣀⣀⣀⣀⡀        │ 
+ │ 26%          ⠒⠒⠒⠒⠒⠒⠒⠉⠉⠉⠉           ⠈⠉⠉⠉⠑⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠉⠉⠉⠉           ⠈⠉⠉⠉⠑⠒⠒⠒ │ 
+ │ UV         9 ▆▆▅▅▄▃▁▁              ▁▃▄▅▅▆▆▇▆▆▆▅▄▄▃▁              ▁▃▃▄▅▆▆▆▇ │ 
+ │              ▲    6pm     Thu    6am     12pm    6pm    Fri     6am     12 │ 
+ │ time      sky  temp  feels  rain   precip    wind           humidity  UV   │ 
+ │ Wed 2pm   ⚡     85°F   83°F   63% ███   0.05 in ↗ 12 mph       26%      ▀ │ 
+ │ Wed 3pm   ⚡     86°F   83°F   67% ███   0.05 in → 12 mph       25%        │ 
+ │ Wed 4pm   ⚡     85°F   83°F   70% ████  0.06 in → 12 mph       26%        │ 
+ │ Wed 5pm   ⚡     84°F   81°F   73% ████  0.06 in → 12 mph       28%        │ 
+ │ Wed 6pm   ⚡     82°F   79°F   74% ████  0.07 in → 12 mph       31%        │ 
+ │ Wed 7pm   ☂     79°F   75°F   40% ██    0.00 in → 12 mph       35%         │ 
+ │ Wed 8pm   ☂     76°F   72°F   39% ██    0.00 in → 12 mph       40%         │ 
+ ╰────────────────────────────────────────────────────────────────────────────╯ 
+ ←→ cursor  t/p/w/h/v series │ / search ? help q quit          updated just now 
+"
+`;
+
+exports[`80x24 daily view 1`] = `
+" ◆ weather-outlook Denver, Colorado, US · 2:00 PM  1  2  3 10-Day  4  5  6  7!  
+ ╭─ 10-day outlook ───────────────────────────────────────────────────────────╮ 
+ │ ▸Wed, Jul 15 ⛅    63° ─────━━━━━━━━─ 86°     ☂ 0%  0.00 in 22 mph gusts   │ 
+ │  Thu, Jul 16 ⚡    60° ────━━━━━━━━━━ 89°    ☂ 87%  0.30 in 24 mph gusts   │ 
+ │  Fri, Jul 17 ☀    56° ───━━━━━━━━━━━ 88°    ☂ 46%  0.16 in 25 mph gusts    │ 
+ │  Sat, Jul 18 ☂    53° ──━━━━━━━━━━── 82°    ☂ 62%  0.00 in 27 mph gusts    │ 
+ │  Sun, Jul 19 ☁    53° ──━━━━━━━━──── 76°    ☂ 80%  0.00 in 29 mph gusts    │ 
+ │  Mon, Jul 20 ☂    56° ───━━━━━━───── 74°    ☂ 19%  0.07 in 31 mph gusts    │ 
+ │  Tue, Jul 21 ❄    57° ───━━━━━━━──── 76°    ☂ 90%  0.31 in 33 mph gusts    │ 
+ │  Wed, Jul 22 ≋    55° ───━━━━━━━━─── 80°    ☂ 29%  0.10 in 35 mph gusts    │ 
+ │  Thu, Jul 23 ⛅    51° ─━━━━━━━━━━─── 80°    ☂ 75%  0.00 in 37 mph gusts   │ 
+ │  Fri, Jul 24 ☂    48° ━━━━━━━━━───── 75°    ☂ 69%  0.00 in 39 mph gusts    │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ ╰────────────────────────────────────────────────────────────────────────────╯ 
+ ↑↓ select day │ / search ? help q quit                        updated just now 
+"
+`;
+
+exports[`80x24 alerts view 1`] = `
+" ◆ weather-outlook Denver, Colorado, US · 2:00  1  2  3  4  5  6  7 Alerts (2)  
+ ╭─ active ─────────────────╮ ╭─ Severe Thunderstorm Warning ─────────────────╮ 
+ │ ▲ Severe Thunderstorm Wa │ │ SEVERE · until 2:45 PM                        │ 
+ │ ▲ Heat Advisory          │ │ Denver; Arapahoe; Adams                       │ 
+ │                          │ │                                               │ 
+ │                          │ │ Severe Thunderstorm Warning issued for Denver │ 
+ │                          │ │ County                                        │ 
+ │                          │ │                                               │ 
+ │                          │ │ At 2:05 PM MDT, a severe thunderstorm was     │ 
+ │                          │ │ located near Denver, moving east at 25 mph.   │ 
+ │                          │ │ HAZARD...60 mph wind gusts and quarter size   │ 
+ │                          │ │ hail.                                         │ 
+ │                          │ │                                               │ 
+ │                          │ │ For your protection move to an interior room  │ 
+ │                          │ │ on the lowest floor of a building.            │ 
+ │                          │ │                                               │ 
+ │                          │ │                                               │ 
+ │                          │ │                                               │ 
+ │                          │ │                                               │ 
+ │                          │ │                                               │ 
+ │                          │ │                                               │ 
+ │                          │ │                                               │ 
+ ╰──────────────────────────╯ ╰───────────────────────────────────────────────╯ 
+ ↑↓ select alert │ / search ? help q quit                      updated just now 
+"
+`;
+
+exports[`80x24 boot splash while the first fetch runs 1`] = `
+" ◆ weather-outlook Denver, Colorado, US · 2:00 PM      1 Now  2  3  4  5  6  7  
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                 █ █ ██▀▀▄▀█▀█▀█ ██▀▀█▀█▄▄█▀██ █▀█▀█  █▀██▀██▄▀                 
+                 ▀▄▀▄▀██▄█▀█ █ █▀███▄█▀▄  █▄██▄█ █ █▄▄█▄██▄██ █                 
+                                                                                
+                 ⠋ fetching the sky over Denver, Colorado, US…                  
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+ tab/1-7 views │ / search ? help q quit                        updated just now 
+"
+`;
+
+exports[`160x48 now view 1`] = `
+" ◆ weather-outlook Denver, Colorado, US · 2:00 PM                                     1 Now  2 Hourly  3 10-Day  4 Radar  5 World Map  6 Hazards  7 Alerts (2)  
+ ╭─ sky ─────────────────────────────────────────────────────────────────────────────────────────────────────────╮ ╭─ now ────────────────────────────────────╮ 
+ │▒▒▒▒▒░░                                                                                                        │ │  █████╗   ██╗    ███████╗      \\  /      │ 
+ │▓▓▓▓▓▒▒░░                                                                                                      │ │ ██╔══██╗ ███║    ██╔════╝    _ /"".-.    │ 
+ │▒▒▒▒▒░░                                                                                                        │ │ ╚█████╔╝ ╚██║    █████╗        \\_(   ).  │ 
+ │                                                                                                               │ │ ██╔══██╗  ██║    ██╔══╝        /(___(__) │ 
+ │                                                                                                               │ │ ╚█████╔╝  ██║    ██║                     │ 
+ │                                                                                                               │ │  ╚════╝   ╚═╝    ╚═╝                     │ 
+ │                                                                                                               │ │ Partly cloudy feels 79°F                 │ 
+ │                                             ░░▒▒▒▒░░                                                          │ │ high 86°F low 63°F                       │ 
+ │                                            ░▒▓▓▓▓▓▓▒░                 ⣴⣿⣦                                     │ │                                          │ 
+ │                                             ░░▒▒▒▒░░                  ⠻⣿⠟                                     │ │ wind        ↗ 11 mph SW gusts 19 mph     │ 
+ │                                                                                                               │ │ humidity    38%                          │ 
+ │                                                                                                               │ │ dew point   53°F · pleasant              │ 
+ │                                                                                                               │ │ pressure    30.01 inHg ↗ rising          │ 
+ │                                                                                                               │ │ visibility  10 mi                        │ 
+ │                                                                                                               │ │ cloud cover 35%                          │ 
+ │                                                                                                               │ │ sun         5:44 AM → 8:26 PM            │ 
+ │                                                                                                               │ │ moon        ● New Moon 3%                │ 
+ │                                                                                                               │ │                                          │ 
+ │                                                                                                               │ │                                          │ 
+ │                                                                                                               │ │                                          │ 
+ │                                                                                                               │ │                                          │ 
+ │                                                                                                               │ │                                          │ 
+ │                                                                                                               │ │                                          │ 
+ │                                                                                                               │ │                                          │ 
+ │                                                                                                               │ │                                          │ 
+ │                                                                                                               │ │                                          │ 
+ │                                                                                                               │ │                                          │ 
+ │                                                                                                               │ │                                          │ 
+ │                                                                                                               │ │                                          │ 
+ │                                                                                                               │ │  ⢀⡠⠚⠉⠉N⠉⠙⠢⣀      ⣀⣠⣤⣤⣤⣀⡀       ⣀⣠⣤⣤⣤⣀⡀   │ 
+ │                                                                                                               │ │ ⢀⠎      ⢒⢾⠋⢆   ⣤⡾⠋⠁   ⠉⠻⣦⡄   ⣤⡾⠋⠁   ⠉⠻⣦⡄ │ 
+ │                                                                                                               │ │ W     ⢀⠔⠁⠈ ⢸E ⣼⠋        ⠈⢻⡄ ⣼⠋        ⠈⢻⡄│ 
+ │                                                                                                               │ │ ⢸   ⢀⠔⠁    ⢸  ⠿   UV 7   ⠸⣇ ⠿  AQI 64  ⠸⣇│ 
+ │                                                                                                               │ │  ⢣⡈⠶⡁     ⣠⠃      high        moderate   │ 
+ │                                                                                                               │ │   ⠈⠲⠤⠤S⠤⠴⠊                               │ 
+ ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ ╰──────────────────────────────────────────╯ 
+ ╭─ next 24 hours ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮ 
+ │ 86°  ⠓⠒⠒⠊⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠒⠒⠒⠒⠒⠤⠤⠤⣀⣀⣀⡀                                                                                                            ⢀⣀⣀⡠⠤⠤⠤⠒⠒⠒⠉⠉  │ 
+ │                                 ⠈⠉⠉⠑⠒⠒⠒⠤⠤⠤⣀⣀⣀⡀                                                                                    ⢀⣀⡠⠤⠤⠒⠒⠒⠉⠉⠉⠁             │ 
+ │                                              ⠈⠉⠉⠑⠒⠒⠢⠤⢄⣀⡀                                                               ⢀⣀⣀⡠⠤⠤⠔⠒⠒⠊⠉⠁                        │ 
+ │                                                        ⠈⠉⠉⠒⠒⠒⠤⠤⠤⢄⣀⣀⡀                                         ⢀⣀⣀⡠⠤⠤⠔⠒⠊⠉⠁                                   │ 
+ │ 59°                                                                ⠈⠉⠉⠉⠒⠒⠒⠤⠤⠤⠤⠤⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⡠⠤⠤⠔⠒⠒⠒⠒⠊⠉⠉⠉⠉⠁                                             │ 
+ │ rain ▅▅▅▅▅▅▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁      │ 
+ │      2pm               5pm               8pm               11pm              2am               5am               8am               11am                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+ tab/1-7 views │ / search s next place u units r refresh ? help q quit                                                                         updated just now 
+"
+`;
+
+exports[`160x48 hourly view 1`] = `
+" ◆ weather-outlook Denver, Colorado, US · 2:00 PM                                     1 Now  2 Hourly  3 10-Day  4 Radar  5 World Map  6 Hazards  7 Alerts (2)  
+ ╭─ next 48 hours ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮ 
+ │ ◀ Wed 2pm ▶   t temp  p precip  w wind  h humidity  v UV                                                                                                   │ 
+ │ temp         ⠤⠤⢤⠤⠤⠤⠤⢄⣀⣀                                                         ⣀⡠⠤⠒⠙⠉⠉⠉⠉⠉⠙⠑⠒⠤⢄⣀                                                           │ 
+ │ 85°F ~83°    ⠁    ⠈  ⠠ ⠉⠑⠢⢄⡀                                              ⢀⣠⠤⠒⠊⠉                ⠉⠒⠤⣀                                                  ⣀⡠⠤⢒ │ 
+ │                         ⠈  ⢈⠑⠢⢄⡀                                       ⢀⢤⠊⠁                         ⠉⠒⢤⣀                                         ⣀⠤⠒⠊⠉⠠    │ 
+ │                               ⠠⠈⠑⠢⢄⡀                               ⢀⡠⠴⠊⠁                                ⠑⢢⣀                                  ⣀⠤⠒⢉  ⠈       │ 
+ │                                  ⠐ ⠈⠑⠢⢄⡀                       ⢀⡠⠔⠪⠁                                       ⠉⠲⠤⣀                          ⢀⡠⠒⠉⢀             │ 
+ │                                     ⠐  ⠈⠑⠢⢄⣀               ⣀⡠⠔⠊⠡                                               ⠩⠒⠤⣀⡀                 ⢀⣀⠤⠒⠁⠠                │ 
+ │                                        ⠈  ⠠ ⠉⠑⠒⠢⠤⠤⠤⠤⠤⠤⠤⠤⠒⢊⠉ ⠐                                                     ⠐⠈⠉⠒⠢⠤⣀⣀⣀⣀⣀⣀⣀⣀⠤⠤⠔⠒⠉⠁ ⠐                   │ 
+ │                                              ⠈  ⠐  ⠠  ⠐                                                              ⠈  ⠠  ⢀  ⠠  ⠐  ⠈                      │ 
+ │ precip                                                                                                                                                     │ 
+ │ 63% 0.05 in  ▁▁▃▃▃▄▄▄▅▅▅▆▆▆                                                                                                                                │ 
+ │              ██████████████                                                                                                                                │ 
+ │              ████████████████████▇▇▇▆▆▆▅▅▅▃▃▃▁▁▁                                                                                            ▁▁▁▃▃▃▅▅▅▆▆▆▇▇ │ 
+ │              ███████████████████████████████████▇▇▇▄▄▄▂▂▂                                                                          ▂▂▂▄▄▄▇▇▇██████████████ │ 
+ │ wind         ⠁ ⠈  ⠈  ⠈  ⠐  ⠐  ⠠  ⢀                                                                          ⢀  ⠠  ⠐  ⠈  ⠈  ⠈  ⠈  ⠈  ⠈  ⠈  ⠐  ⠠  ⠠  ⢀       │ 
+ │ ↗ 12 mph                            ⠈  ⠐  ⠠  ⢀                                                  ⢀  ⠠  ⠐  ⠈                                            ⠈  ⠠ │ 
+ │              ⠓⠊⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠑⠒⠒⠒⠒⠒⠢⠤⠤⠤⠤⠤⢄⣀⣀⡀⠐  ⠠  ⢀  ⢀                          ⢀  ⠠  ⠐  ⠈                ⣀⣀⣀⣀⣀⣀⠤⠤⠤⠒⠒⠒⠒⠒⠒⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠒⠒⠒⠒⠒⠒⠤⠤ │ 
+ │                                                ⠈⠉⠉⠉⠉⠉⠑⠒⠒⠢⠤⠤⢄⣈⣀⣀⣈⣀⡀⠐  ⠐  ⠐  ⠐  ⠈  ⠈          ⣀⣀⣀⣀⣀⣀⠤⠤⠤⠤⠤⠤⠒⠒⠒⠉⠉⠉                                             │ 
+ │                                                                  ⠈⠉⠉⠉⠉⠉⠉⠉⠉⠑⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠉⠉⠉⠉⠉⠉                                                               │ 
+ │ humidity                                                                                                                                                   │ 
+ │ 26%                                   ⢀⣀⣀⡠⠤⠤⠤⠤⠤⠔⠒⠒⠒⠒⠒⠒⠒⠒⠢⠤⠤⠤⠤⠤⢄⣀⣀⡀                                            ⣀⣀⣀⠤⠤⠤⠤⠤⠤⠒⠒⠒⠒⠒⠒⠒⠒⠒⠤⠤⠤⠤⠤⠤⣀⣀⣀                  │ 
+ │              ⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⡠⠤⠤⠤⠤⠤⠔⠒⠒⠊⠉⠉⠉⠉⠉⠁                          ⠈⠉⠉⠉⠉⠉⠑⠒⠒⠢⠤⠤⠤⠤⠤⢄⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⠤⠤⠤⠤⠤⠤⠒⠒⠒⠉⠉⠉⠉⠉⠉                           ⠉⠉⠉⠉⠉⠉⠒⠒⠒⠤⠤⠤⠤⠤⠤⣀⣀ │ 
+ │                                                                                                                                                            │ 
+ │ UV           ▃▃▂▂▂                                                         ▂▂▂▃▃▃▄▄▃▃▃▂▂▂                                                         ▂▂▂▃▃▃▄▄ │ 
+ │ 9            █████▇▇▇▄▄▄▁▁▁                                       ▁▁▁▄▄▄▇▇▇██████████████▇▇▇▄▄▄▁▁▁                                       ▁▁▁▄▄▄▇▇▇████████ │ 
+ │              ██████████████▄▄▄                                 ▄▄▄████████████████████████████████▄▄▄                                 ▄▄▄█████████████████ │ 
+ │              ▲           6pm               Thu               6am               12pm             6pm               Fri               6am               12pm │ 
+ │ time      sky  temp  feels  rain   precip    wind           humidity  UV                                                                                   │ 
+ │ Wed 2pm   ⚡     85°F   83°F   63% ███   0.05 in ↗ 12 mph       26%       9                                                                              ▀ │ 
+ │ Wed 3pm   ⚡     86°F   83°F   67% ███   0.05 in → 12 mph       25%       8                                                                                │ 
+ │ Wed 4pm   ⚡     85°F   83°F   70% ████  0.06 in → 12 mph       26%       7                                                                                │ 
+ │ Wed 5pm   ⚡     84°F   81°F   73% ████  0.06 in → 12 mph       28%       6                                                                                │ 
+ │ Wed 6pm   ⚡     82°F   79°F   74% ████  0.07 in → 12 mph       31%       4                                                                                │ 
+ │ Wed 7pm   ☂     79°F   75°F   40% ██    0.00 in → 12 mph       35%       2                                                                                 │ 
+ │ Wed 8pm   ☂     76°F   72°F   39% ██    0.00 in → 12 mph       40%       0                                                                                 │ 
+ │ Wed 9pm   ☂     72°F   68°F   38% ██    0.00 in → 12 mph       45%       0                                                                                 │ 
+ │ Wed 10pm  ☾     69°F   64°F   35% ██    0.00 in ↘ 11 mph       50%       0                                                                                 │ 
+ │ Wed 11pm  ☾     65°F   61°F   32% ██    0.00 in ↘ 10 mph       55%       0                                                                                 │ 
+ │ Thu 12am  ☾     63°F   58°F   28% █     0.00 in ↘ 10 mph       59%       0                                                                                 │ 
+ │ Thu 1am   ☾     60°F   56°F   23% █     0.00 in ↘ 9 mph        62%       0                                                                                 │ 
+ │ Thu 2am   ☾     59°F   55°F   17% █     0.00 in ↘ 8 mph        64%       0                                                                                 │ 
+ │ Thu 3am   ☾     59°F   55°F   11% █     0.00 in ↘ 7 mph        65%       0                                                                                 │ 
+ │ Thu 4am   ☾     59°F   55°F    4%       0.00 in ↓ 7 mph        64%       0                                                                                 │ 
+ │ Thu 5am   ☾     61°F   57°F    0%       0.00 in ↓ 6 mph        62%       0                                                                                 │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+ ←→ cursor  t/p/w/h/v series │ / search s next place u units r refresh ? help q quit                                                           updated just now 
+"
+`;
+
+exports[`160x48 daily view 1`] = `
+" ◆ weather-outlook Denver, Colorado, US · 2:00 PM                                     1 Now  2 Hourly  3 10-Day  4 Radar  5 World Map  6 Hazards  7 Alerts (2)  
+ ╭─ 10-day outlook ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮ ╭─ day ────────────────────────╮ 
+ │                                                                                                                           │ │                              │ 
+ │ ▸Wed, Jul 15 ⛅  Partly cloudy             63° ────────────━━━━━━━━━━━━━━━━━━── 86°     ☂ 0%  0.00 in 22 mph gusts        │ │ Wednesday, Jul 15            │ 
+ │                                                                                                                           │ │                              │ 
+ │  Thu, Jul 16 ⚡  Thunderstorm              60° ──────────━━━━━━━━━━━━━━━━━━━━━━ 89°    ☂ 87%  0.30 in 24 mph gusts        │ │    \\  /                      │ 
+ │                                                                                                                           │ │  _ /"".-.                    │ 
+ │  Fri, Jul 17 ☀  Clear                     56° ──────━━━━━━━━━━━━━━━━━━━━━━━━━─ 88°    ☂ 46%  0.16 in 25 mph gusts         │ │    \\_(   ).                  │ 
+ │                                                                                                                           │ │    /(___(__)                 │ 
+ │  Sat, Jul 18 ☂  Showers                   53° ────━━━━━━━━━━━━━━━━━━━━━━━───── 82°    ☂ 62%  0.00 in 27 mph gusts         │ │                              │ 
+ │                                                                                                                           │ │ Partly cloudy                │ 
+ │  Sun, Jul 19 ☁  Overcast                  53° ────━━━━━━━━━━━━━━━━━━────────── 76°    ☂ 80%  0.00 in 29 mph gusts         │ │ 86°F / 63°F                  │ 
+ │                                                                                                                           │ │ rain 0% 0.00 in              │ 
+ │  Mon, Jul 20 ☂  Rain                      56° ──────━━━━━━━━━━━━━━──────────── 74°    ☂ 19%  0.07 in 31 mph gusts         │ │ wind 12 mph gusts 22 mph     │ 
+ │                                                                                                                           │ │ UV 8                         │ 
+ │  Tue, Jul 21 ❄  Snow                      57° ───────━━━━━━━━━━━━━━━────────── 76°    ☂ 90%  0.31 in 33 mph gusts         │ │ sun 5:45 AM → 8:25 PM        │ 
+ │                                                                                                                           │ │                              │ 
+ │  Wed, Jul 22 ≋  Fog                       55° ──────━━━━━━━━━━━━━━━━━━━─────── 80°    ☂ 29%  0.10 in 35 mph gusts         │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │  Thu, Jul 23 ⛅  Mostly clear              51° ───━━━━━━━━━━━━━━━━━━━━━━─────── 80°    ☂ 75%  0.00 in 37 mph gusts        │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │  Fri, Jul 24 ☂  Drizzle                   48° ━━━━━━━━━━━━━━━━━━━━━─────────── 75°    ☂ 69%  0.00 in 39 mph gusts         │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ │                                                                                                                           │ │                              │ 
+ ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ ╰──────────────────────────────╯ 
+ ↑↓ select day │ / search s next place u units r refresh ? help q quit                                                                         updated just now 
+"
+`;
+
+exports[`160x48 alerts view 1`] = `
+" ◆ weather-outlook Denver, Colorado, US · 2:00 PM                                     1 Now  2 Hourly  3 10-Day  4 Radar  5 World Map  6 Hazards  7 Alerts (2)  
+ ╭─ active ─────────────────────────────╮ ╭─ Severe Thunderstorm Warning ─────────────────────────────────────────────────────────────────────────────────────╮ 
+ │ ▲ Severe Thunderstorm Warning        │ │ SEVERE · until 2:45 PM                                                                                            │ 
+ │ ▲ Heat Advisory                      │ │ Denver; Arapahoe; Adams                                                                                           │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │ Severe Thunderstorm Warning issued for Denver County                                                              │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │ At 2:05 PM MDT, a severe thunderstorm was located near Denver, moving east at 25 mph.                             │ 
+ │                                      │ │ HAZARD...60 mph wind gusts and quarter size hail.                                                                 │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │ For your protection move to an interior room on the lowest floor of a building.                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ │                                      │ │                                                                                                                   │ 
+ ╰──────────────────────────────────────╯ ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+ ↑↓ select alert │ / search s next place u units r refresh ? help q quit                                                                       updated just now 
+"
+`;
+
+exports[`160x48 boot splash while the first fetch runs 1`] = `
+" ◆ weather-outlook Denver, Colorado, US · 2:00 PM                                         1 Now  2 Hourly  3 10-Day  4 Radar  5 World Map  6 Hazards  7 Alerts  
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                 ██╗    ██╗███████╗ █████╗ ████████╗██╗  ██╗███████╗██████╗        ██████╗ ██╗   ██╗████████╗██╗      ██████╗  ██████╗ ██╗  ██╗                 
+                 ██║    ██║██╔════╝██╔══██╗╚══██╔══╝██║  ██║██╔════╝██╔══██╗      ██╔═══██╗██║   ██║╚══██╔══╝██║     ██╔═══██╗██╔═══██╗██║ ██╔╝                 
+                 ██║ █╗ ██║█████╗  ███████║   ██║   ███████║█████╗  ██████╔╝█████╗██║   ██║██║   ██║   ██║   ██║     ██║   ██║██║   ██║█████╔╝                  
+                 ██║███╗██║██╔══╝  ██╔══██║   ██║   ██╔══██║██╔══╝  ██╔══██╗╚════╝██║   ██║██║   ██║   ██║   ██║     ██║   ██║██║   ██║██╔═██╗                  
+                 ╚███╔███╔╝███████╗██║  ██║   ██║   ██║  ██║███████╗██║  ██║      ╚██████╔╝╚██████╔╝   ██║   ███████╗╚██████╔╝╚██████╔╝██║  ██╗                 
+                  ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝       ╚═════╝  ╚═════╝    ╚═╝   ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝                 
+                                                                                                                                                                
+                                                         ⠋ fetching the sky over Denver, Colorado, US…                                                          
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                                
+ tab/1-7 views │ / search s next place u units r refresh ? help q quit                                                                         updated just now 
+"
+`;
+
+exports[`no-color 80x24 now view in mono 1`] = `
+" ◆ weather-outlook Denver, Colorado, US · 2:00 PM     1 Now  2  3  4  5  6  7!  
+ ╭─ now ──────────────────────────────────────────────────────────────────────╮ 
+ │  █████╗   ██╗    ███████╗      \\  /                                        │ 
+ │ ██╔══██╗ ███║    ██╔════╝    _ /"".-.                                      │ 
+ │ ╚█████╔╝ ╚██║    █████╗        \\_(   ).                                    │ 
+ │ ██╔══██╗  ██║    ██╔══╝        /(___(__)                                   │ 
+ │ ╚█████╔╝  ██║    ██║                                                       │ 
+ │  ╚════╝   ╚═╝    ╚═╝                                                       │ 
+ │ Partly cloudy feels 79°F                                                   │ 
+ │ high 86°F low 63°F                                                         │ 
+ │                                                                            │ 
+ │ wind        ↗ 11 mph SW gusts 19 mph                                       │ 
+ │ humidity    38%                                                            │ 
+ │ dew point   53°F · pleasant                                                │ 
+ │ pressure    30.01 inHg ↗ rising                                            │ 
+ │ visibility  10 mi                                                          │ 
+ │ cloud cover 35%                                                            │ 
+ │ UV index    7                                                              │ 
+ │ air (AQI)   64                                                             │ 
+ │ sun         5:44 AM → 8:26 PM                                              │ 
+ │ moon        ● New Moon 3%                                                  │ 
+ │                                                                            │ 
+ ╰────────────────────────────────────────────────────────────────────────────╯ 
+ tab/1-7 views │ / search ? help q quit                        updated just now 
+"
+`;
