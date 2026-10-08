@@ -3,12 +3,14 @@ import type { Hazards } from "../domain/types.ts";
 import { cellsToAnsi, paint } from "./ansi.ts";
 import { hex, stormCategoryColor } from "./color.ts";
 import { buildHazardLayers, DEFAULT_TOGGLES, quakeColor, stormLabel } from "./hazard-layers.ts";
+import { placeMarkers } from "./places.ts";
 import { renderWorldMap } from "./worldmap.ts";
 
 const DIM = hex("#7a8794");
 const TEXT = hex("#e6edf3");
 const ACCENT = hex("#7dd3fc");
 const FIRE = hex("#ff7043");
+const CITY = hex("#8a9aa8");
 
 function titleCase(s: string): string {
   return s
@@ -34,8 +36,15 @@ export function renderHazardsOneShot(h: Hazards, caps: Capabilities): string {
       label: stormLabel(s),
     });
   }
+  // A handful of world cities for orientation; they yield to hazard labels and
+  // vanish entirely (dot included) when there is no room for their name.
+  layers.markers?.push(...placeMarkers(1, CITY, { maxRank: 0, limit: cols >= 120 ? 14 : 8 }));
   const map = cellsToAnsi(
-    renderWorldMap(cols, rows, { lon: 0, lat: 0, zoom: 1 }, layers, undefined, { fill: lvl > 0 }),
+    renderWorldMap(cols, rows, { lon: 0, lat: 0, zoom: 1 }, layers, undefined, {
+      fill: lvl > 0,
+      // State lines only once the US is wide enough for them to read as lines, not noise.
+      admin: lvl > 0 && cols >= 140,
+    }),
     lvl,
   );
   const out = [

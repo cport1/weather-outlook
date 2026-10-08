@@ -46,6 +46,14 @@ export class PixelCanvas {
     if (c) this.color[i] = c;
   }
 
+  /** Independent copy, so cached line work can be drawn over without mutating the cache. */
+  clone(): PixelCanvas {
+    const c = new PixelCanvas(this.cols, this.rows);
+    c.on.set(this.on);
+    for (let i = 0; i < this.color.length; i++) c.color[i] = this.color[i];
+    return c;
+  }
+
   get(x: number, y: number): boolean {
     if (x < 0 || y < 0 || x >= this.width || y >= this.height) return false;
     return this.on[y * this.width + x] === 1;
