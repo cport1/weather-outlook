@@ -1,0 +1,25 @@
+{
+  "latitude": 39.708336,
+  "longitude": -104.95833,
+  "generationtime_ms": 0.07081031799316406,
+  "utc_offset_seconds": -21600,
+  "timezone": "America/Denver",
+  "timezone_abbreviation": "GMT-6",
+  "elevation": 1599,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "wave_height": "m",
+    "wave_direction": "°",
+    "wave_period": "s",
+    "sea_surface_temperature": "°C"
+  },
+  "current": {
+    "time": "2026-10-07T22:00",
+    "interval": 900,
+    "wave_height": null,
+    "wave_direction": null,
+    "wave_period": null,
+    "sea_surface_temperature": null
+  }
+}

@@ -99,3 +99,21 @@ export function placeMatches(hay: string, needle: string): boolean {
   if (n.length < 3) return false;
   return ` ${normalizePlace(hay)} `.includes(` ${n} `);
 }
+
+/** The closest item within `maxKm`, with its distance. */
+export function nearest<T>(
+  items: Iterable<T>,
+  lat: number,
+  lon: number,
+  pos: (t: T) => { lat: number; lon: number } | undefined,
+  maxKm = Number.POSITIVE_INFINITY,
+): { item: T; distanceKm: number } | undefined {
+  let best: { item: T; distanceKm: number } | undefined;
+  for (const item of items) {
+    const p = pos(item);
+    if (!p || !Number.isFinite(p.lat) || !Number.isFinite(p.lon)) continue;
+    const d = distanceKm(lat, lon, p.lat, p.lon);
+    if (d <= maxKm && (!best || d < best.distanceKm)) best = { item, distanceKm: d };
+  }
+  return best;
+}
