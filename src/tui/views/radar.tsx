@@ -134,7 +134,8 @@ export function RadarView(props: {
         x += [...s].length;
       };
       put(playing() ? " ▶ " : " ❚❚ ", theme.accent);
-      list.forEach((_, k) => put(k === i ? "●" : "·", k === i ? theme.accent : theme.faint));
+      for (let k = 0; k < list.length; k++)
+        put(k === i ? "●" : "·", k === i ? theme.accent : theme.faint);
       put(`  ${t} (${ago <= 0 ? "now" : `${ago} min ago`})  `, theme.text);
       put("space play/pause  ,/. step  +/- zoom  · radar © RainViewer ", theme.dim);
     }
