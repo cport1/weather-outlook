@@ -12,16 +12,15 @@ import { T } from "../theme.ts";
  * the nowcast headline on Now and the anomaly column on 10-Day.
  */
 
-/** "☂ Light rain starting in ~30 min" plus a 2-hour precipitation bar underneath. */
-export function NowcastLine(props: { report: Report; width?: number }) {
+/** "☂ Light rain starting in ~30 min ▁▃▆▃▁" on one line (it replaces a spacer row). */
+export function NowcastLine(props: { report: Report }) {
   const n = () => props.report.nowcast;
   const pts = createMemo(() => {
     const nc = n();
     if (!nc) return [];
     const all = nextTwoHours(nc);
-    // Downsample 1–5 minute nowcasts so the bar fits the panel.
-    const max = Math.max(4, (props.width ?? 40) - 6);
-    const step = Math.max(1, Math.ceil(all.length / max));
+    // At most 8 cells, so 1–5 minute nowcasts fit next to the headline.
+    const step = Math.max(1, Math.ceil(all.length / 8));
     return all.filter((_, i) => i % step === 0);
   });
   const bars = () =>
@@ -35,18 +34,15 @@ export function NowcastLine(props: { report: Report; width?: number }) {
       <text wrapMode="none">
         <span style={{ fg: isWet(n()) ? T.accent : T.dim }}>{isWet(n()) ? "☂ " : "· "}</span>
         <span style={{ fg: isWet(n()) ? T.text : T.dim }}>{headline()}</span>
-      </text>
-      <Show when={isWet(n())}>
-        <text wrapMode="none">
-          <span style={{ fg: T.dim }}>{"  "}</span>
+        <Show when={isWet(n())}>
+          <span> </span>
           <For each={bars()}>
             {(ch, i) => (
               <span style={{ fg: hexOf(nowcastScale(pts()[i()]?.rate ?? 0)) }}>{ch}</span>
             )}
           </For>
-          <span style={{ fg: T.dim }}> 2h</span>
-        </text>
-      </Show>
+        </Show>
+      </text>
     </Show>
   );
 }
@@ -58,12 +54,14 @@ export function AnomalyCell(props: {
   units: Units;
   /** Row background (e.g. a selected-row highlight). */
   bg?: string;
+  /** Just the delta, without "vs avg". */
+  compact?: boolean;
 }) {
   const day = () => props.report.climate?.days.find((d) => d.date === props.date);
   return (
     <Show when={day()?.highAnomaly !== undefined}>
       <span style={{ fg: hexOf(anomalyScale(day()?.highAnomaly ?? 0)), bg: props.bg }}>
-        {` ${tempDelta(day()?.highAnomaly, props.units).padStart(4)} vs avg`}
+        {` ${tempDelta(day()?.highAnomaly, props.units).padStart(4)}${props.compact ? "" : " vs avg"}`}
       </span>
     </Show>
   );

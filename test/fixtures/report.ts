@@ -10,6 +10,7 @@ import {
   SCHEMA_VERSION,
 } from "../../src/domain/types.ts";
 import type { HttpClient } from "../../src/util/http.ts";
+import { fixtureDetails } from "./details.ts";
 
 /**
  * Deterministic, network-free reports for headless view tests and offline
@@ -40,6 +41,8 @@ export interface FixtureOptions {
   temperature?: number;
   alerts?: number;
   aqi?: number;
+  /** Include the detail sections (nowcast, NWS, models, marine, climate). Default true. */
+  details?: boolean;
 }
 
 const round = (v: number, d = 1) => Math.round(v * 10 ** d) / 10 ** d;
@@ -137,6 +140,8 @@ export function fixtureReport(opts: FixtureOptions = {}): Report {
     },
   ].slice(0, opts.alerts ?? 2) as Alert[];
 
+  const extra = opts.details === false ? undefined : fixtureDetails(now, hourly, daily);
+
   return {
     schemaVersion: SCHEMA_VERSION,
     generatedAt: now.toISOString(),
@@ -165,11 +170,21 @@ export function fixtureReport(opts: FixtureOptions = {}): Report {
       hourly,
       daily,
     },
-    airQuality: { provider: "fixture", usAqi: opts.aqi ?? 64, pm2_5: 12.1 },
+    airQuality: {
+      provider: "fixture",
+      usAqi: opts.aqi ?? 64,
+      pm2_5: 12.1,
+      hourly: extra?.aqHourly,
+    },
     astronomy: computeAstronomy(loc.lat, loc.lon, now),
     alerts,
     risks: [{ product: "categorical", day: 1, label: "SLGT", name: "Slight risk", level: 3 }],
     errors: [],
+    nowcast: extra?.nowcast,
+    nws: extra?.nws,
+    models: extra?.models,
+    marine: extra?.marine,
+    climate: extra?.climate,
   };
 }
 

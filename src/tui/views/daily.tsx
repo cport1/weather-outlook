@@ -85,7 +85,10 @@ export function DailyView(props: {
   const side = () => dims().width >= 120;
   const mainWidth = () => dims().width - 2 - 3 - (side() ? 33 : 0);
   const showLabel = () => mainWidth() >= 100;
-  const bar = () => Math.max(8, Math.min(32, mainWidth() - (showLabel() ? 85 : 61)));
+  // Room for the "+3° vs avg" climate anomaly column when climate data is present.
+  const anomalyWidth = () => (props.report.climate ? (showLabel() ? 12 : 5) : 0);
+  const bar = () =>
+    Math.max(8, Math.min(32, mainWidth() - (showLabel() ? 85 : 61) - anomalyWidth()));
   const rowHeight = () => (dims().height - 2 - 3 >= days().length * 2 ? 2 : 1);
   const selected = () => days()[Math.min(props.state.dayIndex, days().length - 1)];
   return (
@@ -170,7 +173,13 @@ export function DailyView(props: {
                     {" "}
                     {`${speed(d.windGustMax, u())} gusts`}
                   </span>
-                  <AnomalyCell report={props.report} date={d.date} units={u()} bg={bg()} />
+                  <AnomalyCell
+                    report={props.report}
+                    date={d.date}
+                    units={u()}
+                    bg={bg()}
+                    compact={!showLabel()}
+                  />
                 </text>
                 <Show when={rowHeight() === 2}>
                   <text> </text>
