@@ -44,6 +44,20 @@ export interface AppState {
   /** Overrides the live condition for demos (`--simulate rain`). */
   simulate?: string;
   alertIndex: number;
+  /** Hourly view: hour under the chart cursor (index into the 48h window). */
+  hourCursor: number;
+  /** Hourly view: which chart groups are shown (t/p/w/h/v toggle them). */
+  hourSeries: HourSeries;
+  /** 10-day view: selected / hovered day. */
+  dayIndex: number;
+  /** `/` location search overlay. */
+  search: { open: boolean; query: string; results: Location[]; index: number; busy: boolean };
+  /** Recently viewed locations (most recent first), cycled with `s`. */
+  recent: Location[];
+  /** Saved locations handed in by the CLI/config, also cycled with `s`. */
+  saved: Location[];
+  /** False while the terminal window is unfocused; animations pause. */
+  focused: boolean;
 }
 
 export interface MapOverlays {
@@ -55,7 +69,17 @@ export interface MapOverlays {
   places: boolean;
 }
 
-export function createAppStore(init: Pick<AppState, "location" | "units" | "motion" | "simulate">) {
+export interface HourSeries {
+  temp: boolean;
+  precip: boolean;
+  wind: boolean;
+  humidity: boolean;
+  uv: boolean;
+}
+
+export function createAppStore(
+  init: Pick<AppState, "location" | "units" | "motion" | "simulate"> & Partial<AppState>,
+) {
   return createStore<AppState>({
     view: "now",
     loading: true,
@@ -64,6 +88,13 @@ export function createAppStore(init: Pick<AppState, "location" | "units" | "moti
     radarMode: "auto",
     showHelp: false,
     alertIndex: 0,
+    hourCursor: 0,
+    hourSeries: { temp: true, precip: true, wind: true, humidity: true, uv: true },
+    dayIndex: 0,
+    search: { open: false, query: "", results: [], index: 0, busy: false },
+    recent: [],
+    saved: [],
+    focused: true,
     layers: { ...DEFAULT_TOGGLES },
     mapOverlays: { night: true, aurora: false, places: true },
     ...init,
