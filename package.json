@@ -4,8 +4,8 @@
   "description": "A ridiculously good terminal weather dashboard: forecasts, radar, alerts, hurricanes, wildfires and quakes on a live world map.",
   "type": "module",
   "bin": {
-    "weather-outlook": "./src/cli.ts",
-    "wo": "./src/cli.ts"
+    "weather-outlook": "./bin/weather-outlook.js",
+    "wo": "./bin/weather-outlook.js"
   },
   "scripts": {
     "dev": "bun run src/cli.ts",
@@ -13,7 +13,9 @@
     "test": "bun test",
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+    "build": "bun scripts/build.ts",
+    "prepublishOnly": "bun run build"
   },
   "repository": {
     "type": "git",
@@ -62,5 +64,14 @@
     "@types/topojson-client": "^3.1.5",
     "@types/topojson-specification": "^1.0.5",
     "typescript": "7.0.2"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }
