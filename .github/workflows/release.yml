@@ -31,7 +31,9 @@ jobs:
           target-branch: master
 
   publish:
-    needs: release-please
+    # The npm launcher downloads the release binary when Bun is missing, so
+    # binaries must be on the GitHub release before the version hits npm.
+    needs: [release-please, binaries]
     if: needs.release-please.outputs.release_created == 'true'
     runs-on: ubuntu-latest
     environment: npm
