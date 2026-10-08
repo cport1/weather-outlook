@@ -47,6 +47,7 @@ const MAX_IMAGE_PX = 1600;
 const WMS_PX = 1024;
 const IEM_FRAMES = 12;
 const IEM_STEP_MIN = 10;
+const SAT_DIM = 0.6;
 
 type Source = "rainviewer" | "iem";
 
@@ -199,12 +200,16 @@ export function RadarView(props: {
     zoom: props.state.radarZoom,
   });
 
-  /** Radar echo on top of the satellite base (when enabled). */
+  /** Radar echo on top of the satellite base (when enabled), dimmed so echoes and labels pop. */
   const fieldFor = (raster: RadarRaster | undefined) => {
     const sat = satellite();
     if (!raster && !sat) return undefined;
-    return (lon: number, lat: number): RGB | undefined =>
-      raster?.sample(lon, lat) ?? sat?.sample(lon, lat);
+    return (lon: number, lat: number): RGB | undefined => {
+      const echo = raster?.sample(lon, lat);
+      if (echo || !sat) return echo;
+      const c = sat.sample(lon, lat);
+      return c && (c.map((v) => Math.round(v * SAT_DIM)) as unknown as RGB);
+    };
   };
 
   // ── Image mode: render real pixels and hand NativeImages to <image> ──
