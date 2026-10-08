@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.1.0](https://github.com/cport1/weather-outlook/compare/v2.0.0...v2.1.0) (2026-10-08)
+
+
+### Features
+
+* **dist:** install script, Homebrew tap and main as the default branch ([5635bda](https://github.com/cport1/weather-outlook/commit/5635bda0e93da3c2c1c63beae8c8afacd47501f5)), closes [#54](https://github.com/cport1/weather-outlook/issues/54)
+* **fires:** FIRMS_MAP_KEY for VIIRS hotspots, falling back to keyless MODIS ([06357a7](https://github.com/cport1/weather-outlook/commit/06357a7b337981d26b0c33b03b46b39264934fd5)), closes [#49](https://github.com/cport1/weather-outlook/issues/49)
+* **launcher:** run without Bun by downloading the release binary on first use ([d247581](https://github.com/cport1/weather-outlook/commit/d2475815def808e25823a21341566e2339ca17f8)), closes [#52](https://github.com/cport1/weather-outlook/issues/52)
+
+
+### Bug Fixes
+
+* **radar:** never loop 11-hour-old frames from the stale cache ([b32deb4](https://github.com/cport1/weather-outlook/commit/b32deb47c4a90876a8c8aba03a0a8f701a82fe7a)), closes [#42](https://github.com/cport1/weather-outlook/issues/42)
+
 ## [2.0.0](https://github.com/cport1/weather-outlook/compare/v2.0.0-alpha.3...v2.0.0) (2026-10-08)
 
 
