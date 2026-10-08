@@ -1,6 +1,6 @@
 import type { Capabilities } from "../capabilities.ts";
 import { moonGlyph } from "../domain/astronomy.ts";
-import { CONDITION_LABEL, conditionGlyph } from "../domain/conditions.ts";
+import { CONDITION_LABEL, conditionGlyph, padGlyph } from "../domain/conditions.ts";
 import type { Report, Severity } from "../domain/types.ts";
 import { cellsToAnsi, padEnd, paint, truncateAnsi } from "./ansi.ts";
 import { conditionArt } from "./art.ts";
@@ -161,7 +161,7 @@ export function renderOneShot(report: Report, caps: Capabilities): string {
         }).join("");
         const pp = d.precipitationProbability ?? 0;
         out.push(
-          `  ${p(fmtDay(d.date).padEnd(4), TEXT)}${p(conditionGlyph(d.condition), ACCENT)}  ${p(
+          `  ${p(fmtDay(d.date).padEnd(4), TEXT)}${p(padGlyph(conditionGlyph(d.condition), 2), ACCENT)} ${p(
             temp(d.tempMin, units, false).padStart(4),
             tc(d.tempMin),
           )} ${bar} ${p(temp(d.tempMax, units, false).padEnd(4), tc(d.tempMax))} ${p(

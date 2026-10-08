@@ -136,6 +136,40 @@ export function stormLabel(s: Storm): string {
   return `${s.name} ${cat}`;
 }
 
+export interface HotspotCluster {
+  lon: number;
+  lat: number;
+  count: number;
+  /** Summed fire radiative power (MW). */
+  frp: number;
+}
+
+/**
+ * Bin satellite hotspots so the world view shows fire clusters instead of a
+ * carpet of single detections: 2° bins below zoom 2, 1° below zoom 4, and
+ * every detection once zoomed in. Lone detections are dropped when binned.
+ */
+export function hotspotClusters(hotspots: Hazards["hotspots"], zoom: number): HotspotCluster[] {
+  if (zoom >= 4) {
+    return hotspots.map((h) => ({ lon: h.lon, lat: h.lat, count: 1, frp: h.frp ?? 0 }));
+  }
+  const deg = zoom >= 2 ? 1 : 2;
+  const minCount = zoom >= 2 ? 2 : 3;
+  const bins = new Map<string, HotspotCluster>();
+  for (const h of hotspots) {
+    const key = `${Math.floor(h.lon / deg)},${Math.floor(h.lat / deg)}`;
+    const b = bins.get(key);
+    if (b) {
+      // Running mean keeps the marker on the cluster, not the bin corner.
+      b.lon += (h.lon - b.lon) / (b.count + 1);
+      b.lat += (h.lat - b.lat) / (b.count + 1);
+      b.count++;
+      b.frp += h.frp ?? 0;
+    } else bins.set(key, { lon: h.lon, lat: h.lat, count: 1, frp: h.frp ?? 0 });
+  }
+  return [...bins.values()].filter((b) => b.count >= minCount);
+}
+
 /** Static (non-animated) map layers. Animated sprites are drawn by the host on top. */
 export function buildHazardLayers(
   hazards: Hazards | undefined,
@@ -181,17 +215,14 @@ export function buildHazardLayers(
   }
 
   if (toggles.hotspots) {
-    // Satellite hotspots: tiny dim dots, thinned at world zoom so they read as a heat haze.
-    const stride = zoom >= 4 ? 1 : 3;
-    hazards.hotspots.forEach((h, i) => {
-      if (i % stride !== 0) return;
+    for (const c of hotspotClusters(hazards.hotspots, zoom)) {
       markers.push({
-        lon: h.lon,
-        lat: h.lat,
-        glyph: "·",
-        color: lerp(HOTSPOT, FIRE, Math.min(1, (h.frp ?? 0) / 100)),
+        lon: c.lon,
+        lat: c.lat,
+        glyph: c.count >= 40 ? "●" : c.count >= 8 ? "•" : "·",
+        color: lerp(HOTSPOT, FIRE, Math.min(1, c.frp / 400)),
       });
-    });
+    }
   }
   if (toggles.fires) {
     const minAcres = zoom >= 4 ? 100 : zoom >= 2 ? 1_000 : 10_000;
@@ -233,7 +264,8 @@ export function buildHazardLayers(
   return { markers, paths, shaders };
 }
 
-const SPIRAL = ["@", "@", "6", "9"];
+// Quarter arcs read as a spinning circulation and can't be mistaken for digits.
+const SPIRAL = ["◜", "◝", "◞", "◟"];
 const SPIN = ["◐", "◓", "◑", "◒"];
 
 /** Animated sprite glyph for a storm at time t (ms). Spins faster for stronger storms. */

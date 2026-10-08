@@ -2,7 +2,7 @@ import type { MouseEvent, ScrollBoxRenderable } from "@opentui/core";
 import { useTerminalDimensions } from "@opentui/solid";
 import { createEffect, createMemo, For, on } from "solid-js";
 import type { SetStoreFunction } from "solid-js/store";
-import { conditionGlyph } from "../../domain/conditions.ts";
+import { conditionGlyph, padGlyph } from "../../domain/conditions.ts";
 import type { HourlyPoint, Report } from "../../domain/types.ts";
 import { type Cell, PixelCanvas } from "../../render/canvas.ts";
 import { hex, lerp, type RGB, scale, temperatureScale } from "../../render/color.ts";
@@ -428,7 +428,7 @@ export function HourlyView(props: {
                   {`${day} ${shortHour(h.time, tz())}`.padEnd(10)}
                 </span>
                 <span style={{ fg: T.accent, bg: bg() }}>
-                  {`${conditionGlyph(h.condition, h.isDay)}`.padEnd(4)}{" "}
+                  {padGlyph(conditionGlyph(h.condition, h.isDay), 4)}{" "}
                 </span>
                 <span style={{ fg: tcolor(h.temperature), bg: bg() }}>
                   {temp(h.temperature, u()).padStart(5)}{" "}

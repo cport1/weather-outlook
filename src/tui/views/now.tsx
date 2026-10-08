@@ -97,6 +97,9 @@ function Scene(props: {
     const glowX = sunAt?.x ?? skyPoint(sun.azimuth, 0, w, h, south)?.x ?? w / 2;
     const flash = fx.flashLevel;
     const sunHalo = lerp(SUN_LOW, SUN_CORE, Math.min(1, Math.max(0, sun.altitude / 25)));
+    // The sun scales with the sky panel and fades behind cloud.
+    const sunR = Math.max(1.5, Math.min(w / 2, h) * 0.09);
+    const sunVisible = Math.max(0, 1 - props.cloudCover / 90);
 
     // Gradient, with a warm glow pooled around the sun near the horizon.
     for (let y = 0; y < h; y++) {
@@ -110,8 +113,9 @@ function Scene(props: {
           if (k > 0) c = lerp(c, GLOW, k * 0.8);
         }
         if (sunAt && !stormy) {
-          const k = 1 - Math.hypot((x - sunAt.x) / 5, (y - sunAt.y + 0.5) / 2);
-          if (k > 0) c = lerp(c, sunHalo, k * 0.5);
+          // Wide soft glow sized to the sky; cells are ~2:1 tall, so x spans twice y.
+          const k = 1 - Math.hypot((x - sunAt.x) / (sunR * 6), (y - sunAt.y) / (sunR * 3));
+          if (k > 0) c = lerp(c, sunHalo, k * k * 0.55 * sunVisible);
         }
         if (flash > 0) c = c.map((v) => Math.min(255, v + flash * 90)) as unknown as RGB;
         api.cell(x, y, " ", undefined, c);
@@ -136,8 +140,38 @@ function Scene(props: {
       const disk = moonDisk(moon.phase, 3, 2, MOON_LIT, south);
       api.grid(disk, Math.max(0, moonAt.x - 1), Math.max(0, moonAt.y - 1));
     }
-    if (sunAt && !stormy && props.cloudCover < 90) {
-      api.grid(moonDisk(0.5, 3, 2, sunHalo), Math.max(0, sunAt.x - 1), Math.max(0, sunAt.y - 1));
+    if (sunAt && !stormy && sunVisible > 0) {
+      // Faint rays that slowly turn, then a solid disk with a hot center.
+      const turn = props.motion ? clock / 9000 : 0;
+      for (let i = 0; i < 12; i++) {
+        const a = turn + (i / 12) * Math.PI * 2;
+        for (let r = sunR * 1.5; r < sunR * 2.6; r += 0.5) {
+          const rx = Math.round(sunAt.x + Math.cos(a) * r * 2);
+          const ry = Math.round(sunAt.y + Math.sin(a) * r);
+          const fade = 1 - (r - sunR * 1.5) / (sunR * 1.1);
+          api.blend(
+            rx,
+            ry,
+            i % 2 ? "·" : "•",
+            lerp(sunHalo, SUN_CORE, 0.4),
+            fade * 0.8 * sunVisible,
+          );
+        }
+      }
+      for (let dy = -Math.ceil(sunR); dy <= Math.ceil(sunR); dy++) {
+        for (let dx = -Math.ceil(sunR * 2); dx <= Math.ceil(sunR * 2); dx++) {
+          const d = Math.hypot(dx / 2, dy) / sunR;
+          if (d > 1) continue;
+          const core = lerp(SUN_CORE, hex("#ffffff"), (1 - d) * 0.7);
+          api.cell(
+            Math.round(sunAt.x + dx),
+            Math.round(sunAt.y + dy),
+            " ",
+            undefined,
+            lerp(sunHalo, core, 0.6 + 0.4 * sunVisible),
+          );
+        }
+      }
     }
 
     // Drifting cloud banks.

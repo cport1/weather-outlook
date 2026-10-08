@@ -196,7 +196,10 @@ export function createHttpClient(
     const cached = cache && !opts.refresh ? await cache.get(cacheKey) : undefined;
     if (cached?.fresh) return cached.entry.body;
     const swr = opts.swr ?? clientOpts.swr ?? false;
-    if (swr && cached && cached.ageMs < cached.entry.ttlMs + maxStaleMs) {
+    // Fast-changing data (current conditions, alerts) may only be a little stale: the
+    // window scales with the TTL (≥30 min) and never exceeds the client-wide cap.
+    const staleWindow = Math.min(maxStaleMs, Math.max(30 * 60_000, 2 * (cached?.entry.ttlMs ?? 0)));
+    if (swr && cached && cached.ageMs < cached.entry.ttlMs + staleWindow) {
       // Stale-while-revalidate: answer now, refresh the cache behind the caller's back.
       const job: Promise<void> = revalidate(url, cacheKey, opts, cached, binary)
         .then(({ changed }) => {
