@@ -67,7 +67,7 @@ describe.each(SIZES)("%ix%i", (width, height) => {
     test(`${view} view renders`, async () => {
       const { t } = await mount(width, height, view);
       const frame = t.captureCharFrame();
-      expect(frame).toContain("weather-outlook");
+      expect(frame).toContain("◆");
       expect(frame.replace(/\s/g, "").length).toBeGreaterThan(width);
     });
   }
@@ -170,6 +170,15 @@ describe("interaction", () => {
     await Bun.sleep(60);
     await t.renderOnce();
     expect(state.search.open).toBe(false);
+  });
+
+  test("Tab in map inspect mode stays with the map", async () => {
+    const { t, state } = await mount(160, 48, "map");
+    t.mockInput.pressKey("i");
+    await t.renderOnce();
+    t.mockInput.pressTab();
+    await t.renderOnce();
+    expect(state.view).toBe("map");
   });
 
   test("`s` cycles through saved places", async () => {

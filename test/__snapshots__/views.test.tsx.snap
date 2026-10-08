@@ -1,7 +1,7 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
 exports[`80x24 now view 1`] = `
-" ◆ weather-outlook Denver, Colorado, US · 2:00 PM     1 Now  2  3  4  5  6  7!  
+" ◆ Denver · 2:00 PM     1 Now  2 Hrs  3 10d  4 Radar  5 Map  6 Haz  7 Alrt (2)  
  ╭─ now ──────────────────────────────────────────────────────────────────────╮ 
  │  █████╗   ██╗    ███████╗      \\  /                                        │ 
  │ ██╔══██╗ ███║    ██╔════╝    _ /"".-.                                      │ 
@@ -18,18 +18,18 @@ exports[`80x24 now view 1`] = `
  │ pressure    30.01 inHg ↗ rising                                            │ 
  │ visibility  10 mi                                                          │ 
  │ cloud cover 35%                                                            │ 
+ │ severe       SLGT  Slight risk                                             │ 
  │ UV index    7                                                              │ 
  │ air (AQI)   64                                                             │ 
  │ sun         5:44 AM → 8:26 PM                                              │ 
  │ moon        ● New Moon 3%                                                  │ 
- │                                                                            │ 
  ╰────────────────────────────────────────────────────────────────────────────╯ 
  tab/1-7 views │ / search ? help q quit                        updated just now 
 "
 `;
 
 exports[`80x24 hourly view 1`] = `
-" ◆ weather-outlook Denver, Colorado, US · 2:00 PM  1  2 Hourly  3  4  5  6  7!  
+" ◆ Denver · 2:00 PM  1 Now  2 Hourly  3 10d  4 Radar  5 Map  6 Haz  7 Alrt (2)  
  ╭─ next 48 hours ────────────────────────────────────────────────────────────╮ 
  │ ◀ Wed 2pm ▶   t temp  p precip  w wind  h humidity  v UV                   │ 
  │ temp         ⠓⠒⠒⠲⠢⠤⣀                  ⢀⡠⠤⠒⠚⠊⠉⠉⠉⠙⠒⠒⠤⡀                  ⢀⡠⡤⠤ │ 
@@ -57,7 +57,7 @@ exports[`80x24 hourly view 1`] = `
 `;
 
 exports[`80x24 daily view 1`] = `
-" ◆ weather-outlook Denver, Colorado, US · 2:00 PM  1  2  3 10-Day  4  5  6  7!  
+" ◆ Denver · 2:00 PM  1 Now  2 Hrs  3 10-Day  4 Radar  5 Map  6 Haz  7 Alrt (2)  
  ╭─ 10-day outlook ───────────────────────────────────────────────────────────╮ 
  │ ▸Wed, Jul 15 ⛅    63° ─────━━━━━━━━─ 86°     ☂ 0%  0.00 in 22 mph gusts   │ 
  │  Thu, Jul 16 ⚡    60° ────━━━━━━━━━━ 89°    ☂ 87%  0.30 in 24 mph gusts   │ 
@@ -85,7 +85,7 @@ exports[`80x24 daily view 1`] = `
 `;
 
 exports[`80x24 alerts view 1`] = `
-" ◆ weather-outlook Denver, Colorado, US · 2:00  1  2  3  4  5  6  7 Alerts (2)  
+" ◆ Denver · 2:00 PM   1 Now  2 Hrs  3 10d  4 Radar  5 Map  6 Haz  7 Alerts (2)  
  ╭─ active ─────────────────╮ ╭─ Severe Thunderstorm Warning ─────────────────╮ 
  │ ▲ Severe Thunderstorm Wa │ │ SEVERE · until 2:45 PM                        │ 
  │ ▲ Heat Advisory          │ │ Denver; Arapahoe; Adams                       │ 
@@ -113,8 +113,7 @@ exports[`80x24 alerts view 1`] = `
 `;
 
 exports[`80x24 boot splash while the first fetch runs 1`] = `
-" ◆ weather-outlook Denver, Colorado, US · 2:00 PM      1 Now  2  3  4  5  6  7  
-                                                                                
+" ◆ Denver · 2:00 PM         1 Now  2 Hrs  3 10d  4 Radar  5 Map  6 Haz  7 Alrt  
                                                                                 
                                                                                 
                                                                                 
@@ -126,8 +125,9 @@ exports[`80x24 boot splash while the first fetch runs 1`] = `
                  █ █ ██▀▀▄▀█▀█▀█ ██▀▀█▀█▄▄█▀██ █▀█▀█  █▀██▀██▄▀                 
                  ▀▄▀▄▀██▄█▀█ █ █▀███▄█▀▄  █▄██▄█ █ █▄▄█▄██▄██ █                 
                                                                                 
-                 ⠋ fetching the sky over Denver, Colorado, US…                  
+                         weather-outlook 2.0.0-alpha.1                          
                                                                                 
+                 ⠋ fetching the sky over Denver, Colorado, US…                  
                                                                                 
                                                                                 
                                                                                 
@@ -158,9 +158,9 @@ exports[`160x48 now view 1`] = `
  │                                                                                                               │ │ pressure    30.01 inHg ↗ rising          │ 
  │                                                                                                               │ │ visibility  10 mi                        │ 
  │                                                                                                               │ │ cloud cover 35%                          │ 
+ │                                                                                                               │ │ severe       SLGT  Slight risk           │ 
  │                                                                                                               │ │ sun         5:44 AM → 8:26 PM            │ 
  │                                                                                                               │ │ moon        ● New Moon 3%                │ 
- │                                                                                                               │ │                                          │ 
  │                                                                                                               │ │                                          │ 
  │                                                                                                               │ │                                          │ 
  │                                                                                                               │ │                                          │ 
@@ -368,7 +368,6 @@ exports[`160x48 boot splash while the first fetch runs 1`] = `
                                                                                                                                                                 
                                                                                                                                                                 
                                                                                                                                                                 
-                                                                                                                                                                
                  ██╗    ██╗███████╗ █████╗ ████████╗██╗  ██╗███████╗██████╗        ██████╗ ██╗   ██╗████████╗██╗      ██████╗  ██████╗ ██╗  ██╗                 
                  ██║    ██║██╔════╝██╔══██╗╚══██╔══╝██║  ██║██╔════╝██╔══██╗      ██╔═══██╗██║   ██║╚══██╔══╝██║     ██╔═══██╗██╔═══██╗██║ ██╔╝                 
                  ██║ █╗ ██║█████╗  ███████║   ██║   ███████║█████╗  ██████╔╝█████╗██║   ██║██║   ██║   ██║   ██║     ██║   ██║██║   ██║█████╔╝                  
@@ -376,8 +375,9 @@ exports[`160x48 boot splash while the first fetch runs 1`] = `
                  ╚███╔███╔╝███████╗██║  ██║   ██║   ██║  ██║███████╗██║  ██║      ╚██████╔╝╚██████╔╝   ██║   ███████╗╚██████╔╝╚██████╔╝██║  ██╗                 
                   ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝       ╚═════╝  ╚═════╝    ╚═╝   ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝                 
                                                                                                                                                                 
-                                                         ⠋ fetching the sky over Denver, Colorado, US…                                                          
+                                                                 weather-outlook 2.0.0-alpha.1                                                                  
                                                                                                                                                                 
+                                                         ⠋ fetching the sky over Denver, Colorado, US…                                                          
                                                                                                                                                                 
                                                                                                                                                                 
                                                                                                                                                                 
@@ -401,7 +401,7 @@ exports[`160x48 boot splash while the first fetch runs 1`] = `
 `;
 
 exports[`no-color 80x24 now view in mono 1`] = `
-" ◆ weather-outlook Denver, Colorado, US · 2:00 PM     1 Now  2  3  4  5  6  7!  
+" ◆ Denver · 2:00 PM     1 Now  2 Hrs  3 10d  4 Radar  5 Map  6 Haz  7 Alrt (2)  
  ╭─ now ──────────────────────────────────────────────────────────────────────╮ 
  │  █████╗   ██╗    ███████╗      \\  /                                        │ 
  │ ██╔══██╗ ███║    ██╔════╝    _ /"".-.                                      │ 
@@ -418,11 +418,11 @@ exports[`no-color 80x24 now view in mono 1`] = `
  │ pressure    30.01 inHg ↗ rising                                            │ 
  │ visibility  10 mi                                                          │ 
  │ cloud cover 35%                                                            │ 
+ │ severe       SLGT  Slight risk                                             │ 
  │ UV index    7                                                              │ 
  │ air (AQI)   64                                                             │ 
  │ sun         5:44 AM → 8:26 PM                                              │ 
  │ moon        ● New Moon 3%                                                  │ 
- │                                                                            │ 
  ╰────────────────────────────────────────────────────────────────────────────╯ 
  tab/1-7 views │ / search ? help q quit                        updated just now 
 "

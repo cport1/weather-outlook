@@ -47,10 +47,14 @@ const samePlaceAs = (a: Location, b: Location) =>
 function Header(props: { state: AppState; select: (v: View) => void }) {
   const dims = useTerminalDimensions();
   const loc = () => props.state.location;
-  const place = () => [loc().name, loc().region, loc().countryCode].filter(Boolean).join(", ");
+  // Narrow terminals keep just the place name so the clock and tabs still fit.
+  const place = () =>
+    dims().width < 110
+      ? loc().name
+      : [loc().name, loc().region, loc().countryCode].filter(Boolean).join(", ");
   const clock = () => clockTime(new Date(), loc().timezone);
   // 0 = full labels, 1 = short labels, 2 = numbers (active tab keeps its label).
-  const density = () => (dims().width >= 130 ? 0 : dims().width >= 96 ? 1 : 2);
+  const density = () => (dims().width >= 130 ? 0 : dims().width >= 80 ? 1 : 2);
   const label = (v: View, i: number) => {
     const n =
       props.state.view === v || density() === 0
@@ -68,7 +72,7 @@ function Header(props: { state: AppState; select: (v: View) => void }) {
     <box flexDirection="row" height={1} paddingLeft={1} paddingRight={1} backgroundColor={T.panel}>
       <text wrapMode="none" flexShrink={1}>
         <span style={{ fg: T.accent, bg: T.panel }}>
-          {density() !== 1 ? "◆ weather-outlook " : "◆ "}
+          {density() === 0 ? "◆ weather-outlook " : "◆ "}
         </span>
         <span style={{ fg: T.text, bg: T.panel }}>{place()}</span>
         <span style={{ fg: T.dim, bg: T.panel }}> · {clock()}</span>

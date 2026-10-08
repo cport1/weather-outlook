@@ -1,6 +1,7 @@
 import { type ASCIIFontName, measureText } from "@opentui/core";
 import { useTerminalDimensions } from "@opentui/solid";
 import { createSignal, For, onCleanup, Show } from "solid-js";
+import pkg from "../../../package.json" with { type: "json" };
 import { hex, lerp, type RGB } from "../../render/color.ts";
 import { hexOf } from "../format.ts";
 import { T } from "../theme.ts";
@@ -71,6 +72,9 @@ export function Splash(props: { place: string; error?: string; motion: boolean }
           </box>
         )}
       </Show>
+      <text wrapMode="none" fg={T.faint}>
+        {`weather-outlook ${pkg.version}`}
+      </text>
       <text wrapMode="none" fg={props.error ? T.danger : T.dim}>
         {props.error
           ? `✗ ${props.error}`
