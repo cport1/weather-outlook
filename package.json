@@ -1,6 +1,6 @@
 {
   "name": "weather-outlook",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.3",
   "description": "A ridiculously good terminal weather dashboard: forecasts, radar, alerts, hurricanes, wildfires and quakes on a live world map.",
   "type": "module",
   "bin": {
