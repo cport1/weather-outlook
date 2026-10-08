@@ -115,17 +115,25 @@ weather-outlook hazards        # alias: weather-outlook planet
 ## 🧰 Usage
 
 ```text
-weather-outlook [location] [options]
+weather-outlook [location | @saved] [options]
 weather-outlook hazards [--json] [--no-hotspots]
-weather-outlook cache <clear|path>
+weather-outlook add <name> <place>          # save a location, then use it as @name
+weather-outlook config <get|set|unset|path> [key] [value]
+weather-outlook doctor                      # terminal + provider diagnostics
+weather-outlook cache <clear|path|prune>
 ```
 
 | Option | |
 | --- | --- |
-| `location` | City (`Paris`, `Paris, TX`, `London, UK`), postcode (`10001`), or `lat,lon`. Omit to use your IP location. |
-| `-1, --once` | Print a one-shot summary instead of opening the dashboard |
+| `location` | City (`Paris`, `Paris, TX`, `London, UK`), postcode (`10001`), `lat,lon`, or a saved `@name`. Omit to use your IP location. Ambiguous names (`Springfield`) prompt you to pick when run interactively; `--no-pick` takes the best match. |
+| `-1, --once` | Print a one-shot summary instead of opening the dashboard (adapts to narrow terminals) |
+| `-c, --compact` | Five-line card, great for a shell rc file |
+| `-f, --format <fmt>` | One-liner for status bars, e.g. `'%c %t %w'` (see below) |
 | `-j, --json` | Print the full report as JSON (schema-versioned, stable contract) |
-| `-u, --units <metric\|imperial>` | Override units (default: based on the location's country) |
+| `--fields <list>` | With `--json`, only these parts: `location,current,hourly,daily,forecast,airQuality,astronomy,alerts,errors` |
+| `-u, --units <metric\|imperial>` | Override units (default: config, else the location's country) |
+| `--temp <C\|F>` · `--wind <kmh\|mph\|ms\|kn\|bft>` · `--precip <mm\|in>` | Per-measure units on top of `--units` (`bft` = Beaufort) |
+| `--hour12` · `--hour24` | Clock style (default: from your locale) |
 | `--simulate <rain\|snow\|storm\|fog\|clear\|cloudy>` | Force the sky animation — great for demos |
 | `--no-motion` | Disable animations (also `WEATHER_OUTLOOK_REDUCE_MOTION=1`) |
 | `--no-color` | Disable colors (also respects `NO_COLOR`) |
@@ -151,8 +159,50 @@ weather-outlook cache <clear|path>
 
 ```sh
 weather-outlook "Reykjavik" --json | jq '.forecast.current | {temperature, condition, windSpeed}'
+weather-outlook Denver --json --fields current,alerts   # only fetches what you ask for
 weather-outlook hazards --json | jq '.storms[] | {name, category, windKt}'
 ```
+
+The output is a stable, versioned contract described by JSON Schema: [`schema/report.v1.json`](schema/report.v1.json) and [`schema/hazards.v1.json`](schema/hazards.v1.json). Every document carries `schemaVersion`; values are always metric/SI (°C, km/h, mm, hPa, metres) whatever `--units` says, and times are ISO 8601 with offsets. Breaking changes bump the version and get a new schema file.
+
+### Status bars
+
+`--format` takes wttr.in-style tokens and only fetches what they need (`%l %m %S` makes no forecast request at all). It answers from cache instantly and refreshes the cache in the background.
+
+```sh
+weather-outlook Denver --format '%c %t %w'      # ☁ 64°F ↑6mph
+```
+
+| Token | | Token | |
+| --- | --- | --- | --- |
+| `%c` | condition glyph | `%p` | chance of precipitation |
+| `%C` | condition text | `%a` | US AQI |
+| `%t` | temperature | `%m` | moon phase |
+| `%f` | feels like | `%S` · `%s` | sunrise · sunset |
+| `%h` | humidity | `%A` | active alert count |
+| `%w` | wind | `%l` | location name |
+
+### Config
+
+Settings live in `~/.config/weather-outlook/config.json` (`%APPDATA%` on Windows; `weather-outlook config path` prints it, `WEATHER_OUTLOOK_CONFIG` overrides it):
+
+```sh
+weather-outlook config set units metric
+weather-outlook config set wind kn          # temp, wind, precip, clock (12h|24h), theme
+weather-outlook config set keys.OWM_API_KEY …
+weather-outlook add home "Paris, TX"
+weather-outlook @home
+```
+
+```json
+{ "units": "imperial", "wind": "kn", "theme": "midnight", "locations": [{ "name": "home", "query": "Denver" }], "keys": { "OWM_API_KEY": "..." } }
+```
+
+Precedence is flags › environment › file › defaults. `WEATHER_OUTLOOK_UNITS`, `_TEMP`, `_WIND`, `_PRECIP`, `_CLOCK` and `_THEME` override the file, and a provider key in the environment (e.g. `OWM_API_KEY`) beats the one in `keys`.
+
+### Troubleshooting
+
+`weather-outlook doctor` prints the detected color depth, unicode support, image protocol and terminal size, the config and cache locations (with cache size), pings every data source with latency, and draws a braille / block / emoji test pattern so you can see what your font supports.
 
 ## 🛰️ Data sources
 
@@ -186,6 +236,8 @@ bun install
 bun dev Miami              # run the dashboard from source
 bun test                   # unit tests + a real-PTY boot test of the built CLI
 bun run typecheck && bun run lint
+bun run schema             # regenerate schema/*.json after changing src/domain/types.ts
+bun run fixtures           # re-record test/fixtures from the live APIs
 ```
 
 Built with [OpenTUI](https://github.com/anomalyco/opentui) + Solid, TypeScript, d3-geo, zod and citty. Handy tools:

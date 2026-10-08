@@ -15,6 +15,8 @@
     "lint": "biome check .",
     "format": "biome format --write .",
     "build": "bun scripts/build.ts",
+    "schema": "bun scripts/gen-schema.ts",
+    "fixtures": "bun scripts/record-fixtures.ts",
     "prepublishOnly": "bun run build"
   },
   "repository": {
@@ -68,6 +70,7 @@
   "files": [
     "bin",
     "dist",
+    "schema",
     "README.md",
     "LICENSE"
   ],
