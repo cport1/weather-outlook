@@ -331,6 +331,83 @@
           "additionalProperties": {
             "type": "number"
           }
+        },
+        "hourly": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "time": {
+                "type": "string"
+              },
+              "usAqi": {
+                "type": "number"
+              },
+              "europeanAqi": {
+                "type": "number"
+              },
+              "pm2_5": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "time"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "stations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "provider": {
+                "type": "string",
+                "const": "openaq"
+              },
+              "id": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              },
+              "distanceKm": {
+                "type": "number"
+              },
+              "time": {
+                "type": "string"
+              },
+              "readings": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "number"
+                    },
+                    "units": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "units"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "provider",
+              "id",
+              "name",
+              "readings"
+            ],
+            "additionalProperties": false
+          }
         }
       },
       "required": [
@@ -518,6 +595,644 @@
         ],
         "additionalProperties": false
       }
+    },
+    "nowcast": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "interval": {
+          "type": "number"
+        },
+        "points": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "time": {
+                "type": "string"
+              },
+              "rate": {
+                "type": "number"
+              },
+              "snow": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "time",
+              "rate"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "headline": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "provider",
+        "interval",
+        "points",
+        "headline"
+      ],
+      "additionalProperties": false
+    },
+    "nws": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "const": "nws"
+        },
+        "office": {
+          "type": "string"
+        },
+        "gridId": {
+          "type": "string"
+        },
+        "gridX": {
+          "type": "number"
+        },
+        "gridY": {
+          "type": "number"
+        },
+        "pointType": {
+          "type": "string"
+        },
+        "periods": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "startTime": {
+                "type": "string"
+              },
+              "endTime": {
+                "type": "string"
+              },
+              "isDaytime": {
+                "type": "boolean"
+              },
+              "temperature": {
+                "type": "number"
+              },
+              "precipitationProbability": {
+                "type": "number"
+              },
+              "wind": {
+                "type": "string"
+              },
+              "shortForecast": {
+                "type": "string"
+              },
+              "detailedForecast": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "startTime",
+              "isDaytime",
+              "shortForecast",
+              "detailedForecast"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "observation": {
+          "type": "object",
+          "properties": {
+            "station": {
+              "type": "string"
+            },
+            "stationName": {
+              "type": "string"
+            },
+            "time": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "temperature": {
+              "type": "number"
+            },
+            "dewPoint": {
+              "type": "number"
+            },
+            "humidity": {
+              "type": "number"
+            },
+            "windSpeed": {
+              "type": "number"
+            },
+            "windGust": {
+              "type": "number"
+            },
+            "windDirection": {
+              "type": "number"
+            },
+            "pressure": {
+              "type": "number"
+            },
+            "visibility": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "station",
+            "time"
+          ],
+          "additionalProperties": false
+        },
+        "extras": {
+          "type": "object",
+          "properties": {
+            "heatRiskMax": {
+              "type": "number"
+            },
+            "heatRiskDate": {
+              "type": "string"
+            },
+            "lightningMax": {
+              "type": "number"
+            },
+            "snowfall24h": {
+              "type": "number"
+            },
+            "snowfallTotal": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        },
+        "discussion": {
+          "type": "object",
+          "properties": {
+            "issued": {
+              "type": "string"
+            },
+            "office": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "issued",
+            "office",
+            "text"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "provider",
+        "office",
+        "periods"
+      ],
+      "additionalProperties": false
+    },
+    "models": {
+      "type": "object",
+      "properties": {
+        "times": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "models": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "temperature": {
+                "type": "array",
+                "items": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "label",
+              "temperature"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "ensemble": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string"
+            },
+            "members": {
+              "type": "number"
+            },
+            "min": {
+              "type": "array",
+              "items": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              }
+            },
+            "max": {
+              "type": "array",
+              "items": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              }
+            },
+            "mean": {
+              "type": "array",
+              "items": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": [
+            "model",
+            "members",
+            "min",
+            "max",
+            "mean"
+          ],
+          "additionalProperties": false
+        },
+        "confidence": {
+          "type": "object",
+          "properties": {
+            "score": {
+              "type": "number"
+            },
+            "label": {
+              "type": "string",
+              "enum": [
+                "high",
+                "moderate",
+                "low"
+              ]
+            },
+            "spread": {
+              "type": "number"
+            },
+            "modelSpread": {
+              "type": "number"
+            },
+            "hours": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "score",
+            "label",
+            "spread",
+            "hours"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "times",
+        "models"
+      ],
+      "additionalProperties": false
+    },
+    "marine": {
+      "type": "object",
+      "properties": {
+        "waves": {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "type": "string"
+            },
+            "current": {
+              "type": "object",
+              "properties": {
+                "time": {
+                  "type": "string"
+                },
+                "height": {
+                  "type": "number"
+                },
+                "period": {
+                  "type": "number"
+                },
+                "direction": {
+                  "type": "number"
+                },
+                "seaSurfaceTemperature": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "time"
+              ],
+              "additionalProperties": false
+            },
+            "hourly": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "time": {
+                    "type": "string"
+                  },
+                  "height": {
+                    "type": "number"
+                  },
+                  "period": {
+                    "type": "number"
+                  },
+                  "direction": {
+                    "type": "number"
+                  },
+                  "seaSurfaceTemperature": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "time"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "provider",
+            "current",
+            "hourly"
+          ],
+          "additionalProperties": false
+        },
+        "tides": {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "const": "noaa-coops"
+            },
+            "station": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "lat": {
+                  "type": "number"
+                },
+                "lon": {
+                  "type": "number"
+                },
+                "distanceKm": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "lat",
+                "lon",
+                "distanceKm"
+              ],
+              "additionalProperties": false
+            },
+            "events": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "time": {
+                    "type": "string"
+                  },
+                  "height": {
+                    "type": "number"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "high",
+                      "low"
+                    ]
+                  }
+                },
+                "required": [
+                  "time",
+                  "height",
+                  "type"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "curve": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "time": {
+                    "type": "string"
+                  },
+                  "height": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "time",
+                  "height"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "provider",
+            "station",
+            "events",
+            "curve"
+          ],
+          "additionalProperties": false
+        },
+        "buoy": {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "const": "ndbc"
+            },
+            "id": {
+              "type": "string"
+            },
+            "lat": {
+              "type": "number"
+            },
+            "lon": {
+              "type": "number"
+            },
+            "distanceKm": {
+              "type": "number"
+            },
+            "time": {
+              "type": "string"
+            },
+            "windDirection": {
+              "type": "number"
+            },
+            "windSpeed": {
+              "type": "number"
+            },
+            "windGust": {
+              "type": "number"
+            },
+            "waveHeight": {
+              "type": "number"
+            },
+            "dominantPeriod": {
+              "type": "number"
+            },
+            "waveDirection": {
+              "type": "number"
+            },
+            "pressure": {
+              "type": "number"
+            },
+            "airTemperature": {
+              "type": "number"
+            },
+            "waterTemperature": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "provider",
+            "id",
+            "lat",
+            "lon",
+            "distanceKm",
+            "time"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "climate": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "startYear": {
+          "type": "number"
+        },
+        "endYear": {
+          "type": "number"
+        },
+        "days": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "date": {
+                "type": "string"
+              },
+              "normalHigh": {
+                "type": "number"
+              },
+              "normalLow": {
+                "type": "number"
+              },
+              "highAnomaly": {
+                "type": "number"
+              },
+              "lowAnomaly": {
+                "type": "number"
+              },
+              "highPercentile": {
+                "type": "number"
+              },
+              "lowPercentile": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "date",
+              "normalHigh",
+              "normalLow"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "recordHigh": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "year": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "value",
+            "year"
+          ],
+          "additionalProperties": false
+        },
+        "recordLow": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "year": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "value",
+            "year"
+          ],
+          "additionalProperties": false
+        },
+        "fact": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "provider",
+        "startYear",
+        "endYear",
+        "days"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [

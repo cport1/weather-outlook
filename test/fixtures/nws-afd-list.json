@@ -1,0 +1,17 @@
+{
+  "@context": {
+    "@version": "1.1",
+    "@vocab": "https://api.weather.gov/ontology#"
+  },
+  "@graph": [
+    {
+      "@id": "https://api.weather.gov/products/cdf04591-762c-488a-8e8d-4288c8fd967d",
+      "id": "cdf04591-762c-488a-8e8d-4288c8fd967d",
+      "wmoCollectiveId": "FXUS65",
+      "issuingOffice": "KBOU",
+      "issuanceTime": "2026-10-07T23:15:00+00:00",
+      "productCode": "AFD",
+      "productName": "Area Forecast Discussion"
+    }
+  ]
+}

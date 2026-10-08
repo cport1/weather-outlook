@@ -143,7 +143,38 @@ describe("--fields", () => {
       forecast: false,
       airQuality: false,
       alerts: false,
+      nowcast: false,
+      nws: false,
+      models: false,
+      marine: false,
+      climate: false,
     });
+  });
+  test("detail sections can be selected and fetch only their sources", async () => {
+    expect(parseFields("nws,tides,normals,minutely,models")).toEqual([
+      "nws",
+      "marine",
+      "climate",
+      "nowcast",
+      "models",
+    ]);
+    const { http, requests } = fixtureHttp();
+    const loc = await resolveLocation(http, "39.7392,-104.9903");
+    requests.length = 0;
+    const fields = parseFields("nws,climate");
+    const report = await buildReport(http, loc, "metric", { include: fieldsNeeds(fields) });
+    const hosts = new Set(requests.map((u) => new URL(u).host));
+    // Climate needs the forecast to compare against, but nothing else.
+    expect([...hosts].sort()).toEqual([
+      "api.open-meteo.com",
+      "api.weather.gov",
+      "archive-api.open-meteo.com",
+    ]);
+    expect(report.errors).toEqual([]);
+    const out = projectReport(report, fields);
+    expect(Object.keys(out)).toEqual(["schemaVersion", "generatedAt", "units", "nws", "climate"]);
+    expect((out.nws as { periods: unknown[] }).periods.length).toBeGreaterThan(0);
+    expect((out.climate as { days: unknown[] }).days.length).toBeGreaterThan(0);
   });
 });
 

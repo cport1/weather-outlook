@@ -1,0 +1,25 @@
+{
+  "features": [
+    {
+      "id": "https://api.weather.gov/stations/KBJC",
+      "properties": {
+        "stationIdentifier": "KBJC",
+        "name": "Broomfield / Jeffco"
+      }
+    },
+    {
+      "id": "https://api.weather.gov/stations/KBKF",
+      "properties": {
+        "stationIdentifier": "KBKF",
+        "name": "Buckley Space Force Base"
+      }
+    },
+    {
+      "id": "https://api.weather.gov/stations/KAPA",
+      "properties": {
+        "stationIdentifier": "KAPA",
+        "name": "Denver - Centennial Airport"
+      }
+    }
+  ]
+}

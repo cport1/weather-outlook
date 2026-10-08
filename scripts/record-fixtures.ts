@@ -98,6 +98,7 @@ for (const f of FIXTURES) {
     const rec = recorder();
     await f.record(rec.http);
     body = rec.last();
+    if (f.transform) body = f.transform(body);
     if (f.kind === "ip") body = scrubIp(f.name, body as Record<string, unknown>);
   }
   await writeFile(join(DIR, `${f.name}.json`), `${JSON.stringify(body, null, 2)}\n`);
