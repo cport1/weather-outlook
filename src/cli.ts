@@ -2,6 +2,7 @@
 import { type CommandDef, defineCommand, runCommand, showUsage } from "citty";
 import envPaths from "env-paths";
 import pkg from "../package.json" with { type: "json" };
+import { renderAbout, trackProviders } from "./attribution.ts";
 import { DiskCache } from "./cache/disk-cache.ts";
 import { detectCapabilities } from "./capabilities.ts";
 import {
@@ -37,7 +38,7 @@ process.stdout.on("error", (err: NodeJS.ErrnoException) => {
 
 const paths = envPaths("weather-outlook", { suffix: "" });
 const makeHttp = (opts: HttpClientOptions = {}) =>
-  createHttpClient(new DiskCache(paths.cache), fetch, opts);
+  trackProviders(createHttpClient(new DiskCache(paths.cache), fetch, opts));
 
 const colorArg = {
   type: "boolean",
@@ -214,6 +215,15 @@ const doctor = defineCommand({
   },
 });
 
+const about = defineCommand({
+  meta: { name: "about", description: "version, data providers, licenses and attribution" },
+  args: { color: colorArg },
+  run({ args }) {
+    const caps = detectCapabilities({ color: args.color ? undefined : false });
+    process.stdout.write(renderAbout(pkg.version, caps.color > 0));
+  },
+});
+
 const subCommands: Record<string, CommandDef<never>> = {
   hazards: hazards as CommandDef<never>,
   planet: hazards as CommandDef<never>,
@@ -221,6 +231,7 @@ const subCommands: Record<string, CommandDef<never>> = {
   config: config as CommandDef<never>,
   add: add as CommandDef<never>,
   doctor: doctor as CommandDef<never>,
+  about: about as CommandDef<never>,
 };
 
 /** CLI flags beat config/env for each measure. */
@@ -295,9 +306,15 @@ const main = defineCommand({
     },
     color: colorArg,
     refresh: { type: "boolean", alias: "r", description: "bypass the cache" },
+    images: {
+      type: "enum",
+      options: ["auto", "off"],
+      description:
+        "radar as Kitty/Sixel images when supported, or off for text cells (env WEATHER_OUTLOOK_IMAGES)",
+    },
   },
   // Listed for --help only; dispatch happens below so place names never collide with commands.
-  subCommands: { hazards, cache, config, add, doctor },
+  subCommands: { hazards, cache, config, add, doctor, about },
   async run({ args }) {
     const cfg = await effectiveConfig();
     setUnitOverrides(unitOverrides(cfg, args));
@@ -338,6 +355,7 @@ const main = defineCommand({
     if (dashboard) {
       // Lazy-load the TUI so one-shot and JSON modes never pay for it.
       const { runDashboard } = await import("./tui/index.tsx");
+      const images = args.images ?? process.env.WEATHER_OUTLOOK_IMAGES;
       const dashOpts = {
         http,
         location,
@@ -348,6 +366,7 @@ const main = defineCommand({
         savedLocations: cfg.locations.flatMap((l) =>
           l.location ? [{ ...l.location, source: "config" as const }] : [],
         ),
+        images: images === "off" || images === "0" || images === "false" ? "off" : "auto",
       };
       await runDashboard(dashOpts as Parameters<typeof runDashboard>[0]);
       return;

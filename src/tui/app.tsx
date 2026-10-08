@@ -31,9 +31,10 @@ import type { HttpClient } from "../util/http.ts";
 import { CellCanvas, type DrawApi } from "./cell-canvas.ts";
 import { type AppState, VIEW_LABEL, VIEWS } from "./store.ts";
 import { T, theme, toHexStr } from "./theme.ts";
+import { Credits, closeCredits, toggleCredits } from "./views/credits.tsx";
 import { HazardsView } from "./views/hazards.tsx";
 import { MapView } from "./views/map.tsx";
-import { type RadarControls, RadarView } from "./views/radar.tsx";
+import { type RadarControls, RadarView, toggleSatellite } from "./views/radar.tsx";
 
 extend({ cell_canvas: CellCanvas });
 
@@ -133,7 +134,7 @@ function Footer(props: { state: AppState }) {
     props.state.view === "map"
       ? "←↑↓→ pan  +/- zoom  c center  0 reset  S/F/H/Q/A layers"
       : props.state.view === "radar"
-        ? "space play/pause  ,/. step  +/- zoom"
+        ? "space play/pause  ,/. step  +/- zoom  v satellite"
         : props.state.view === "alerts"
           ? "↑↓ select alert"
           : "tab/1-7 views";
@@ -590,6 +591,7 @@ const HELP: Array<[string, string]> = [
   ["1-7 / tab", "switch view"],
   ["space , .", "radar play/pause, step frames"],
   ["i", "radar: real image ↔ text cells"],
+  ["v", "radar: satellite base layer"],
   ["u", "toggle °C / °F"],
   ["r", "refresh now"],
   ["m", "toggle animations"],
@@ -598,6 +600,7 @@ const HELP: Array<[string, string]> = [
   ["c", "center map on location"],
   ["S F H Q A", "map layers: storms fires hotspots quakes alerts"],
   ["?", "toggle help"],
+  ["!", "data credits"],
   ["q / ctrl+c", "quit"],
 ];
 
@@ -641,7 +644,11 @@ export function App(props: Props): JSX.Element {
     const n = key.name;
     if (n === "q" || (key.ctrl && n === "c")) return props.quit();
     if (n === "?") return setState("showHelp", (v) => !v);
-    if (n === "escape") return setState("showHelp", false);
+    if (n === "!") return toggleCredits();
+    if (n === "escape") {
+      closeCredits();
+      return setState("showHelp", false);
+    }
     if (/^[1-7]$/.test(n)) return setState("view", VIEWS[Number(n) - 1] ?? "now");
     if (n === "tab") {
       const i = VIEWS.indexOf(state.view);
@@ -656,6 +663,7 @@ export function App(props: Props): JSX.Element {
     if (state.view === "radar") {
       if (n === "space") return radar?.toggle();
       if (n === "i") return setState("radarMode", (m) => (m === "auto" ? "cells" : "auto"));
+      if (n === "v") return toggleSatellite();
       if (n === "," || n === "<") return radar?.step(-1);
       if (n === "." || n === ">") return radar?.step(1);
       if (n === "+" || n === "=") return setState("radarZoom", (z) => Math.min(60, z * 1.5));
@@ -743,6 +751,7 @@ export function App(props: Props): JSX.Element {
       <Show when={state.showHelp}>
         <Help />
       </Show>
+      <Credits />
     </box>
   );
 }
