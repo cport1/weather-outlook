@@ -121,20 +121,20 @@ exports[`80x24 details view 1`] = `
  ╰──────────────────────╯ │                                                   │ 
   HeatRisk Moderate · lig │ .KEY MESSAGES...                                  │ 
  ╭─ forecast · BOU ─────╮ │                                                   │ 
- │ This Afternoon  86°█ │ │  - Scattered afternoon storms with gusty outflow  │ 
- │ Showers and          │ │ winds and small hail.                             │ 
+ │ This Afternoon  86 ▀ │ │  - Scattered afternoon storms with gusty          │ 
+ │ Showers and          │ │  outflow winds and small hail.                    │ 
  │ thunderstorms        │ │                                                   │ 
  │ likely. Mostly       │ │  - Hotter and drier Thursday and Friday.          │ 
  │ sunny, with a high   │ │                                                   │ 
  │ near 86. Chance of   │ │ .SHORT TERM /Through Thursday/...                 │ 
  │ precipitation is     │ │                                                   │ 
- │ 60%.                 │ │ A weak shortwave crosses the northern Front Rang  │ 
- │                      │ │ this afternoon. Surface dewpoints in the 50s eas  │ 
- │ Tonight  61°F Chanc  │ │ of the foothills support around 1000 J/kg of CAP  │ 
- │ A chance of showers  │ │ enough for a few strong storms.                   │ 
- │ and thunderstorms    │ │                                                   │ 
- │ before midnight.     │ │                                                   │ 
- │ Partly cloudy, with  │ │                                                   │ 
+ │ 60%.                 │ │ A weak shortwave crosses the northern Front       │ 
+ │                      │ │ Range this afternoon. Surface dewpoints in the    │ 
+ │                      │ │ 50s east of the foothills support around 1000     │ 
+ │ Tonight  61°F Chan   │ │ J/kg of CAPE, enough for a few strong storms.     │ 
+ │ A chance of          │ │                                                   │ 
+ │ showers and          │ │                                                   │ 
+ │ thunderstorms        │ │                                                   │ 
  ╰──────────────────────╯ ╰───────────────────────────────────────────────────╯ 
  ←→ panel  ↑↓ scroll discussion │ / search ? help q quit       updated just now 
 "
@@ -385,15 +385,15 @@ exports[`160x48 details view 1`] = `
  ╰───────────────────────────────────────────────╯ │                                                                                                          │ 
   HeatRisk Moderate · lightning LAL 3              │ .KEY MESSAGES...                                                                                         │ 
  ╭─ forecast · BOU ──────────────────────────────╮ │                                                                                                          │ 
- │ This Afternoon  86°F Showers and Thunderstor  │ │  - Scattered afternoon storms with gusty outflow winds and small hail.                                   │ 
+ │ This Afternoon  86°F Showers and Thundersto   │ │  - Scattered afternoon storms with gusty outflow winds and small hail.                                   │ 
  │ Showers and thunderstorms likely. Mostly      │ │                                                                                                          │ 
  │ sunny, with a high near 86. Chance of         │ │  - Hotter and drier Thursday and Friday.                                                                 │ 
  │ precipitation is 60%.                         │ │                                                                                                          │ 
  │                                               │ │ .SHORT TERM /Through Thursday/...                                                                        │ 
- │ Tonight  61°F Chance Showers And Thunderstor  │ │                                                                                                          │ 
- │ A chance of showers and thunderstorms before  │ │ A weak shortwave crosses the northern Front Range this afternoon. Surface dewpoints in the 50s east of   │ 
- │ midnight. Partly cloudy, with a low around    │ │ the foothills support around 1000 J/kg of CAPE, enough for a few strong storms.                          │ 
- │ 61.                                           │ │                                                                                                          │ 
+ │ Tonight  61°F Chance Showers And Thundersto   │ │                                                                                                          │ 
+ │ A chance of showers and thunderstorms         │ │ A weak shortwave crosses the northern Front Range this afternoon. Surface dewpoints in the 50s east of   │ 
+ │ before midnight. Partly cloudy, with a low    │ │ the foothills support around 1000 J/kg of CAPE, enough for a few strong storms.                          │ 
+ │ around 61.                                    │ │                                                                                                          │ 
  │                                               │ │                                                                                                          │ 
  │ Thursday  88°F Sunny                          │ │                                                                                                          │ 
  │ Sunny, with a high near 88. North wind 5 to   │ │                                                                                                          │ 

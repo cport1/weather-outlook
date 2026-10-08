@@ -7,6 +7,7 @@ import { clockTime } from "../render/units.ts";
 import type { HttpClient } from "../util/http.ts";
 import { setAnimationsPaused } from "./cell-canvas.ts";
 import { fmtTime, hexOf, SEVERITY_COLOR } from "./format.ts";
+import { scrollbarGutter } from "./scroll.ts";
 import { type AppState, VIEW_LABEL, VIEWS, type View } from "./store.ts";
 import { cycleTheme, isMono, T } from "./theme.ts";
 import { Credits, closeCredits, toggleCredits } from "./views/credits.tsx";
@@ -220,6 +221,8 @@ function AlertsView(props: { state: AppState; report: Report }) {
               title={` ${a().event} `}
               paddingLeft={1}
               paddingRight={1}
+              scrollX={false}
+              contentOptions={scrollbarGutter()}
             >
               <text fg={hexOf(SEVERITY_COLOR[a().severity])}>
                 {a().severity.toUpperCase()} · until {fmtTime(a().expires, tz())}

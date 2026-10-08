@@ -10,6 +10,7 @@ import { uvScale } from "../../render/gauges.ts";
 import { precip, speed, temp, windArrow } from "../../render/units.ts";
 import type { CellCanvas, DrawApi } from "../cell-canvas.ts";
 import { currentHourIndex, hexOf, precipScale, shortHour, tcolor } from "../format.ts";
+import { scrollbarGutter } from "../scroll.ts";
 import type { AppState, HourSeries } from "../store.ts";
 import { T, theme } from "../theme.ts";
 
@@ -408,6 +409,7 @@ export function HourlyView(props: {
       </text>
       <scrollbox
         flexGrow={1}
+        contentOptions={scrollbarGutter()}
         ref={(r: ScrollBoxRenderable) => {
           table = r;
         }}
