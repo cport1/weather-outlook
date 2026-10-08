@@ -18,7 +18,11 @@ export function fixtureHttp(opts: { fail?: string[]; override?: Record<string, u
     requests.push(url);
     const u = new URL(url);
     const key = `${u.host}${u.pathname}`;
-    const f = FIXTURES.find((x) => x.match === key);
+    const f =
+      FIXTURES.find((x) => x.match === key) ??
+      FIXTURES.filter((x) => x.prefix && key.startsWith(x.match)).sort(
+        (a, b) => b.match.length - a.match.length,
+      )[0];
     if (!f) throw new Error(`no fixture for ${key}`);
     if (opts.fail?.includes(f.name) || opts.fail?.includes(u.host)) {
       throw new Error(`${f.name} unreachable`);

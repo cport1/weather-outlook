@@ -131,7 +131,8 @@ weather-outlook cache <clear|path|prune>
 | `-c, --compact` | Five-line card, great for a shell rc file |
 | `-f, --format <fmt>` | One-liner for status bars, e.g. `'%c %t %w'` (see below) |
 | `-j, --json` | Print the full report as JSON (schema-versioned, stable contract) |
-| `--fields <list>` | With `--json`, only these parts: `location,current,hourly,daily,forecast,airQuality,astronomy,alerts,errors` |
+| `--fields <list>` | With `--json`, only these parts: `location,current,hourly,daily,forecast,airQuality,astronomy,alerts,errors,nowcast,nws,models,marine,climate` |
+| `-p, --provider <id>` | Forecast source: `open-meteo` (default, no key), `openweathermap`, `tomorrow`, `pirateweather`, `weatherapi`, `visualcrossing`. Keyed sources read `OWM_API_KEY`, `TOMORROW_API_KEY`, `PIRATEWEATHER_API_KEY`, `WEATHERAPI_KEY` or `VISUALCROSSING_API_KEY` from the environment or `config set keys.<NAME>`; also `config set provider` / `WEATHER_OUTLOOK_PROVIDER`. `OPENAQ_API_KEY` adds OpenAQ station readings. |
 | `-u, --units <metric\|imperial>` | Override units (default: config, else the location's country) |
 | `--temp <C\|F>` · `--wind <kmh\|mph\|ms\|kn\|bft>` · `--precip <mm\|in>` | Per-measure units on top of `--units` (`bft` = Beaufort) |
 | `--hour12` · `--hour24` | Clock style (default: from your locale) |
