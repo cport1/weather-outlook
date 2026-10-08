@@ -20,7 +20,7 @@ export const PROVIDERS: Provider[] = [
   {
     id: "open-meteo",
     name: "Open-Meteo",
-    use: "forecast, air quality, geocoding",
+    use: "forecast, air quality, geocoding, global map fields",
     license: "CC BY 4.0",
     attribution: "Weather data by Open-Meteo.com",
     url: "https://open-meteo.com",
@@ -56,7 +56,7 @@ export const PROVIDERS: Provider[] = [
   {
     id: "swpc",
     name: "NOAA / Space Weather Prediction Center",
-    use: "space weather",
+    use: "space weather, aurora oval",
     license: "Public domain (US Government)",
     attribution: "NOAA Space Weather Prediction Center",
     url: "https://www.swpc.noaa.gov",
@@ -166,16 +166,25 @@ export const PROVIDERS: Provider[] = [
   {
     id: "natural-earth",
     name: "Natural Earth",
-    use: "coastlines and borders (bundled)",
+    use: "coastlines, borders, provinces and cities (bundled)",
     license: "Public domain",
     attribution: "Made with Natural Earth (via world-atlas)",
     url: "https://www.naturalearthdata.com",
     hosts: [],
   },
+  {
+    id: "us-atlas",
+    name: "US Census Bureau (via us-atlas)",
+    use: "US state boundaries (bundled)",
+    license: "Public domain (US Government)",
+    attribution: "US state boundaries from the US Census Bureau cartographic files",
+    url: "https://github.com/topojson/us-atlas",
+    hosts: [],
+  },
 ];
 
 /** Bundled map data is always in use; everything else is recorded as requests are made. */
-const used = new Set<string>(["natural-earth"]);
+const used = new Set<string>(["natural-earth", "us-atlas"]);
 
 export function providerForUrl(url: string): Provider | undefined {
   let host: string;
