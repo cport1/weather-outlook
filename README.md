@@ -37,10 +37,10 @@ wo Denver --once                       # short alias + one-shot summary
 ```
 
 > [!NOTE]
-> The npm package runs on [Bun](https://bun.sh) (the TUI engine needs Bun's FFI).
-> If Bun isn't installed, the `weather-outlook` command tells you how to get it.
-> Standalone binaries that need nothing at all (macOS, Linux glibc/musl, Windows) are attached to each
-> [GitHub release](https://github.com/cport1/weather-outlook/releases) with SHA256 checksums.
+> Works with plain Node — no Bun required. With [Bun](https://bun.sh) installed it runs on Bun directly;
+> otherwise the first run downloads the matching standalone binary from the
+> [GitHub release](https://github.com/cport1/weather-outlook/releases) (SHA256-verified, cached, ~70–100 MB).
+> Set `WEATHER_OUTLOOK_NO_DOWNLOAD=1` to opt out.
 
 ## ✨ What's inside
 
