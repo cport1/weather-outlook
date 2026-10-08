@@ -109,7 +109,7 @@ function Header(props: { state: AppState }) {
             <span
               style={{
                 fg: props.state.view === v ? T.bg : T.dim,
-                bg: props.state.view === v ? T.accent : undefined,
+                bg: props.state.view === v ? T.accent : T.panel,
               }}
             >
               {` ${i() + 1} ${VIEW_LABEL[v]}${v === "alerts" && props.state.report?.alerts.length ? ` (${props.state.report.alerts.length})` : ""} `}
@@ -546,7 +546,7 @@ function AlertsView(props: { state: AppState; report: Report }) {
         >
           <For each={alerts()}>
             {(a, i) => (
-              <text bg={i() === props.state.alertIndex ? T.border : undefined}>
+              <text bg={i() === props.state.alertIndex ? T.border : T.bg}>
                 <span style={{ fg: hexOf(SEVERITY_COLOR[a.severity]) }}> ▲ </span>
                 <span style={{ fg: T.text }}>{a.event.slice(0, 34)}</span>
               </text>

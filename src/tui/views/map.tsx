@@ -1,5 +1,5 @@
 import type { Cell } from "../../render/canvas.ts";
-import { stormCategoryColor } from "../../render/color.ts";
+import { type RGB, stormCategoryColor } from "../../render/color.ts";
 import {
   buildHazardLayers,
   quakeColor,
@@ -7,6 +7,7 @@ import {
   stormLabel,
   stormSprite,
 } from "../../render/hazard-layers.ts";
+import { type LabelRequest, placeLabels } from "../../render/labels.ts";
 import { cellProjector, renderWorldMap } from "../../render/worldmap.ts";
 import type { DrawApi } from "../cell-canvas.ts";
 import type { AppState } from "../store.ts";
@@ -54,21 +55,24 @@ export function MapView(props: { state: AppState }) {
         if (at && g) api.cell(at[0], at[1], g, quakeColor(q));
       }
     }
+    // Your location gets first pick of label space, then storms by strength.
+    const labels: Array<LabelRequest & { color: RGB }> = [];
+    const here = project(loc.lon, loc.lat);
+    if (here) {
+      const blink = !props.state.motion || Math.floor(clock / 500) % 2 === 0;
+      api.cell(here[0], here[1], blink ? "◉" : "○", theme.accent);
+      labels.push({ col: here[0], row: here[1], text: loc.name, color: theme.accent });
+    }
     if (hazards && layers.storms) {
       for (const s of hazards.storms) {
         const at = project(s.lon, s.lat);
         if (!at) continue;
         const color = stormCategoryColor(s.category);
         api.cell(at[0], at[1], props.state.motion ? stormSprite(s, clock) : "@", color);
-        api.text(at[0] + 2, at[1], stormLabel(s), color);
+        labels.push({ col: at[0], row: at[1], text: stormLabel(s), color });
       }
     }
-    const here = project(loc.lon, loc.lat);
-    if (here) {
-      const blink = !props.state.motion || Math.floor(clock / 500) % 2 === 0;
-      api.cell(here[0], here[1], blink ? "◉" : "○", theme.accent);
-      api.text(here[0] + 2, here[1], loc.name, theme.accent);
-    }
+    for (const l of placeLabels(labels, w, h - 1)) api.text(l.x, l.y, l.text, l.color);
 
     // Status + legend line.
     let x = 1;
