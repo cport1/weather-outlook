@@ -59,6 +59,8 @@ export function mergeStorms(...sources: Storm[][]): Storm[] {
 
 export interface HazardOptions {
   hotspots?: boolean;
+  /** NASA FIRMS MAP_KEY for higher-resolution VIIRS hotspots (default: env FIRMS_MAP_KEY). */
+  firmsKey?: string;
   /** Location for the nearby small-quake query. */
   near?: { lat: number; lon: number };
   /** Regional alert polygons for the map (NWS national, Canada, Norway). Default true. */
@@ -101,7 +103,15 @@ export async function fetchHazards(http: HttpClient, opts: HazardOptions = {}): 
     attempt("nifc-perimeters", errors, () => fetchNifcPerimeters(http), []),
     opts.hotspots === false
       ? Promise.resolve([])
-      : attempt("firms", errors, () => fetchFirmsHotspots(http), []),
+      : attempt(
+          "firms",
+          errors,
+          () =>
+            fetchFirmsHotspots(http, opts.firmsKey ?? process.env.FIRMS_MAP_KEY, (message) =>
+              errors.push({ provider: "firms", message }),
+            ),
+          [],
+        ),
     opts.hotspots === false
       ? Promise.resolve([])
       : attempt("cwfis", errors, () => fetchCwfisHotspots(http), []),
