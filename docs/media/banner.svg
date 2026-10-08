@@ -100,8 +100,8 @@
     <rect x="68" y="276" width="420" height="6" rx="3" fill="url(#temp)"/>
     <g class="mono" font-size="20">
       <text x="68" y="330" fill="#7dd3fc">❯</text>
-      <text x="92" y="330" fill="#e6edf3">npx weather-outlook@next</text>
-      <rect x="392" y="314" width="11" height="20" fill="#7dd3fc">
+      <text x="92" y="330" fill="#e6edf3">npx weather-outlook</text>
+      <rect x="332" y="314" width="11" height="20" fill="#7dd3fc">
         <animate attributeName="opacity" values="1;1;0;0" dur="1.1s" repeatCount="indefinite"/>
       </rect>
     </g>
