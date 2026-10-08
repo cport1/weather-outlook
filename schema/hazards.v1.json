@@ -1,0 +1,353 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cport1/weather-outlook/master/schema/hazards.v1.json",
+  "title": "weather-outlook hazards",
+  "description": "Output of `weather-outlook hazards --json`.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "generatedAt": {
+      "type": "string"
+    },
+    "storms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "basin": {
+            "type": "string"
+          },
+          "classification": {
+            "type": "string"
+          },
+          "category": {
+            "type": "number"
+          },
+          "lat": {
+            "type": "number"
+          },
+          "lon": {
+            "type": "number"
+          },
+          "windKt": {
+            "type": "number"
+          },
+          "pressureMb": {
+            "type": "number"
+          },
+          "movement": {
+            "type": "string"
+          },
+          "updated": {
+            "type": "string"
+          },
+          "track": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "time": {
+                  "type": "string"
+                },
+                "lat": {
+                  "type": "number"
+                },
+                "lon": {
+                  "type": "number"
+                },
+                "windKt": {
+                  "type": "number"
+                },
+                "pressureMb": {
+                  "type": "number"
+                },
+                "category": {
+                  "type": "number"
+                },
+                "forecast": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "lat",
+                "lon",
+                "forecast"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "cone": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "name",
+          "classification",
+          "category",
+          "lat",
+          "lon",
+          "track"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "fires": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "lat": {
+            "type": "number"
+          },
+          "lon": {
+            "type": "number"
+          },
+          "acres": {
+            "type": "number"
+          },
+          "containment": {
+            "type": "number"
+          },
+          "frp": {
+            "type": "number"
+          },
+          "confidence": {
+            "type": "string"
+          },
+          "discovered": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "incident",
+              "hotspot"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "lat",
+          "lon",
+          "kind"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "hotspots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "lat": {
+            "type": "number"
+          },
+          "lon": {
+            "type": "number"
+          },
+          "acres": {
+            "type": "number"
+          },
+          "containment": {
+            "type": "number"
+          },
+          "frp": {
+            "type": "number"
+          },
+          "confidence": {
+            "type": "string"
+          },
+          "discovered": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "incident",
+              "hotspot"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "lat",
+          "lon",
+          "kind"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "quakes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "magnitude": {
+            "type": "number"
+          },
+          "place": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string"
+          },
+          "lat": {
+            "type": "number"
+          },
+          "lon": {
+            "type": "number"
+          },
+          "depthKm": {
+            "type": "number"
+          },
+          "tsunami": {
+            "type": "boolean"
+          },
+          "alert": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "magnitude",
+          "place",
+          "time",
+          "lat",
+          "lon",
+          "depthKm",
+          "tsunami"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "space": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "kp": {
+          "type": "number"
+        },
+        "kpTime": {
+          "type": "string"
+        },
+        "solarWindSpeed": {
+          "type": "number"
+        },
+        "bz": {
+          "type": "number"
+        },
+        "scales": {
+          "type": "object",
+          "properties": {
+            "R": {
+              "type": "number"
+            },
+            "S": {
+              "type": "number"
+            },
+            "G": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "provider"
+      ],
+      "additionalProperties": false
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "generatedAt",
+    "storms",
+    "fires",
+    "hotspots",
+    "quakes",
+    "errors"
+  ],
+  "additionalProperties": false
+}
