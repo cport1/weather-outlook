@@ -1,0 +1,61 @@
+{
+  "id": "https://api.weather.gov/points/36.5,-125.5",
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [-125.5, 36.5]
+  },
+  "properties": {
+    "@id": "https://api.weather.gov/points/36.5,-125.5",
+    "@type": "wx:Point",
+    "cwa": "ONP",
+    "type": "marine",
+    "forecastOffice": "https://api.weather.gov/offices/ONP",
+    "gridId": null,
+    "gridX": null,
+    "gridY": null,
+    "forecast": null,
+    "forecastHourly": null,
+    "forecastGridData": null,
+    "observationStations": null,
+    "relativeLocation": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-123.0322294, 37.7272391]
+      },
+      "properties": {
+        "city": "San Francisco",
+        "state": "CA",
+        "distance": {
+          "unitCode": "wmoUnit:m",
+          "value": 249386.38207854
+        },
+        "bearing": {
+          "unitCode": "wmoUnit:degree_(angle)",
+          "value": 238
+        }
+      }
+    },
+    "forecastZone": "https://api.weather.gov/zones/forecast/PZZ930",
+    "timeZone": "America/Los_Angeles",
+    "radarStation": null,
+    "astronomicalData": {
+      "sunrise": "2026-10-08T07:23:24-07:00",
+      "sunset": "2026-10-08T18:55:28-07:00",
+      "transit": "2026-10-08T13:09:26-07:00",
+      "civilTwilightBegin": "2026-10-08T06:57:40-07:00",
+      "civilTwilightEnd": "2026-10-08T19:21:12-07:00",
+      "nauticalTwilightBegin": "2026-10-08T06:27:48-07:00",
+      "nauticalTwilightEnd": "2026-10-08T19:51:04-07:00",
+      "astronomicalTwilightBegin": "2026-10-08T05:57:52-07:00",
+      "astronomicalTwilightEnd": "2026-10-08T20:20:59-07:00"
+    },
+    "nwr": {
+      "transmitter": null,
+      "sameCode": null,
+      "areaBroadcast": null,
+      "pointBroadcast": "https://api.weather.gov/points/36.5,-125.5/radio"
+    }
+  }
+}

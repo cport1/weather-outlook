@@ -1,0 +1,26 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "id": "https://api.weather.gov/stations/SFOC1",
+      "properties": {
+        "stationIdentifier": "SFOC1",
+        "name": "SAN FRANCISCO DOWNTOWN"
+      }
+    },
+    {
+      "id": "https://api.weather.gov/stations/OAMC1",
+      "properties": {
+        "stationIdentifier": "OAMC1",
+        "name": "Oakland Museum"
+      }
+    },
+    {
+      "id": "https://api.weather.gov/stations/D3169",
+      "properties": {
+        "stationIdentifier": "D3169",
+        "name": "DW3169 Oakland"
+      }
+    }
+  ]
+}
