@@ -1,4 +1,5 @@
 import { fromWmo } from "../domain/conditions.ts";
+import type { AqHourlyPoint } from "../domain/details.ts";
 import type { AirQuality, DailyPoint, Forecast, HourlyPoint, Location } from "../domain/types.ts";
 import type { HttpClient } from "../util/http.ts";
 
@@ -185,7 +186,9 @@ export async function lookupTimezone(
 }
 
 interface AqResponse {
+  utc_offset_seconds?: number;
   current?: Record<string, number | string | null>;
+  hourly?: Series & { time: string[] };
 }
 
 const POLLEN = [
@@ -213,8 +216,15 @@ export async function fetchAirQuality(
       "nitrogen_dioxide",
       ...POLLEN,
     ].join(","),
+    hourly: "us_aqi,european_aqi,pm2_5",
+    forecast_days: "4",
+    timezone: "auto",
   });
   const raw = await http.json<AqResponse>(`${AQ_URL}?${params}`, { ttlMs: 30 * 60_000 });
+  return parseAirQuality(raw);
+}
+
+export function parseAirQuality(raw: AqResponse): AirQuality {
   const c = raw.current ?? {};
   const pollen: Record<string, number> = {};
   for (const p of POLLEN) {
@@ -229,8 +239,25 @@ export async function fetchAirQuality(
     pm10: num(c.pm10),
     ozone: num(c.ozone),
     no2: num(c.nitrogen_dioxide),
+    // Open-Meteo only models pollen over Europe; elsewhere every value is null.
     pollen: Object.keys(pollen).length ? pollen : undefined,
+    hourly: parseAqHourly(raw),
   };
+}
+
+function parseAqHourly(raw: AqResponse): AqHourlyPoint[] | undefined {
+  const h = raw.hourly;
+  if (!h?.time.length) return undefined;
+  const off = raw.utc_offset_seconds ?? 0;
+  const points = h.time.map((t, i) => ({
+    time: withOffset(t, off),
+    usAqi: at(h, "us_aqi", i),
+    europeanAqi: at(h, "european_aqi", i),
+    pm2_5: at(h, "pm2_5", i),
+  }));
+  return points.some((p) => p.usAqi !== undefined || p.europeanAqi !== undefined)
+    ? points
+    : undefined;
 }
 
 interface GeocodeResponse {

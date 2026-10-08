@@ -1,0 +1,55 @@
+{
+  "meta": { "name": "openaq-api", "website": "/", "page": 1, "limit": 5, "found": 2 },
+  "results": [
+    {
+      "id": 2178,
+      "name": "Del Norte",
+      "locality": "Albuquerque",
+      "timezone": "America/Denver",
+      "country": { "id": 155, "code": "US", "name": "United States" },
+      "isMobile": false,
+      "isMonitor": true,
+      "sensors": [
+        {
+          "id": 3917,
+          "name": "o3 ppm",
+          "parameter": { "id": 10, "name": "o3", "units": "ppm", "displayName": "O₃" }
+        },
+        {
+          "id": 3918,
+          "name": "pm25 µg/m³",
+          "parameter": { "id": 2, "name": "pm25", "units": "µg/m³", "displayName": "PM2.5" }
+        },
+        {
+          "id": 3919,
+          "name": "no2 ppm",
+          "parameter": { "id": 7, "name": "no2", "units": "ppm", "displayName": "NO₂" }
+        }
+      ],
+      "coordinates": { "latitude": 35.1353, "longitude": -106.584702 },
+      "distance": 4210.5,
+      "datetimeFirst": { "utc": "2016-03-06T19:00:00Z", "local": "2016-03-06T12:00:00-07:00" },
+      "datetimeLast": { "utc": "2024-04-12T15:00:00Z", "local": "2024-04-12T09:00:00-06:00" }
+    },
+    {
+      "id": 2179,
+      "name": "South Valley",
+      "locality": "Albuquerque",
+      "timezone": "America/Denver",
+      "country": { "id": 155, "code": "US", "name": "United States" },
+      "isMobile": false,
+      "isMonitor": true,
+      "sensors": [
+        {
+          "id": 3920,
+          "name": "pm10 µg/m³",
+          "parameter": { "id": 1, "name": "pm10", "units": "µg/m³", "displayName": "PM10" }
+        }
+      ],
+      "coordinates": { "latitude": 35.0163, "longitude": -106.6574 },
+      "distance": 12880.1,
+      "datetimeFirst": { "utc": "2016-03-06T19:00:00Z", "local": "2016-03-06T12:00:00-07:00" },
+      "datetimeLast": { "utc": "2024-04-12T15:00:00Z", "local": "2024-04-12T09:00:00-06:00" }
+    }
+  ]
+}
