@@ -1,4 +1,4 @@
-import { PNG } from "pngjs";
+import { NativeImage } from "@opentui/core";
 import type { RGB } from "../render/color.ts";
 import type { HttpClient } from "../util/http.ts";
 
@@ -27,9 +27,16 @@ interface Decoded {
   data: Uint8Array;
 }
 
+/** Decode PNG → straight RGBA using OpenTUI's native (Zig) image codec. */
 function decodePng(bytes: Uint8Array): Decoded {
-  const png = PNG.sync.read(Buffer.from(bytes));
-  return { width: png.width, height: png.height, data: new Uint8Array(png.data) };
+  const img = NativeImage.decode(bytes);
+  try {
+    const data = new Uint8Array(img.width * img.height * 4);
+    img.copyTo(data, { format: "rgba8" });
+    return { width: img.width, height: img.height, data };
+  } finally {
+    img.dispose();
+  }
 }
 
 function pixel(img: Decoded, x: number, y: number): RGB | undefined {
