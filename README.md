@@ -60,7 +60,7 @@ wo Denver --once                       # short alias + one-shot summary
     </td>
     <td width="50%" valign="top">
       <h3>📡 Radar — the last two hours, looping</h3>
-      13 RainViewer frames animated over a coastline map, with play/pause and frame stepping. Kitty / Sixel terminals get <b>real pixels</b>; everyone else gets crisp half-block cells.
+      A looping two-hour radar — sharper NEXRAD inside the US, RainViewer everywhere else — with an optional satellite layer (<kbd>v</kbd>). Kitty / Sixel terminals get <b>real pixels</b>; everyone else gets crisp half-block cells.
       <br><br><img src="docs/media/view-radar.png" alt="Radar view">
     </td>
   </tr>
@@ -90,13 +90,25 @@ wo Denver --once                       # short alias + one-shot summary
   </tr>
   <tr>
     <td width="50%" valign="top">
+      <h3>🔎 Inspect anything on the map</h3>
+      Press <kbd>i</kbd> or click a storm, fire, quake, volcano or alert for its details — <kbd>Tab</kbd> cycles, <kbd>Enter</kbd> jumps to that spot's forecast. <kbd>g</kbd> flies anywhere; weather fields, night shading and the aurora oval are a keypress away.
+      <br><br><img src="docs/media/view-inspect.png" alt="Map inspect card for a hurricane">
+    </td>
+    <td width="50%" valign="top">
+      <h3>📰 Details — for weather nerds</h3>
+      NWS observations, forecast and the forecaster's discussion; GFS/ECMWF/ICON model comparison with ensemble spread; marine & tides; hourly air quality & pollen; and today vs the 30-year normal.
+      <br><br><img src="docs/media/view-details.png" alt="Details view with NWS forecast discussion">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
       <h3>⚠️ Alerts — official warnings</h3>
       Active NWS alerts for your location, sorted by severity, with the full text and safety instructions.
       <br><br><img src="docs/media/view-alerts.png" alt="Alerts view">
     </td>
     <td width="50%" valign="top">
       <h3>⌨️ Keyboard-first</h3>
-      Seven views on <kbd>1</kbd>–<kbd>7</kbd>, vim-style map panning, <kbd>?</kbd> for help anywhere, auto-refresh every 10 minutes, and it respects <code>NO_COLOR</code> and reduced motion.
+      Eight views on <kbd>1</kbd>–<kbd>8</kbd> (or click the tabs), <kbd>/</kbd> to search places, four themes, mouse pan and zoom, <kbd>?</kbd> for help anywhere, and it respects <code>NO_COLOR</code> and reduced motion.
       <br><br><img src="docs/media/view-help.png" alt="Help overlay">
     </td>
   </tr>
