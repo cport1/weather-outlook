@@ -72,5 +72,14 @@ export async function runDashboard(opts: DashboardOptions): Promise<void> {
   );
   void refresh();
   void refreshHazards();
+  // Stale-while-revalidate: the first paint comes from cache; re-read once fresh data lands.
+  let pending: ReturnType<typeof setTimeout> | undefined;
+  opts.http.onBackgroundUpdate?.(() => {
+    clearTimeout(pending);
+    pending = setTimeout(() => {
+      void refresh();
+      void refreshHazards();
+    }, 250);
+  });
   setInterval(() => void refreshHazards(), 15 * 60_000);
 }
