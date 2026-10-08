@@ -2,16 +2,19 @@
 // Usage: bun scripts/snapshot.tsx [place] [width] [height]
 import { testRender } from "@opentui/solid";
 import envPaths from "env-paths";
+import { trackProviders } from "../src/attribution.ts";
 import { DiskCache } from "../src/cache/disk-cache.ts";
 import { resolveLocation } from "../src/providers/location.ts";
 import { fetchHazards } from "../src/hazards.ts";
 import { buildReport } from "../src/report.ts";
 import { App } from "../src/tui/app.tsx";
 import { createAppStore, VIEWS } from "../src/tui/store.ts";
+import { toggleCredits } from "../src/tui/views/credits.tsx";
+import { toggleSatellite } from "../src/tui/views/radar.tsx";
 import { createHttpClient } from "../src/util/http.ts";
 
 const [place = "Denver", w = "120", h = "36"] = process.argv.slice(2);
-const http = createHttpClient(new DiskCache(envPaths("weather-outlook", { suffix: "" }).cache));
+const http = trackProviders(createHttpClient(new DiskCache(envPaths("weather-outlook", { suffix: "" }).cache)));
 const location = await resolveLocation(http, place);
 const report = await buildReport(http, location, "imperial");
 const [state, setState] = createAppStore({ location, units: "imperial", motion: Boolean(process.env.MOTION), simulate: process.env.SIMULATE });
@@ -20,6 +23,9 @@ const t = await testRender(() => <App http={http} state={state} setState={setSta
   width: Number(w),
   height: Number(h),
 });
+// SATELLITE=1 turns on the radar satellite base; CREDITS=1 opens the credits overlay.
+if (process.env.SATELLITE) toggleSatellite();
+if (process.env.CREDITS) toggleCredits();
 const only = process.env.VIEW;
 const htmlOut = process.env.HTML;
 const pages: string[] = [];

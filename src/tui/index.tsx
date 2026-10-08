@@ -14,9 +14,13 @@ export interface DashboardOptions {
   units: Units;
   motion: boolean;
   simulate?: string;
+  /** "off" forces text cells and skips Kitty/Sixel probing (VHS/ttyd falsely advertise Sixel). */
+  images?: "auto" | "off";
 }
 
 export async function runDashboard(opts: DashboardOptions): Promise<void> {
+  // OpenTUI reads this when it probes the terminal, so it must be set before the renderer exists.
+  if (opts.images === "off") process.env.OPENTUI_GRAPHICS = "false";
   const renderer = await createCliRenderer({
     exitOnCtrlC: false,
     targetFps: 30,
@@ -28,6 +32,7 @@ export async function runDashboard(opts: DashboardOptions): Promise<void> {
     motion: opts.motion,
     simulate: opts.simulate,
   });
+  if (opts.images === "off") setState("radarMode", "cells");
 
   let inflight = false;
   const refresh = async (force = false) => {

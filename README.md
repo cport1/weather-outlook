@@ -39,7 +39,8 @@ wo Denver --once                       # short alias + one-shot summary
 > [!NOTE]
 > v2 is in alpha on the `next` tag and runs on [Bun](https://bun.sh) (the TUI engine needs Bun's FFI).
 > If Bun isn't installed, the `weather-outlook` command tells you how to get it.
-> Standalone binaries that need nothing at all are [on the roadmap](https://github.com/cport1/weather-outlook/milestone/9).
+> Standalone binaries that need nothing at all (macOS, Linux glibc/musl, Windows) are attached to each
+> [GitHub release](https://github.com/cport1/weather-outlook/releases) with SHA256 checksums.
 
 ## ✨ What's inside
 
@@ -138,6 +139,8 @@ weather-outlook cache <clear|path|prune>
 | `--no-motion` | Disable animations (also `WEATHER_OUTLOOK_REDUCE_MOTION=1`) |
 | `--no-color` | Disable colors (also respects `NO_COLOR`) |
 | `-r, --refresh` | Bypass the response cache |
+| `--images <auto\|off>` | Radar as Kitty/Sixel images when supported, or `off` for text cells (also `WEATHER_OUTLOOK_IMAGES=off`) |
+| `about` | Version, data providers, licenses and attribution |
 
 ### Keys
 
@@ -153,6 +156,8 @@ weather-outlook cache <clear|path|prune>
 | <kbd>S</kbd> <kbd>F</kbd> <kbd>H</kbd> <kbd>Q</kbd> <kbd>A</kbd> | Map layers: storms · fires · hotspots · quakes · alerts |
 | <kbd>Space</kbd> · <kbd>,</kbd> <kbd>.</kbd> | Radar play/pause · step frames |
 | <kbd>i</kbd> | Radar: real image ↔ text cells |
+| <kbd>v</kbd> | Radar: satellite base layer (GOES / Himawari / VIIRS via NASA GIBS) |
+| <kbd>!</kbd> | Data credits for this session |
 | <kbd>?</kbd> · <kbd>q</kbd> | Help · quit |
 
 ### JSON for scripts
@@ -218,7 +223,8 @@ Everything works out of the box — no accounts, no keys. Responses are cached o
 | Satellite fire hotspots | [NASA FIRMS](https://firms.modaps.eosdis.nasa.gov) (MODIS, 24h) | 🌐 Global |
 | Earthquakes | [USGS](https://earthquake.usgs.gov/earthquakes/feed/) | 🌐 Global |
 | Space weather & aurora | [NOAA SWPC](https://www.swpc.noaa.gov) | 🌐 Global |
-| Radar | [RainViewer](https://www.rainviewer.com/api.html) · [IEM NEXRAD](https://mesonet.agron.iastate.edu) | 🌐 Global · 🇺🇸 US |
+| Radar | [RainViewer](https://www.rainviewer.com/api.html) · [IEM NEXRAD](https://mesonet.agron.iastate.edu) (inside the US) | 🌐 Global · 🇺🇸 US |
+| Satellite | [NASA GIBS](https://earthdata.nasa.gov/gibs): GOES-East/West GeoColor, Himawari IR, VIIRS | 🌐 Global |
 | Base map | [Natural Earth](https://www.naturalearthdata.com) via world-atlas | Public domain |
 | Sun & moon | Computed locally with [SunCalc](https://github.com/mourner/suncalc) | — |
 
@@ -226,7 +232,7 @@ Planned next: MeteoAlarm & Environment Canada alerts, SPC outlooks, tides & buoy
 
 ## 🖥️ Terminal support
 
-Any modern truecolor terminal whose font includes braille glyphs will look great. Terminals that speak the **Kitty graphics** or **Sixel** protocols render radar as real images — detected automatically by querying the terminal, never guessed from environment variables. Fewer colors, no unicode, or `NO_COLOR` all degrade gracefully.
+Any modern truecolor terminal whose font includes braille glyphs will look great. Terminals that speak the **Kitty graphics** or **Sixel** protocols render radar as real images — detected automatically by querying the terminal, never guessed from environment variables. Recorders like VHS/ttyd advertise Sixel without rendering it; pass `--images off` (or set `WEATHER_OUTLOOK_IMAGES=off`) to force text cells. Fewer colors, no unicode, or `NO_COLOR` all degrade gracefully.
 
 ## 🛠️ Development
 
