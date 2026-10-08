@@ -153,9 +153,14 @@ weather-outlook cache <clear|path|prune>
 | <kbd>←↑↓→</kbd> / <kbd>h j k l</kbd> | Pan the map |
 | <kbd>+</kbd> / <kbd>-</kbd> | Zoom the map or radar |
 | <kbd>c</kbd> · <kbd>0</kbd> | Center on your location · reset the map |
+| drag · wheel | Pan the map · zoom around the pointer |
 | <kbd>S</kbd> <kbd>F</kbd> <kbd>H</kbd> <kbd>Q</kbd> <kbd>A</kbd> | Map layers: storms · fires · hotspots · quakes · alerts |
+| <kbd>T</kbd> <kbd>W</kbd> <kbd>P</kbd> <kbd>C</kbd> | Map fields (one at a time, with legend): temperature · wind · precipitation · clouds |
+| <kbd>N</kbd> <kbd>O</kbd> <kbd>L</kbd> | Map overlays: night shading · aurora oval · city names |
+| <kbd>g</kbd> | Map: type a place and fly there |
+| <kbd>i</kbd> / click | Map: inspect hazards — <kbd>Tab</kbd> next, <kbd>Enter</kbd> open its forecast, <kbd>Esc</kbd> exit |
 | <kbd>Space</kbd> · <kbd>,</kbd> <kbd>.</kbd> | Radar play/pause · step frames |
-| <kbd>i</kbd> | Radar: real image ↔ text cells |
+| <kbd>i</kbd> (radar) | Radar: real image ↔ text cells |
 | <kbd>v</kbd> | Radar: satellite base layer (GOES / Himawari / VIIRS via NASA GIBS) |
 | <kbd>!</kbd> | Data credits for this session |
 | <kbd>?</kbd> · <kbd>q</kbd> | Help · quit |
