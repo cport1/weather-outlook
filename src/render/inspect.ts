@@ -1,12 +1,18 @@
 import type { Alert, Hazards } from "../domain/types.ts";
 import { hex, type RGB, stormCategoryColor } from "./color.ts";
-import { type LayerToggles, quakeColor, SEVERITY_COLOR, stormLabel } from "./hazard-layers.ts";
+import {
+  eventColor,
+  type LayerToggles,
+  quakeColor,
+  SEVERITY_COLOR,
+  stormLabel,
+} from "./hazard-layers.ts";
 
 /** A hazard the map can select and describe (inspect mode). */
 export interface Inspectable {
   /** Stable across refreshes, e.g. "storm:al092026". */
   key: string;
-  kind: "storm" | "fire" | "quake" | "alert";
+  kind: "storm" | "fire" | "quake" | "alert" | "event";
   lon: number;
   lat: number;
   title: string;
@@ -125,8 +131,30 @@ export function inspectables(
         color: hex("#ff7043"),
         lines: [
           `${Math.round(f.acres ?? 0).toLocaleString()} acres`,
-          f.containment !== undefined ? `${Math.round(f.containment)}% contained` : "",
+          f.containment !== undefined
+            ? `${Math.round(f.containment)}% contained`
+            : (f.status ?? ""),
           ago(f.discovered, now) ? `discovered ${ago(f.discovered, now)}` : "",
+        ].filter(Boolean),
+      });
+    }
+  }
+  if (hazards && toggles.events) {
+    for (const e of hazards.events ?? []) {
+      const place =
+        e.title.replace(/^(Flood|Drought|Forest fires?) in /i, "").split(",")[0] ?? e.title;
+      out.push({
+        key: `event:${e.id}`,
+        kind: "event",
+        lon: e.lon,
+        lat: e.lat,
+        title: e.kind === "volcano" && !/volcano/i.test(e.title) ? `${e.title} volcano` : e.title,
+        place: place.replace(/\s+Volcano$/i, "").trim() || e.title,
+        color: eventColor(e),
+        lines: [
+          [e.level ? `${e.level} alert` : "", e.detail ?? ""].filter(Boolean).join(" · "),
+          `${e.kind} · ${e.provider}`,
+          ago(e.updated, now) ? `updated ${ago(e.updated, now)}` : "",
         ].filter(Boolean),
       });
     }

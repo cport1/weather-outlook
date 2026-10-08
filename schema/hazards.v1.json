@@ -163,6 +163,12 @@
               "incident",
               "hotspot"
             ]
+          },
+          "status": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
           }
         },
         "required": [
@@ -216,6 +222,12 @@
               "incident",
               "hotspot"
             ]
+          },
+          "status": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
           }
         },
         "required": [
@@ -319,6 +331,313 @@
         "provider"
       ],
       "additionalProperties": false
+    },
+    "alerts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "event": {
+            "type": "string"
+          },
+          "headline": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "instruction": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "extreme",
+              "severe",
+              "moderate",
+              "minor",
+              "unknown"
+            ]
+          },
+          "urgency": {
+            "type": "string"
+          },
+          "areas": {
+            "type": "string"
+          },
+          "onset": {
+            "type": "string"
+          },
+          "expires": {
+            "type": "string"
+          },
+          "polygon": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "event",
+          "severity"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "nearbyQuakes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "magnitude": {
+            "type": "number"
+          },
+          "place": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string"
+          },
+          "lat": {
+            "type": "number"
+          },
+          "lon": {
+            "type": "number"
+          },
+          "depthKm": {
+            "type": "number"
+          },
+          "tsunami": {
+            "type": "boolean"
+          },
+          "alert": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "magnitude",
+          "place",
+          "time",
+          "lat",
+          "lon",
+          "depthKm",
+          "tsunami"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "perimeters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "acres": {
+            "type": "number"
+          },
+          "rings": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "rings"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "volcano",
+              "flood",
+              "drought",
+              "landslide",
+              "dust",
+              "snow",
+              "heat",
+              "other"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "lat": {
+            "type": "number"
+          },
+          "lon": {
+            "type": "number"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "orange",
+              "red"
+            ]
+          },
+          "detail": {
+            "type": "string"
+          },
+          "updated": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "kind",
+          "title",
+          "lat",
+          "lon"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "outlooks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "product": {
+            "type": "string",
+            "enum": [
+              "categorical",
+              "tornado",
+              "wind",
+              "hail",
+              "probabilistic",
+              "fire",
+              "rainfall"
+            ]
+          },
+          "day": {
+            "type": "number"
+          },
+          "label": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "level": {
+            "type": "number"
+          },
+          "fill": {
+            "type": "string"
+          },
+          "valid": {
+            "type": "string"
+          },
+          "expires": {
+            "type": "string"
+          },
+          "rings": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              }
+            }
+          }
+        },
+        "required": [
+          "product",
+          "day",
+          "label",
+          "name",
+          "level",
+          "rings"
+        ],
+        "additionalProperties": false
+      }
     },
     "errors": {
       "type": "array",

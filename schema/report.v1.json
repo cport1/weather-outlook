@@ -448,6 +448,55 @@
         "additionalProperties": false
       }
     },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "product": {
+            "type": "string",
+            "enum": [
+              "categorical",
+              "tornado",
+              "wind",
+              "hail",
+              "probabilistic",
+              "fire",
+              "rainfall"
+            ]
+          },
+          "day": {
+            "type": "number"
+          },
+          "label": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "level": {
+            "type": "number"
+          },
+          "fill": {
+            "type": "string"
+          },
+          "valid": {
+            "type": "string"
+          },
+          "expires": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "product",
+          "day",
+          "label",
+          "name",
+          "level"
+        ],
+        "additionalProperties": false
+      }
+    },
     "errors": {
       "type": "array",
       "items": {

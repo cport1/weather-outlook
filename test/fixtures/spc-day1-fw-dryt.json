@@ -1,0 +1,23 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "GeometryCollection", "geometries": [] },
+      "properties": {
+        "DN": 0,
+        "VALID": "202610071700",
+        "EXPIRE": "202610081200",
+        "ISSUE": "202610071626",
+        "VALID_ISO": "2026-10-07T17:00:00+00:00",
+        "EXPIRE_ISO": "2026-10-08T12:00:00+00:00",
+        "ISSUE_ISO": "2026-10-07T16:26:00+00:00",
+        "FORECASTER": "Elizalde-Garcia",
+        "LABEL": "No Areas",
+        "LABEL2": "",
+        "stroke": "",
+        "fill": ""
+      }
+    }
+  ]
+}
