@@ -18,6 +18,7 @@ import type { Cell } from "../../render/canvas.ts";
 import { hex, type RGB, stormCategoryColor } from "../../render/color.ts";
 import { nightShader } from "../../render/daynight.ts";
 import { auroraShader, FIELD_LABEL, fieldLayer, fieldLegend } from "../../render/fields.ts";
+import { fireFlicker } from "../../render/flicker.ts";
 import {
   buildHazardLayers,
   quakeColor,
@@ -430,6 +431,16 @@ export function MapView(props: Props) {
         const g = props.state.motion ? quakePulse(q, clock) : undefined;
         const at = g && project(q.lon, q.lat);
         if (at && g) api.cell(at[0], at[1], g, quakeColor(q));
+      }
+    }
+    if (hazards && layers.fires && props.state.motion) {
+      // Same size cut as the static layer, so only fires already on the map flicker.
+      const minAcres = cam.zoom >= 4 ? 100 : cam.zoom >= 2 ? 1_000 : 10_000;
+      for (const f of hazards.fires) {
+        if ((f.acres ?? 0) < minAcres) continue;
+        const s = fireFlicker(f, clock);
+        const at = s && project(f.lon, f.lat);
+        if (at && s) api.cell(at[0], at[1], s.glyph, s.color);
       }
     }
     if (hazards && layers.storms) {
