@@ -186,6 +186,9 @@
               "uvIndex": {
                 "type": "number"
               },
+              "pressure": {
+                "type": "number"
+              },
               "condition": {
                 "type": "string",
                 "enum": [
