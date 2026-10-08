@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.0-alpha.3](https://github.com/cport1/weather-outlook/compare/v2.0.0-alpha.2...v2.0.0-alpha.3) (2026-10-08)
+
+
+### Bug Fixes
+
+* **test:** keep the boot-splash snapshot independent of the package version ([580b872](https://github.com/cport1/weather-outlook/commit/580b8724e548b2e01e3b6a7093db4c318740fcf6))
+
 ## [2.0.0-alpha.2](https://github.com/cport1/weather-outlook/compare/v2.0.0-alpha.1...v2.0.0-alpha.2) (2026-10-08)
 
 
