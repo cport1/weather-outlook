@@ -22,12 +22,12 @@ import {
 import type { Location } from "./domain/types.ts";
 import { fetchHazards } from "./hazards.ts";
 import { describePlace, type ResolveOptions, resolveLocation } from "./providers/location.ts";
+import { PROVIDER_IDS, resolveProvider } from "./providers/registry.ts";
 import { stripAnsi } from "./render/ansi.ts";
 import { formatNeeds, renderFormat } from "./render/format.ts";
 import { renderHazardsOneShot } from "./render/hazards-oneshot.ts";
 import { renderCompact, renderOneShot } from "./render/oneshot.ts";
 import { defaultUnits, setUnitOverrides, type UnitOverrides } from "./render/units.ts";
-import { PROVIDER_IDS, resolveProvider } from "./providers/registry.ts";
 import { buildReport, fieldsNeeds, parseFields, projectReport } from "./report.ts";
 import { createHttpClient, type HttpClientOptions } from "./util/http.ts";
 
@@ -325,7 +325,10 @@ const main = defineCommand({
     const cfg = await effectiveConfig();
     setUnitOverrides(unitOverrides(cfg, args));
     // Env vars win over config `keys`, as with getKey().
-    const provider = resolveProvider(args.provider ?? cfg.provider, { ...cfg.keys, ...process.env });
+    const provider = resolveProvider(args.provider ?? cfg.provider, {
+      ...cfg.keys,
+      ...process.env,
+    });
     const caps = detectCapabilities({
       color: args.color ? undefined : false,
       motion: args.motion ? undefined : false,

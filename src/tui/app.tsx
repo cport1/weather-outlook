@@ -11,6 +11,7 @@ import { type AppState, VIEW_LABEL, VIEWS, type View } from "./store.ts";
 import { cycleTheme, isMono, T } from "./theme.ts";
 import { Credits, closeCredits, toggleCredits } from "./views/credits.tsx";
 import { DailyView } from "./views/daily.tsx";
+import { DetailsView } from "./views/details.tsx";
 import { HazardsView } from "./views/hazards.tsx";
 import { HOURS, HourlyView, SERIES_KEYS } from "./views/hourly.tsx";
 import { type MapControls, MapView } from "./views/map.tsx";
@@ -37,6 +38,7 @@ const SHORT_LABEL: Partial<Record<View, string>> = {
   map: "Map",
   hazards: "Haz",
   alerts: "Alrt",
+  details: "More",
 };
 
 const samePlaceAs = (a: Location, b: Location) =>
@@ -117,8 +119,10 @@ function Footer(props: { state: AppState }) {
         return "←→ cursor  t/p/w/h/v series";
       case "daily":
         return "↑↓ select day";
+      case "details":
+        return "←→ panel  ↑↓ scroll discussion";
       default:
-        return "tab/1-7 views";
+        return `tab/1-${VIEWS.length} views`;
     }
   };
   return (
@@ -219,7 +223,8 @@ function AlertsView(props: { state: AppState; report: Report }) {
 // ─── Help overlay ──────────────────────────────────────────────────────────
 
 const HELP: Array<[string, string]> = [
-  ["1-7 / tab", "switch view (or click a tab)"],
+  [`1-${VIEWS.length} / tab`, "switch view (or click a tab)"],
+  ["← → [ ]", "details: switch panel (↑↓ scroll discussion)"],
   ["/", "search for a location"],
   ["s", "cycle saved & recent locations"],
   ["← →", "hourly: move chart cursor"],
@@ -469,6 +474,9 @@ export function App(props: Props): JSX.Element {
               </Match>
               <Match when={state.view === "alerts"}>
                 <AlertsView state={state} report={report()} />
+              </Match>
+              <Match when={state.view === "details"}>
+                <DetailsView state={state} report={report()} />
               </Match>
             </Switch>
           )}

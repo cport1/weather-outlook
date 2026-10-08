@@ -6,6 +6,7 @@ import { cellsToAnsi, padEnd, paint, truncateAnsi } from "./ansi.ts";
 import { conditionArt } from "./art.ts";
 import { lineChart, sparkline } from "./charts.ts";
 import { aqiScale, hex, type RGB, scale, temperatureScale } from "./color.ts";
+import { renderDetailsOneShot } from "./details.ts";
 import {
   clockTime,
   compass,
@@ -17,7 +18,6 @@ import {
   temp,
   windArrow,
 } from "./units.ts";
-import { renderDetailsOneShot } from "./details.ts";
 
 const DIM = hex("#7a8794");
 const TEXT = hex("#e6edf3");
