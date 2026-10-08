@@ -32,6 +32,8 @@ export interface FetchOptions {
 
 export interface HttpClient {
   text(url: string, opts: FetchOptions): Promise<string>;
+  /** Binary body (e.g. PNG tiles). Cached as base64. */
+  bytes(url: string, opts: FetchOptions): Promise<Uint8Array>;
   json<T = unknown>(url: string, opts: FetchOptions): Promise<T>;
 }
 
@@ -47,6 +49,7 @@ export function createHttpClient(
     url: string,
     opts: FetchOptions,
     etag: string | undefined,
+    binary: boolean,
   ): Promise<{ status: number; body: string; etag?: string }> {
     const retries = opts.retries ?? 2;
     let lastErr: unknown;
@@ -73,7 +76,7 @@ export function createHttpClient(
         }
         return {
           status: res.status,
-          body: await res.text(),
+          body: binary ? Buffer.from(await res.arrayBuffer()).toString("base64") : await res.text(),
           etag: res.headers.get("etag") ?? undefined,
         };
       } catch (err) {
@@ -85,16 +88,17 @@ export function createHttpClient(
     throw lastErr;
   }
 
-  async function load(url: string, opts: FetchOptions): Promise<string> {
-    const cached = cache && !opts.refresh ? await cache.get(url) : undefined;
+  async function load(url: string, opts: FetchOptions, binary: boolean): Promise<string> {
+    const cacheKey = binary ? `b:${url}` : url;
+    const cached = cache && !opts.refresh ? await cache.get(cacheKey) : undefined;
     if (cached?.fresh) return cached.entry.body;
     try {
-      const res = await fetchWithRetry(url, opts, cached?.entry.etag);
+      const res = await fetchWithRetry(url, opts, cached?.entry.etag, binary);
       if (res.status === 304 && cached) {
-        await cache?.touch(url, cached.entry);
+        await cache?.touch(cacheKey, cached.entry);
         return cached.entry.body;
       }
-      await cache?.set(url, res.body, opts.ttlMs, res.etag);
+      await cache?.set(cacheKey, res.body, opts.ttlMs, res.etag);
       return res.body;
     } catch (err) {
       if (cached && opts.staleIfError !== false) return cached.entry.body;
@@ -102,16 +106,22 @@ export function createHttpClient(
     }
   }
 
-  function text(url: string, opts: FetchOptions): Promise<string> {
-    const existing = inflight.get(url);
+  function dedupe(url: string, opts: FetchOptions, binary: boolean): Promise<string> {
+    const key = `${binary ? "b:" : ""}${url}`;
+    const existing = inflight.get(key);
     if (existing) return existing;
-    const p = load(url, opts).finally(() => inflight.delete(url));
-    inflight.set(url, p);
+    const p = load(url, opts, binary).finally(() => inflight.delete(key));
+    inflight.set(key, p);
     return p;
   }
 
+  const text = (url: string, opts: FetchOptions) => dedupe(url, opts, false);
+
   return {
     text,
+    async bytes(url, opts) {
+      return new Uint8Array(Buffer.from(await dedupe(url, opts, true), "base64"));
+    },
     async json<T>(url: string, opts: FetchOptions): Promise<T> {
       return JSON.parse(await text(url, opts)) as T;
     },

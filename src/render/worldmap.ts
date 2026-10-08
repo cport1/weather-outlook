@@ -3,6 +3,7 @@ import type { FeatureCollection, MultiLineString } from "geojson";
 import { feature, mesh } from "topojson-client";
 import type { GeometryCollection, Topology } from "topojson-specification";
 import countries50 from "world-atlas/countries-50m.json" with { type: "json" };
+import land50 from "world-atlas/land-50m.json" with { type: "json" };
 import land110 from "world-atlas/land-110m.json" with { type: "json" };
 import { type Cell, composite, HalfBlockField, PixelCanvas } from "./canvas.ts";
 import { hex, type RGB } from "./color.ts";
@@ -55,12 +56,20 @@ export const DEFAULT_THEME: MapTheme = {
 
 const landTopo = land110 as unknown as Topology<{ land: GeometryCollection }>;
 const countriesTopo = countries50 as unknown as Topology<{ countries: GeometryCollection }>;
+const land50Topo = land50 as unknown as Topology<{ land: GeometryCollection }>;
 let landFeature: FeatureCollection | undefined;
+let land50Feature: FeatureCollection | undefined;
 let borderMesh: MultiLineString | undefined;
 
 function landGeo(): FeatureCollection {
   landFeature ??= feature(landTopo, landTopo.objects.land) as unknown as FeatureCollection;
   return landFeature;
+}
+
+/** 50m land outlines for zoomed-in views (coast detail). */
+function land50Geo(): FeatureCollection {
+  land50Feature ??= feature(land50Topo, land50Topo.objects.land) as unknown as FeatureCollection;
+  return land50Feature;
 }
 
 function borders(): MultiLineString {
@@ -123,6 +132,7 @@ function fillLand(
   proj: GeoProjection,
   theme: MapTheme,
   overlay?: MapLayers["field"],
+  fine = false,
 ): void {
   const scaleX = 2; // braille px per half-block px horizontally
   const scaleY = 2; // braille px per half-block px vertically (4 per cell vs 2 per cell)
@@ -142,7 +152,7 @@ function fillLand(
       ) {
         continue;
       }
-      const isLand = pointInLand(ll[0], ll[1]);
+      const isLand = fine ? pointInLandFine(ll[0], ll[1]) : pointInLand(ll[0], ll[1]);
       const over = overlay?.(ll[0], ll[1]);
       field.set(x, y, over ?? (isLand ? theme.land : theme.ocean));
     }
@@ -186,6 +196,71 @@ function buildLandGrid(): Uint8Array {
     }
   }
   return grid;
+}
+
+// --- fine point-in-land: 0.05° rows from 50m data, built lazily per row ---
+const FINE_RES = 0.05;
+const FINE_W = Math.round(360 / FINE_RES);
+let fineEdges: Float64Array | undefined; // [ax, ay, bx, by] per edge, sorted by min lat
+let fineMinLat: Float64Array | undefined;
+const fineRows = new Map<number, Uint8Array>();
+
+function buildFineEdges(): void {
+  const edges: number[][] = [];
+  for (const f of land50Geo().features) {
+    const g = f.geometry;
+    const polys =
+      g.type === "Polygon" ? [g.coordinates] : g.type === "MultiPolygon" ? g.coordinates : [];
+    for (const poly of polys) {
+      for (const ring of poly) {
+        for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+          const a = ring[i];
+          const b = ring[j];
+          if (a && b && a[1] !== b[1]) edges.push([a[0] ?? 0, a[1] ?? 0, b[0] ?? 0, b[1] ?? 0]);
+        }
+      }
+    }
+  }
+  edges.sort((p, q) => Math.min(p[1] ?? 0, p[3] ?? 0) - Math.min(q[1] ?? 0, q[3] ?? 0));
+  fineEdges = new Float64Array(edges.flat());
+  fineMinLat = new Float64Array(edges.map((e) => Math.min(e[1] ?? 0, e[3] ?? 0)));
+}
+
+function fineRow(gy: number): Uint8Array {
+  let row = fineRows.get(gy);
+  if (row) return row;
+  if (!fineEdges || !fineMinLat) buildFineEdges();
+  const edges = fineEdges as Float64Array;
+  const minLat = fineMinLat as Float64Array;
+  const lat = 90 - (gy + 0.5) * FINE_RES;
+  const xs: number[] = [];
+  for (let k = 0; k < minLat.length && (minLat[k] ?? 0) <= lat; k++) {
+    const ax = edges[k * 4] ?? 0;
+    const ay = edges[k * 4 + 1] ?? 0;
+    const bx = edges[k * 4 + 2] ?? 0;
+    const by = edges[k * 4 + 3] ?? 0;
+    if (ay > lat !== by > lat) xs.push(ax + ((lat - ay) / (by - ay)) * (bx - ax));
+  }
+  xs.sort((p, q) => p - q);
+  row = new Uint8Array(FINE_W);
+  for (let k = 0; k + 1 < xs.length; k += 2) {
+    const from = Math.max(0, Math.floor(((xs[k] ?? 0) + 180) / FINE_RES));
+    const to = Math.min(FINE_W - 1, Math.floor(((xs[k + 1] ?? 0) + 180) / FINE_RES));
+    row.fill(1, from, to + 1);
+  }
+  if (fineRows.size > 4000) fineRows.clear();
+  fineRows.set(gy, row);
+  return row;
+}
+
+export function pointInLandFine(lon: number, lat: number): boolean {
+  const l = ((((lon + 180) % 360) + 360) % 360) - 180;
+  const gy = Math.max(
+    0,
+    Math.min(Math.round(180 / FINE_RES) - 1, Math.floor((90 - lat) / FINE_RES)),
+  );
+  const gx = Math.max(0, Math.min(FINE_W - 1, Math.floor((l + 180) / FINE_RES)));
+  return fineRow(gy)[gx] === 1;
 }
 
 export function pointInLand(lon: number, lat: number): boolean {
@@ -234,11 +309,12 @@ export function renderWorldMap(
   const proj = makeProjection(cam, lines.width, lines.height);
 
   const field = new HalfBlockField(cols, rows);
-  if (opts.fill !== false) fillLand(field, proj, theme, layers.field);
+  const fine = cam.zoom >= 6;
+  if (opts.fill !== false) fillLand(field, proj, theme, layers.field, fine);
   const base = field.toCells();
 
   if (cam.zoom >= 2) geoPath(proj, canvasContext(lines, theme.border) as never)(borders());
-  geoPath(proj, canvasContext(lines, theme.coast) as never)(landGeo());
+  geoPath(proj, canvasContext(lines, theme.coast) as never)(fine ? land50Geo() : landGeo());
   for (const p of layers.paths ?? []) {
     let prev: [number, number] | null = null;
     p.coords.forEach((c, i) => {

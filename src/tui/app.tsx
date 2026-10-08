@@ -18,11 +18,13 @@ import { lineChart, sparkline } from "../render/charts.ts";
 import { aqiScale, hex, type RGB, scale, temperatureScale } from "../render/color.ts";
 import { type FxKind, WeatherFx } from "../render/fx.ts";
 import { compass, distance, precip, pressure, speed, temp, windArrow } from "../render/units.ts";
+import type { HttpClient } from "../util/http.ts";
 import { CellCanvas, type DrawApi } from "./cell-canvas.ts";
 import { type AppState, VIEW_LABEL, VIEWS } from "./store.ts";
 import { T, theme, toHexStr } from "./theme.ts";
 import { HazardsView } from "./views/hazards.tsx";
 import { MapView } from "./views/map.tsx";
+import { type RadarControls, RadarView } from "./views/radar.tsx";
 
 extend({ cell_canvas: CellCanvas });
 
@@ -49,6 +51,7 @@ const hexOf = (c: RGB) => toHexStr(c);
 const tcolor = (c: number) => hexOf(temperatureScale(c));
 
 interface Props {
+  http: HttpClient;
   state: AppState;
   setState: SetStoreFunction<AppState>;
   refresh: () => void;
@@ -129,9 +132,11 @@ function Footer(props: { state: AppState }) {
   const hints = () =>
     props.state.view === "map"
       ? "←↑↓→ pan  +/- zoom  c center  0 reset  S/F/H/Q/A layers"
-      : props.state.view === "alerts"
-        ? "↑↓ select alert"
-        : "tab/1-6 views";
+      : props.state.view === "radar"
+        ? "space play/pause  ,/. step  +/- zoom"
+        : props.state.view === "alerts"
+          ? "↑↓ select alert"
+          : "tab/1-7 views";
   return (
     <box flexDirection="row" height={1} paddingLeft={1} paddingRight={1} backgroundColor={T.panel}>
       <text wrapMode="none">
@@ -582,7 +587,8 @@ function AlertsView(props: { state: AppState; report: Report }) {
 // ─── Help overlay ──────────────────────────────────────────────────────────
 
 const HELP: Array<[string, string]> = [
-  ["1-6 / tab", "switch view"],
+  ["1-7 / tab", "switch view"],
+  ["space , .", "radar play/pause, step frames"],
   ["u", "toggle °C / °F"],
   ["r", "refresh now"],
   ["m", "toggle animations"],
@@ -628,12 +634,14 @@ export function App(props: Props): JSX.Element {
   const renderer = useRenderer();
   const { state, setState } = props;
 
+  let radar: RadarControls | undefined;
+
   useKeyboard((key) => {
     const n = key.name;
     if (n === "q" || (key.ctrl && n === "c")) return props.quit();
     if (n === "?") return setState("showHelp", (v) => !v);
     if (n === "escape") return setState("showHelp", false);
-    if (/^[1-6]$/.test(n)) return setState("view", VIEWS[Number(n) - 1] ?? "now");
+    if (/^[1-7]$/.test(n)) return setState("view", VIEWS[Number(n) - 1] ?? "now");
     if (n === "tab") {
       const i = VIEWS.indexOf(state.view);
       return setState(
@@ -644,6 +652,13 @@ export function App(props: Props): JSX.Element {
     if (n === "u") return setState("units", (u) => (u === "metric" ? "imperial" : "metric"));
     if (n === "r") return props.refresh();
     if (n === "m") return setState("motion", (m) => !m);
+    if (state.view === "radar") {
+      if (n === "space") return radar?.toggle();
+      if (n === "," || n === "<") return radar?.step(-1);
+      if (n === "." || n === ">") return radar?.step(1);
+      if (n === "+" || n === "=") return setState("radarZoom", (z) => Math.min(60, z * 1.5));
+      if (n === "-" || n === "_") return setState("radarZoom", (z) => Math.max(6, z / 1.5));
+    }
     if (state.view === "map" && key.shift) {
       const toggle = { s: "storms", f: "fires", h: "hotspots", q: "quakes", a: "alerts" } as const;
       const layer = toggle[n as keyof typeof toggle];
@@ -705,6 +720,9 @@ export function App(props: Props): JSX.Element {
               </Match>
               <Match when={state.view === "daily"}>
                 <DailyView state={state} report={report()} />
+              </Match>
+              <Match when={state.view === "radar"}>
+                <RadarView state={state} http={props.http} controls={(c) => (radar = c)} />
               </Match>
               <Match when={state.view === "map"}>
                 <MapView state={state} />

@@ -59,7 +59,15 @@ export async function runDashboard(opts: DashboardOptions): Promise<void> {
   };
 
   await render(
-    () => <App state={state} setState={setState} refresh={() => void refresh(true)} quit={quit} />,
+    () => (
+      <App
+        http={opts.http}
+        state={state}
+        setState={setState}
+        refresh={() => void refresh(true)}
+        quit={quit}
+      />
+    ),
     renderer,
   );
   void refresh();
