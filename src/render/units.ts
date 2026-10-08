@@ -1,19 +1,81 @@
 export type Units = "metric" | "imperial";
+export type TempUnit = "C" | "F";
+export type WindUnit = "kmh" | "mph" | "ms" | "kn" | "bft";
+export type PrecipUnit = "mm" | "in";
+
+export const TEMP_UNITS: readonly TempUnit[] = ["C", "F"];
+export const WIND_UNITS: readonly WindUnit[] = ["kmh", "mph", "ms", "kn", "bft"];
+export const PRECIP_UNITS: readonly PrecipUnit[] = ["mm", "in"];
+
+/**
+ * Per-measure overrides on top of the metric/imperial system
+ * (`--temp C --wind kn --precip mm`, `--hour24`). Set once at startup;
+ * every formatter below consults them so renderers only pass the system.
+ */
+export interface UnitOverrides {
+  temp?: TempUnit;
+  wind?: WindUnit;
+  precip?: PrecipUnit;
+  hour12?: boolean;
+}
+
+let overrides: UnitOverrides = {};
+
+export function setUnitOverrides(o: UnitOverrides): void {
+  overrides = { ...o };
+}
+
+export function getUnitOverrides(): UnitOverrides {
+  return overrides;
+}
+
+export function tempUnit(units: Units): TempUnit {
+  return overrides.temp ?? (units === "imperial" ? "F" : "C");
+}
+
+export function windUnit(units: Units): WindUnit {
+  return overrides.wind ?? (units === "imperial" ? "mph" : "kmh");
+}
+
+export function precipUnit(units: Units): PrecipUnit {
+  return overrides.precip ?? (units === "imperial" ? "in" : "mm");
+}
 
 export function temp(c: number, units: Units, withUnit = true): string {
   if (!Number.isFinite(c)) return "--";
-  const v = units === "imperial" ? (c * 9) / 5 + 32 : c;
-  return `${Math.round(v)}°${withUnit ? (units === "imperial" ? "F" : "C") : ""}`;
+  const u = tempUnit(units);
+  const v = u === "F" ? (c * 9) / 5 + 32 : c;
+  return `${Math.round(v)}°${withUnit ? u : ""}`;
+}
+
+/** Beaufort force (0-12) for a wind speed in km/h. */
+export function beaufort(kmh: number): number {
+  const limits = [1, 6, 12, 20, 29, 39, 50, 62, 75, 89, 103, 118];
+  const i = limits.findIndex((l) => kmh < l);
+  return i === -1 ? 12 : i;
 }
 
 export function speed(kmh: number | undefined, units: Units): string {
   if (kmh === undefined) return "--";
-  return units === "imperial" ? `${Math.round(kmh * 0.621371)} mph` : `${Math.round(kmh)} km/h`;
+  switch (windUnit(units)) {
+    case "mph":
+      return `${Math.round(kmh * 0.621371)} mph`;
+    case "ms": {
+      const ms = kmh / 3.6;
+      return `${ms < 10 ? ms.toFixed(1) : Math.round(ms)} m/s`;
+    }
+    case "kn":
+      return `${Math.round(kmh / 1.852)} kn`;
+    case "bft":
+      return `${beaufort(kmh)} Bft`;
+    default:
+      return `${Math.round(kmh)} km/h`;
+  }
 }
 
 export function precip(mm: number | undefined, units: Units): string {
   if (mm === undefined) return "--";
-  return units === "imperial" ? `${(mm / 25.4).toFixed(2)} in` : `${mm.toFixed(1)} mm`;
+  return precipUnit(units) === "in" ? `${(mm / 25.4).toFixed(2)} in` : `${mm.toFixed(1)} mm`;
 }
 
 export function distance(m: number | undefined, units: Units): string {
@@ -26,6 +88,47 @@ export function distance(m: number | undefined, units: Units): string {
 export function pressure(hpa: number | undefined, units: Units): string {
   if (hpa === undefined) return "--";
   return units === "imperial" ? `${(hpa * 0.02953).toFixed(2)} inHg` : `${Math.round(hpa)} hPa`;
+}
+
+type Env = Record<string, string | undefined>;
+
+/** BCP 47 locale from POSIX env (`de_DE.UTF-8` → `de-DE`); Bun's Intl ignores LANG. */
+export function envLocale(env: Env = process.env): string | undefined {
+  const raw = env.LC_ALL || env.LC_TIME || env.LANG;
+  if (!raw || raw === "C" || raw === "POSIX") return undefined;
+  const tag = raw.split(".")[0]?.split("@")[0]?.replace("_", "-");
+  try {
+    return tag ? Intl.getCanonicalLocales(tag)[0] : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Whether the user's locale writes times on a 12-hour clock. */
+export function localeHour12(env: Env = process.env): boolean {
+  const locale = envLocale(env) ?? "en-US";
+  try {
+    return new Intl.DateTimeFormat(locale, { hour: "numeric" }).resolvedOptions().hour12 ?? true;
+  } catch {
+    return true;
+  }
+}
+
+/** 12h vs 24h clock: `--hour12/--hour24` override, else the locale's convention. */
+export function hour12(): boolean {
+  return overrides.hour12 ?? localeHour12();
+}
+
+/** Clock time like "6:42 PM" or "18:42" in the location's timezone. */
+export function clockTime(iso: string | Date, tz?: string, withMinutes = true): string {
+  const h12 = hour12();
+  return new Date(iso).toLocaleTimeString("en-US", {
+    hour: h12 ? "numeric" : "2-digit",
+    // A bare "18" reads as a number, so the 24h clock always shows minutes.
+    minute: withMinutes || !h12 ? "2-digit" : undefined,
+    hourCycle: h12 ? "h12" : "h23",
+    timeZone: tz,
+  });
 }
 
 const COMPASS = [
