@@ -1,10 +1,10 @@
 name: Release
 
-# Conventional commits on master → release-please keeps a "chore: release" PR up to date
+# Conventional commits on main → release-please keeps a "chore: release" PR up to date
 # (version bump + CHANGELOG). Merging that PR tags a GitHub release and publishes to npm.
 on:
   push:
-    branches: [master]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -28,7 +28,7 @@ jobs:
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-          target-branch: master
+          target-branch: main
 
   publish:
     # The npm launcher downloads the release binary when Bun is missing, so

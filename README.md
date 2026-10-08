@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/weather-outlook"><img alt="npm" src="https://img.shields.io/npm/v/weather-outlook?style=flat-square&label=npm&color=7dd3fc&labelColor=0a0f16"></a>
-  <a href="https://github.com/cport1/weather-outlook/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/cport1/weather-outlook/ci.yml?branch=master&style=flat-square&label=CI&labelColor=0a0f16"></a>
+  <a href="https://github.com/cport1/weather-outlook/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/cport1/weather-outlook/ci.yml?branch=main&style=flat-square&label=CI&labelColor=0a0f16"></a>
   <img alt="runtime: Bun" src="https://img.shields.io/badge/runtime-Bun-ffd54f?style=flat-square&labelColor=0a0f16">
   <img alt="API keys: none" src="https://img.shields.io/badge/API%20keys-none-69f0ae?style=flat-square&labelColor=0a0f16">
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/github/license/cport1/weather-outlook?style=flat-square&color=c4b5fd&labelColor=0a0f16"></a>
@@ -24,23 +24,30 @@
 ## ⚡ Quick start
 
 ```sh
-bunx weather-outlook                   # try it instantly
-bunx weather-outlook "Tokyo"           # any city, postcode, or "lat,lon"
+npx weather-outlook                    # try it instantly
+npx weather-outlook "Tokyo"            # any city, postcode, or "lat,lon"
 ```
 
-Or install it globally:
+Or install it:
 
 ```sh
-npm i -g weather-outlook               # or: bun add -g weather-outlook
+npm i -g weather-outlook                    # any Node; or: bun add -g weather-outlook
+brew install cport1/tap/weather-outlook     # macOS & Linux, prebuilt binary
+curl -fsSL https://raw.githubusercontent.com/cport1/weather-outlook/main/install.sh | sh
+```
+
+Then:
+
+```sh
 weather-outlook                        # dashboard for wherever you are (IP location)
 wo Denver --once                       # short alias + one-shot summary
 ```
 
 > [!NOTE]
-> Works with plain Node — no Bun required. With [Bun](https://bun.sh) installed it runs on Bun directly;
-> otherwise the first run downloads the matching standalone binary from the
-> [GitHub release](https://github.com/cport1/weather-outlook/releases) (SHA256-verified, cached, ~70–100 MB).
-> Set `WEATHER_OUTLOOK_NO_DOWNLOAD=1` to opt out.
+> The npm package runs on [Bun](https://bun.sh) when it's installed; otherwise the first run downloads the
+> matching standalone binary (SHA256-verified, cached; `WEATHER_OUTLOOK_NO_DOWNLOAD=1` opts out).
+> Homebrew and the install script use the same binaries, which are also attached to every
+> [GitHub release](https://github.com/cport1/weather-outlook/releases) for macOS, Linux (glibc & musl) and Windows.
 
 ## ✨ What's inside
 
@@ -260,7 +267,7 @@ Built with [OpenTUI](https://github.com/anomalyco/opentui) + Solid, TypeScript, 
 - `HTML=out.html VIEW=map bun scripts/snapshot.tsx Miami 150 42` — render any view headlessly to colored HTML
 - `vhs docs/tapes/hero.tape` — re-record the README media with [VHS](https://github.com/charmbracelet/vhs)
 
-Releases are automatic: [Conventional Commits](https://www.conventionalcommits.org) on `master` feed a release PR, and merging it publishes to npm with provenance.
+Releases are automatic: [Conventional Commits](https://www.conventionalcommits.org) on `main` feed a release PR, and merging it publishes to npm with provenance.
 
 ## 📜 License
 
