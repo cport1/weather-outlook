@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/cport1/weather-outlook/compare/v2.1.0...v2.1.1) (2026-10-08)
+
+
+### Bug Fixes
+
+* stale current conditions, emoji alignment, hotspot clutter and a real sun ([f92c11e](https://github.com/cport1/weather-outlook/commit/f92c11eb4baee253fa02357d5c000b5f197c75ae))
+
 ## [2.1.0](https://github.com/cport1/weather-outlook/compare/v2.0.0...v2.1.0) (2026-10-08)
 
 
