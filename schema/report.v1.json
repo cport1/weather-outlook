@@ -1,0 +1,480 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/cport1/weather-outlook/master/schema/report.v1.json",
+  "title": "weather-outlook report",
+  "description": "Output of `weather-outlook --json`. All values are metric/SI regardless of --units.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "generatedAt": {
+      "type": "string"
+    },
+    "units": {
+      "type": "string",
+      "enum": [
+        "metric",
+        "imperial"
+      ]
+    },
+    "location": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "countryCode": {
+          "type": "string"
+        },
+        "lat": {
+          "type": "number"
+        },
+        "lon": {
+          "type": "number"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "elevation": {
+          "type": "number"
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "geocode",
+            "ip",
+            "coords",
+            "config"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "lat",
+        "lon",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "forecast": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "fetchedAt": {
+          "type": "string"
+        },
+        "current": {
+          "type": "object",
+          "properties": {
+            "time": {
+              "type": "string"
+            },
+            "temperature": {
+              "type": "number"
+            },
+            "feelsLike": {
+              "type": "number"
+            },
+            "humidity": {
+              "type": "number"
+            },
+            "dewPoint": {
+              "type": "number"
+            },
+            "pressure": {
+              "type": "number"
+            },
+            "windSpeed": {
+              "type": "number"
+            },
+            "windGust": {
+              "type": "number"
+            },
+            "windDirection": {
+              "type": "number"
+            },
+            "cloudCover": {
+              "type": "number"
+            },
+            "visibility": {
+              "type": "number"
+            },
+            "precipitation": {
+              "type": "number"
+            },
+            "uvIndex": {
+              "type": "number"
+            },
+            "condition": {
+              "type": "string",
+              "enum": [
+                "clear",
+                "mostly-clear",
+                "partly-cloudy",
+                "cloudy",
+                "fog",
+                "drizzle",
+                "rain",
+                "heavy-rain",
+                "freezing-rain",
+                "snow",
+                "heavy-snow",
+                "sleet",
+                "showers",
+                "thunderstorm",
+                "hail",
+                "unknown"
+              ]
+            },
+            "isDay": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "time",
+            "temperature",
+            "condition",
+            "isDay"
+          ],
+          "additionalProperties": false
+        },
+        "hourly": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "time": {
+                "type": "string"
+              },
+              "temperature": {
+                "type": "number"
+              },
+              "feelsLike": {
+                "type": "number"
+              },
+              "precipitationProbability": {
+                "type": "number"
+              },
+              "precipitation": {
+                "type": "number"
+              },
+              "windSpeed": {
+                "type": "number"
+              },
+              "windGust": {
+                "type": "number"
+              },
+              "windDirection": {
+                "type": "number"
+              },
+              "humidity": {
+                "type": "number"
+              },
+              "cloudCover": {
+                "type": "number"
+              },
+              "uvIndex": {
+                "type": "number"
+              },
+              "condition": {
+                "type": "string",
+                "enum": [
+                  "clear",
+                  "mostly-clear",
+                  "partly-cloudy",
+                  "cloudy",
+                  "fog",
+                  "drizzle",
+                  "rain",
+                  "heavy-rain",
+                  "freezing-rain",
+                  "snow",
+                  "heavy-snow",
+                  "sleet",
+                  "showers",
+                  "thunderstorm",
+                  "hail",
+                  "unknown"
+                ]
+              },
+              "isDay": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "time",
+              "temperature",
+              "condition",
+              "isDay"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "daily": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "date": {
+                "type": "string"
+              },
+              "tempMax": {
+                "type": "number"
+              },
+              "tempMin": {
+                "type": "number"
+              },
+              "precipitationSum": {
+                "type": "number"
+              },
+              "precipitationProbability": {
+                "type": "number"
+              },
+              "windSpeedMax": {
+                "type": "number"
+              },
+              "windGustMax": {
+                "type": "number"
+              },
+              "uvIndexMax": {
+                "type": "number"
+              },
+              "sunrise": {
+                "type": "string"
+              },
+              "sunset": {
+                "type": "string"
+              },
+              "condition": {
+                "type": "string",
+                "enum": [
+                  "clear",
+                  "mostly-clear",
+                  "partly-cloudy",
+                  "cloudy",
+                  "fog",
+                  "drizzle",
+                  "rain",
+                  "heavy-rain",
+                  "freezing-rain",
+                  "snow",
+                  "heavy-snow",
+                  "sleet",
+                  "showers",
+                  "thunderstorm",
+                  "hail",
+                  "unknown"
+                ]
+              }
+            },
+            "required": [
+              "date",
+              "tempMax",
+              "tempMin",
+              "condition"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "provider",
+        "fetchedAt",
+        "current",
+        "hourly",
+        "daily"
+      ],
+      "additionalProperties": false
+    },
+    "airQuality": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "usAqi": {
+          "type": "number"
+        },
+        "europeanAqi": {
+          "type": "number"
+        },
+        "pm2_5": {
+          "type": "number"
+        },
+        "pm10": {
+          "type": "number"
+        },
+        "ozone": {
+          "type": "number"
+        },
+        "no2": {
+          "type": "number"
+        },
+        "pollen": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "number"
+          }
+        }
+      },
+      "required": [
+        "provider"
+      ],
+      "additionalProperties": false
+    },
+    "astronomy": {
+      "type": "object",
+      "properties": {
+        "sunrise": {
+          "type": "string"
+        },
+        "sunset": {
+          "type": "string"
+        },
+        "solarNoon": {
+          "type": "string"
+        },
+        "dayLengthMin": {
+          "type": "number"
+        },
+        "moonPhase": {
+          "type": "number"
+        },
+        "moonPhaseName": {
+          "type": "string"
+        },
+        "moonIllumination": {
+          "type": "number"
+        },
+        "moonrise": {
+          "type": "string"
+        },
+        "moonset": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "moonPhase",
+        "moonPhaseName",
+        "moonIllumination"
+      ],
+      "additionalProperties": false
+    },
+    "alerts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "event": {
+            "type": "string"
+          },
+          "headline": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "instruction": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "extreme",
+              "severe",
+              "moderate",
+              "minor",
+              "unknown"
+            ]
+          },
+          "urgency": {
+            "type": "string"
+          },
+          "areas": {
+            "type": "string"
+          },
+          "onset": {
+            "type": "string"
+          },
+          "expires": {
+            "type": "string"
+          },
+          "polygon": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "event",
+          "severity"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "generatedAt",
+    "units",
+    "location",
+    "alerts",
+    "errors"
+  ],
+  "additionalProperties": false
+}
