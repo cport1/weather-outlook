@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.0](https://github.com/cport1/weather-outlook/compare/v2.0.0-alpha.3...v2.0.0) (2026-10-08)
+
+
+### Chores
+
+* release 2.0.0 ([197469e](https://github.com/cport1/weather-outlook/commit/197469ee80fc1d571525d6a5c47a312bff1db803))
+
 ## [2.0.0-alpha.3](https://github.com/cport1/weather-outlook/compare/v2.0.0-alpha.2...v2.0.0-alpha.3) (2026-10-08)
 
 
