@@ -1,10 +1,10 @@
 import { afterAll, afterEach, beforeAll, describe, expect, setSystemTime, test } from "bun:test";
 import { testRender } from "@opentui/solid";
+import pkg from "../package.json" with { type: "json" };
 import { App } from "../src/tui/app.tsx";
 import { createAppStore, type View } from "../src/tui/store.ts";
 import { resolveThemeName, setTheme } from "../src/tui/theme.ts";
 import { FIXTURE_NOW, fixtureHazards, fixtureReport, offlineHttp } from "./fixtures/report.ts";
-import pkg from "../package.json" with { type: "json" };
 
 // Headless frames of every view from fixture data (no network, frozen clock,
 // no motion) so layout regressions show up as snapshot diffs.
