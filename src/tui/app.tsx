@@ -1,6 +1,6 @@
 import type { KeyEvent, OptimizedBuffer } from "@opentui/core";
 import { onBlur, onFocus, useKeyboard, useRenderer, useTerminalDimensions } from "@opentui/solid";
-import { For, type JSX, Match, onCleanup, onMount, Show, Switch } from "solid-js";
+import { createMemo, For, type JSX, Match, onCleanup, onMount, Show, Switch } from "solid-js";
 import type { SetStoreFunction } from "solid-js/store";
 import type { Alert, Location, Report } from "../domain/types.ts";
 import { clockTime } from "../render/units.ts";
@@ -56,12 +56,11 @@ function Header(props: { state: AppState; select: (v: View) => void }) {
       : [loc().name, loc().region, loc().countryCode].filter(Boolean).join(", ");
   const clock = () => clockTime(new Date(), loc().timezone);
   // 0 = full labels, 1 = short labels, 2 = numbers (active tab keeps its label).
-  const density = () => (dims().width >= 130 ? 0 : dims().width >= 80 ? 1 : 2);
-  const label = (v: View, i: number) => {
+  const labelAt = (v: View, i: number, density: 0 | 1 | 2) => {
     const n =
-      props.state.view === v || density() === 0
+      props.state.view === v || density === 0
         ? VIEW_LABEL[v]
-        : density() === 1
+        : density === 1
           ? (SHORT_LABEL[v] ?? VIEW_LABEL[v].slice(0, 4))
           : "";
     const count =
@@ -70,6 +69,26 @@ function Header(props: { state: AppState; select: (v: View) => void }) {
         : "";
     return n ? ` ${i + 1} ${n}${count} ` : ` ${i + 1}${count ? "!" : ""} `;
   };
+  // The richest header that fits: full labels, then short labels, then short labels
+  // without the clock, then bare numbers.
+  const layout = createMemo(() => {
+    const width = dims().width - 2;
+    const tabs = (d: 0 | 1 | 2) => VIEWS.reduce((n, v, i) => n + labelAt(v, i, d).length, 0);
+    const lead = (d: 0 | 1 | 2, withClock: boolean) =>
+      (d === 0 ? 18 : 2) + place().length + (withClock ? 3 + clock().length : 0);
+    const options: Array<[0 | 1 | 2, boolean]> = [
+      [0, true],
+      [1, true],
+      [1, false],
+      [2, true],
+      [2, false],
+    ];
+    const min = dims().width >= 130 ? 0 : dims().width >= 80 ? 1 : 2;
+    const fit = options.find(([d, c]) => d >= min && lead(d, c) + tabs(d) <= width);
+    return fit ?? ([2, false] as const);
+  });
+  const density = () => layout()[0];
+  const label = (v: View, i: number) => labelAt(v, i, density());
   return (
     <box flexDirection="row" height={1} paddingLeft={1} paddingRight={1} backgroundColor={T.panel}>
       <text wrapMode="none" flexShrink={1}>
@@ -77,7 +96,9 @@ function Header(props: { state: AppState; select: (v: View) => void }) {
           {density() === 0 ? "◆ weather-outlook " : "◆ "}
         </span>
         <span style={{ fg: T.text, bg: T.panel }}>{place()}</span>
-        <span style={{ fg: T.dim, bg: T.panel }}> · {clock()}</span>
+        <Show when={layout()[1]}>
+          <span style={{ fg: T.dim, bg: T.panel }}> · {clock()}</span>
+        </Show>
       </text>
       <box flexGrow={1} />
       <box flexDirection="row" flexShrink={0}>

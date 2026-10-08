@@ -201,6 +201,28 @@ export function cleanDiscussion(text: string): string {
     .trim();
 }
 
+/**
+ * Undo the ~66-column hard wrap of NWS text products so they re-wrap to the
+ * panel width. Section headers (".SHORT TERM..."), bullets and indented or
+ * short lines (tables, signatures) keep their line breaks.
+ */
+export function reflow(text: string): string {
+  const lines = text.split("\n");
+  const out: string[] = [];
+  for (const line of lines) {
+    const prev = out[out.length - 1];
+    const continues =
+      prev !== undefined &&
+      prev.length >= 50 &&
+      !prev.startsWith(".") &&
+      line.trim() !== "" &&
+      !/^(\s|-|\.|&&|\$\$)/.test(line);
+    if (continues) out[out.length - 1] = `${prev} ${line}`;
+    else out.push(line);
+  }
+  return out.join("\n");
+}
+
 async function latestObservation(
   http: HttpClient,
   stationsUrl: string,

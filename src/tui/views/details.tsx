@@ -17,6 +17,7 @@ type Buoy = NonNullable<Marine["buoy"]>;
 type Tides = NonNullable<Marine["tides"]>;
 
 import { fmtMonthDay } from "../../providers/climate.ts";
+import { reflow } from "../../providers/nws-forecast.ts";
 import { lineChart } from "../../render/charts.ts";
 import { multiLineChart, seriesRange } from "../../render/charts-multi.ts";
 import { aqiScale, hex, type RGB, temperatureScale } from "../../render/color.ts";
@@ -172,7 +173,7 @@ function NwsPanel(props: {
           <box flexDirection="column" width="45%">
             <Show when={n().observation}>
               {(o: () => NwsObservation) => (
-                <Panel title={`observed · ${o().stationName ?? o().station}`} rows={2}>
+                <Panel title={`observed · ${o().station}`} rows={2}>
                   <text wrapMode="none">
                     <span style={{ fg: tcolor(o().temperature ?? 0) }}>
                       {o().temperature !== undefined ? temp(o().temperature as number, u()) : "--"}
@@ -236,7 +237,7 @@ function NwsPanel(props: {
             }
           >
             <scrollbox flexGrow={1} ref={(r: ScrollBoxRenderable) => props.scroll(r)}>
-              <text fg={T.text}>{n().discussion?.text ?? "Not available."}</text>
+              <text fg={T.text}>{reflow(n().discussion?.text ?? "Not available.")}</text>
             </scrollbox>
           </Panel>
         </box>
@@ -312,7 +313,7 @@ function ModelsPanel(props: { state: AppState; report: Report }) {
                   timeAxis(
                     sliced()?.times ?? [],
                     cols,
-                    (t) => t.slice(11, 13) === "00",
+                    (t) => onLocalHour(t, props.state.location.timezone, 24),
                     (t) => `│${fmtDay(t, props.state.location.timezone)}`,
                   )
                 }

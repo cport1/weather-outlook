@@ -45,7 +45,7 @@ async function mount(width: number, height: number, view: View = "now") {
   return { t, state, setState };
 }
 
-const OWN_VIEWS: View[] = ["now", "hourly", "daily", "alerts"];
+const OWN_VIEWS: View[] = ["now", "hourly", "daily", "alerts", "details"];
 const SIZES: Array<[number, number]> = [
   [80, 24],
   [160, 48],
@@ -79,6 +79,55 @@ describe.each(SIZES)("%ix%i", (width, height) => {
     const frame = t.captureCharFrame();
     expect(frame).toContain("fetching the sky over Denver");
     expect(frame).toMatchSnapshot();
+  });
+});
+
+describe("details panels", () => {
+  for (const [panel, presses, marker] of [
+    ["models", 1, "forecast confidence"],
+    ["marine", 2, "tides"],
+    ["air", 3, "US AQI"],
+    ["climate", 4, "normals"],
+  ] as const) {
+    test(`160x48 ${panel} panel`, async () => {
+      const { t } = await mount(160, 48, "details");
+      for (let i = 0; i < presses; i++) t.mockInput.pressArrow("right");
+      await t.renderOnce();
+      await t.renderOnce();
+      const frame = t.captureCharFrame();
+      expect(frame).toContain(marker);
+      expect(frame).toMatchSnapshot();
+    });
+  }
+
+  test("key 8 opens Details; its tab fits the header at every width", async () => {
+    for (const [w, h, idle] of [
+      [80, 24, "8 More"],
+      [100, 30, "8 More"],
+      [160, 48, "8 Details"],
+    ] as const) {
+      const { t, state } = await mount(w, h, "now");
+      const before = t.captureCharFrame().split("\n")[0] ?? "";
+      expect(before).toContain(idle);
+      t.mockInput.pressKey("8");
+      await t.renderOnce();
+      expect(state.view).toBe("details");
+      const after = t.captureCharFrame().split("\n")[0] ?? "";
+      expect(after).toContain("8 Details");
+      expect(after).toContain("1 ");
+      open?.renderer.destroy();
+      open = undefined;
+    }
+  });
+
+  test("clicking the Details tab switches view", async () => {
+    const { t, state } = await mount(160, 48, "now");
+    const row = t.captureCharFrame().split("\n")[0] ?? "";
+    const x = row.indexOf("8 Details");
+    expect(x).toBeGreaterThan(0);
+    await t.mockMouse.click(x + 2, 0);
+    await t.renderOnce();
+    expect(state.view).toBe("details");
   });
 });
 
