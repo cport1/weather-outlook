@@ -21,8 +21,11 @@ const paths = envPaths("weather-outlook", { suffix: "" });
 interface GlobalOpts {
   units?: Units;
   json?: boolean;
+  once?: boolean;
   color?: boolean;
+  motion?: boolean;
   refresh?: boolean;
+  simulate?: string;
 }
 
 function makeHttp() {
@@ -35,7 +38,10 @@ const program = new Command()
   .version(pkg.version)
   .argument("[location...]", 'place name, "lat,lon", or omit to use your IP location')
   .option("-u, --units <units>", "metric or imperial (default: based on location)")
+  .option("-1, --once", "print a one-shot summary and exit (default when not a TTY)")
   .option("-j, --json", "print the full report as JSON and exit")
+  .option("--no-motion", "disable animations (also respects WEATHER_OUTLOOK_REDUCE_MOTION)")
+  .option("--simulate <condition>", "force the sky animation: rain | snow | storm | fog | clear")
   .option("--no-color", "disable colors (also respects NO_COLOR)")
   .option("-r, --refresh", "bypass the cache")
   .action(async (words: string[], opts: GlobalOpts) => {
@@ -45,12 +51,22 @@ const program = new Command()
     if (units !== "metric" && units !== "imperial") {
       throw new Error(`--units must be "metric" or "imperial"`);
     }
-    const report = await buildReport(http, location, units, { refresh: opts.refresh });
     if (opts.json) {
+      const report = await buildReport(http, location, units, { refresh: opts.refresh });
       process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
       return;
     }
-    const caps = detectCapabilities({ color: opts.color === false ? false : undefined });
+    const caps = detectCapabilities({
+      color: opts.color === false ? false : undefined,
+      motion: opts.motion === false ? false : undefined,
+    });
+    if (!opts.once && caps.isTTY && process.stdin.isTTY) {
+      // Lazy-load the TUI so one-shot and JSON modes never pay for it.
+      const { runDashboard } = await import("./tui/index.tsx");
+      await runDashboard({ http, location, units, motion: caps.motion, simulate: opts.simulate });
+      return;
+    }
+    const report = await buildReport(http, location, units, { refresh: opts.refresh });
     process.stdout.write(`${renderOneShot(report, caps)}\n`);
   });
 

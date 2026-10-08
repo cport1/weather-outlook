@@ -1,6 +1,11 @@
 import type { DiskCache } from "../cache/disk-cache.ts";
 
-export const USER_AGENT = "weather-outlook/2.0 (+https://github.com/cport1/weather-outlook)";
+/**
+ * NOAA's firewall 403s any User-Agent containing the substring "outlook"
+ * (even inside a URL), and MET Norway/Nominatim require a real contact.
+ * So the UA deliberately names the project "wxo" and links the owner profile.
+ */
+export const USER_AGENT = "wxo/2.0 (+https://github.com/cport1; weather CLI)";
 
 export class HttpError extends Error {
   constructor(
