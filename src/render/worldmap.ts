@@ -5,8 +5,9 @@ import type { GeometryCollection, Topology } from "topojson-specification";
 import countries50 from "world-atlas/countries-50m.json" with { type: "json" };
 import land50 from "world-atlas/land-50m.json" with { type: "json" };
 import land110 from "world-atlas/land-110m.json" with { type: "json" };
+import { adminLines } from "./admin.ts";
 import { type Cell, composite, HalfBlockField, PixelCanvas } from "./canvas.ts";
-import { hex, type RGB } from "./color.ts";
+import { hex, lerp, type RGB } from "./color.ts";
 import { type LabelRequest, placeLabels } from "./labels.ts";
 
 export interface Camera {
@@ -23,6 +24,10 @@ export interface MapMarker {
   glyph: string;
   color: RGB;
   label?: string;
+  /** Label color when it differs from the glyph. */
+  labelColor?: RGB;
+  /** Low-priority marker: drawn only when its label can be placed without collisions. */
+  optional?: boolean;
 }
 
 export interface MapPath {
@@ -39,6 +44,22 @@ export interface MapLayers {
   paths?: MapPath[];
   /** Optional per-pixel color field (e.g. temperature, radar), sampled at half-block resolution. */
   field?: (lon: number, lat: number) => RGB | undefined;
+  /** Opacity of `field` over the land/ocean fill (default 1 = opaque). */
+  fieldAlpha?: number;
+  /** Per-pixel post-processing applied after the fill, in order (night shading, aurora glow…). */
+  shaders?: PixelShader[];
+}
+
+/** Maps a fill pixel's color at lon/lat to a new color. */
+export type PixelShader = (lon: number, lat: number, color: RGB) => RGB;
+
+export interface RenderOptions {
+  /** Draw the half-block land/ocean fill (off for colorless terminals). */
+  fill?: boolean;
+  /** First-order admin boundaries (US states, provinces). Default: only when zoom ≥ 4. */
+  admin?: boolean;
+  /** Don't keep this camera's base layer in the cache (animation in-between frames). */
+  transient?: boolean;
 }
 
 export interface MapTheme {
@@ -46,6 +67,8 @@ export interface MapTheme {
   land: RGB;
   coast: RGB;
   border: RGB;
+  /** State/province lines; defaults to halfway between border and land. */
+  admin?: RGB;
 }
 
 export const DEFAULT_THEME: MapTheme = {
@@ -53,6 +76,7 @@ export const DEFAULT_THEME: MapTheme = {
   land: hex("#1d3b2a"),
   coast: hex("#5fb3a1"),
   border: hex("#3d6b5c"),
+  admin: hex("#376452"),
 };
 
 const landTopo = land110 as unknown as Topology<{ land: GeometryCollection }>;
@@ -107,11 +131,25 @@ export function makeProjection(cam: Camera, pxWidth: number, pxHeight: number): 
 }
 
 /** Minimal path context that rasterizes d3-geo output into a PixelCanvas. */
-function canvasContext(canvas: PixelCanvas, color: RGB) {
+function canvasContext(canvas: PixelCanvas, color: RGB, dotted = false) {
   let x0 = 0;
   let y0 = 0;
   let sx = 0;
   let sy = 0;
+  // Dotted lines keep their phase across segments so short d3 resampling steps stay dotted.
+  let phase = 0;
+  const seg = (x: number, y: number) => {
+    if (!dotted) {
+      canvas.line(x0, y0, x, y, color);
+      return;
+    }
+    const len = Math.hypot(x - x0, y - y0);
+    for (let d = (3 - phase) % 3; d <= len; d += 3) {
+      const t = len ? d / len : 0;
+      canvas.set(x0 + (x - x0) * t, y0 + (y - y0) * t, color);
+    }
+    phase = (phase + len) % 3;
+  };
   return {
     beginPath() {},
     moveTo(x: number, y: number) {
@@ -119,12 +157,12 @@ function canvasContext(canvas: PixelCanvas, color: RGB) {
       y0 = sy = y;
     },
     lineTo(x: number, y: number) {
-      canvas.line(x0, y0, x, y, color);
+      seg(x, y);
       x0 = x;
       y0 = y;
     },
     closePath() {
-      canvas.line(x0, y0, sx, sy, color);
+      seg(sx, sy);
       x0 = sx;
       y0 = sy;
     },
@@ -132,37 +170,36 @@ function canvasContext(canvas: PixelCanvas, color: RGB) {
   };
 }
 
-/** Even-odd scanline fill of the projected land into a half-block field. */
-function fillLand(
-  field: HalfBlockField,
+/**
+ * Stroke a lon/lat polyline. Goes through d3-geo so segments that cross the
+ * projection's antimeridian are cut at the seam and drawn to both map edges
+ * instead of streaking across the whole map.
+ */
+export function strokePath(
+  canvas: PixelCanvas,
   proj: GeoProjection,
-  theme: MapTheme,
-  overlay?: MapLayers["field"],
-  fine = false,
+  coords: ReadonlyArray<readonly [number, number]>,
+  color: RGB,
+  opts: { dotted?: boolean; colors?: readonly RGB[] } = {},
 ): void {
-  const scaleX = 2; // braille px per half-block px horizontally
-  const scaleY = 2; // braille px per half-block px vertically (4 per cell vs 2 per cell)
-  // Use invert() at each half-block pixel for the field so fills are exact even across antimeridian.
-  for (let y = 0; y < field.height; y++) {
-    for (let x = 0; x < field.cols; x++) {
-      const ll = proj.invert?.([x * scaleX + 1, y * scaleY + 1]);
-      if (!ll || !Number.isFinite(ll[0]) || !Number.isFinite(ll[1]) || Math.abs(ll[1]) > 90) {
-        continue;
-      }
-      // Reject points that don't round-trip (outside the projection's sphere).
-      const back = proj(ll);
-      if (
-        !back ||
-        Math.abs(back[0] - (x * scaleX + 1)) > 2 ||
-        Math.abs(back[1] - (y * scaleY + 1)) > 2
-      ) {
-        continue;
-      }
-      const isLand = fine ? pointInLandFine(ll[0], ll[1]) : pointInLand(ll[0], ll[1]);
-      const over = overlay?.(ll[0], ll[1]);
-      field.set(x, y, over ?? (isLand ? theme.land : theme.ocean));
+  if (coords.length < 2) return;
+  if (opts.colors) {
+    // Per-vertex colors: one LineString per segment, colored by its end vertex.
+    for (let i = 1; i < coords.length; i++) {
+      const a = coords[i - 1] as [number, number];
+      const b = coords[i] as [number, number];
+      const ctx = canvasContext(canvas, opts.colors[i] ?? color, opts.dotted);
+      geoPath(proj, ctx as never)({ type: "LineString", coordinates: [a, b] });
     }
+    return;
   }
+  geoPath(
+    proj,
+    canvasContext(canvas, color, opts.dotted) as never,
+  )({
+    type: "LineString",
+    coordinates: coords as Array<[number, number]>,
+  });
 }
 
 // --- point-in-land via a coarse precomputed lookup grid (0.5° resolution) ---
@@ -321,15 +358,6 @@ export function pointInLand(lon: number, lat: number): boolean {
   return landGrid[gy * GRID_W + gx] === 1;
 }
 
-function dottedLine(canvas: PixelCanvas, a: [number, number], b: [number, number], c: RGB): void {
-  const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
-  const steps = Math.max(1, Math.ceil(len));
-  for (let i = 0; i <= steps; i += 3) {
-    const t = i / steps;
-    canvas.set(a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, c);
-  }
-}
-
 /** Lon/lat bounds visible for a camera over a viewport of the given pixel aspect (width / height). */
 export function viewportBbox(cam: Camera, aspect: number) {
   const w = 1000;
@@ -370,9 +398,101 @@ export function cellProjector(cam: Camera, cols: number, rows: number) {
   };
 }
 
+// --- cached base layer -------------------------------------------------------
+
+/**
+ * Everything about a map render that depends only on camera + size + theme:
+ * the inverse-projected lon/lat of every half-block pixel, the land mask, and
+ * the coast/border/admin line work. Overlays and shaders are applied on top
+ * per call, so panning back, switching views or animating radar frames never
+ * redoes the expensive projection work.
+ */
+interface BaseLayer {
+  proj: GeoProjection;
+  /** Half-block pixel grid (cols × rows*2). */
+  lon: Float32Array;
+  lat: Float32Array;
+  /** 0 = outside the sphere, 1 = ocean, 2 = land. */
+  kind: Uint8Array;
+  lines: PixelCanvas;
+}
+
+const BASE_CACHE_SIZE = 8;
+const baseCache = new Map<string, BaseLayer>();
+let baseBuilds = 0;
+
+/** Number of base layers built so far (for tests/diagnostics). */
+export function baseLayerBuilds(): number {
+  return baseBuilds;
+}
+
+function themeKey(t: MapTheme): string {
+  return [t.ocean, t.land, t.coast, t.border, t.admin ?? ""].join("|");
+}
+
+function baseLayer(
+  cols: number,
+  rows: number,
+  cam: Camera,
+  theme: MapTheme,
+  admin: boolean,
+  transient = false,
+): BaseLayer {
+  const key = `${cols}x${rows}:${cam.lon.toFixed(4)},${cam.lat.toFixed(4)},${cam.zoom.toFixed(4)}:${admin ? 1 : 0}:${themeKey(theme)}`;
+  const hit = baseCache.get(key);
+  if (hit) {
+    // Refresh LRU position.
+    baseCache.delete(key);
+    baseCache.set(key, hit);
+    return hit;
+  }
+  baseBuilds++;
+  const lines = new PixelCanvas(cols, rows);
+  const proj = makeProjection(cam, lines.width, lines.height);
+  const fine = cam.zoom >= 6;
+  const h = rows * 2;
+  const n = cols * h;
+  const lon = new Float32Array(n);
+  const lat = new Float32Array(n);
+  const kind = new Uint8Array(n);
+  // Half-block pixels are 2×2 braille pixels; sample at their centers.
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < cols; x++) {
+      const px = x * 2 + 1;
+      const py = y * 2 + 1;
+      const ll = proj.invert?.([px, py]);
+      if (!ll || !Number.isFinite(ll[0]) || !Number.isFinite(ll[1]) || Math.abs(ll[1]) > 90)
+        continue;
+      // Reject points that don't round-trip (outside the projection's sphere).
+      const back = proj(ll);
+      if (!back || Math.abs(back[0] - px) > 2 || Math.abs(back[1] - py) > 2) continue;
+      const i = y * cols + x;
+      lon[i] = ll[0];
+      lat[i] = ll[1];
+      kind[i] = (fine ? pointInLandFine(ll[0], ll[1]) : pointInLand(ll[0], ll[1])) ? 2 : 1;
+    }
+  }
+  if (admin) {
+    const color = theme.admin ?? lerp(theme.border, theme.land, 0.5);
+    geoPath(proj, canvasContext(lines, color) as never)(adminLines());
+  }
+  if (cam.zoom >= 2) geoPath(proj, canvasContext(lines, theme.border) as never)(borders());
+  geoPath(proj, canvasContext(lines, theme.coast) as never)(fine ? land50Geo() : landGeo());
+
+  const layer: BaseLayer = { proj, lon, lat, kind, lines };
+  if (transient) return layer;
+  baseCache.set(key, layer);
+  if (baseCache.size > BASE_CACHE_SIZE) {
+    const oldest = baseCache.keys().next().value;
+    if (oldest !== undefined) baseCache.delete(oldest);
+  }
+  return layer;
+}
+
 /**
  * Render the world map with overlays into a grid of styled cells.
- * Layering: half-block fill (ocean/land/field) → braille coast+borders → markers.
+ * Layering: half-block fill (ocean/land → field → shaders) → braille
+ * coast/borders/admin + paths → markers.
  */
 export function renderWorldMap(
   cols: number,
@@ -380,44 +500,50 @@ export function renderWorldMap(
   cam: Camera,
   layers: MapLayers = {},
   theme: MapTheme = DEFAULT_THEME,
-  opts: { fill?: boolean } = {},
+  opts: RenderOptions = {},
 ): Cell[][] {
-  const lines = new PixelCanvas(cols, rows);
-  const proj = makeProjection(cam, lines.width, lines.height);
+  const base = baseLayer(cols, rows, cam, theme, opts.admin ?? cam.zoom >= 4, opts.transient);
+  const { proj } = base;
 
   const field = new HalfBlockField(cols, rows);
-  const fine = cam.zoom >= 6;
-  if (opts.fill !== false) fillLand(field, proj, theme, layers.field, fine);
-  const base = field.toCells();
+  if (opts.fill !== false) {
+    const overlay = layers.field;
+    const alpha = layers.fieldAlpha ?? 1;
+    const shaders = layers.shaders ?? [];
+    for (let i = 0; i < base.kind.length; i++) {
+      const k = base.kind[i];
+      if (!k) continue;
+      const lon = base.lon[i] ?? 0;
+      const lat = base.lat[i] ?? 0;
+      let c: RGB = k === 2 ? theme.land : theme.ocean;
+      const over = overlay?.(lon, lat);
+      if (over) c = alpha >= 1 ? over : lerp(c, over, alpha);
+      for (const s of shaders) c = s(lon, lat, c);
+      field.set(i % cols, Math.floor(i / cols), c);
+    }
+  }
+  const fill = field.toCells();
 
-  if (cam.zoom >= 2) geoPath(proj, canvasContext(lines, theme.border) as never)(borders());
-  geoPath(proj, canvasContext(lines, theme.coast) as never)(fine ? land50Geo() : landGeo());
-  for (const p of layers.paths ?? []) {
-    let prev: [number, number] | null = null;
-    p.coords.forEach((c, i) => {
-      const pt = proj(c);
-      // Skip segments that wrap around the antimeridian.
-      if (pt && prev && Math.abs(pt[0] - prev[0]) < lines.width / 2) {
-        const color = p.colors?.[i] ?? p.color;
-        if (p.dotted) dottedLine(lines, prev, pt, color);
-        else lines.line(prev[0], prev[1], pt[0], pt[1], color);
-      }
-      prev = pt;
-    });
+  let lines = base.lines;
+  if (layers.paths?.length) {
+    lines = lines.clone();
+    for (const p of layers.paths) {
+      strokePath(lines, proj, p.coords, p.color, { dotted: p.dotted, colors: p.colors });
+    }
   }
   // Braille glyphs take the base cell's background so lines sit on the fill.
   const braille = lines
     .toBraille()
     .map((line, r) =>
-      line.map((cell, c) => ({ ...cell, bg: base[r]?.[c]?.bg ?? base[r]?.[c]?.fg })),
+      line.map((cell, c) => ({ ...cell, bg: fill[r]?.[c]?.bg ?? fill[r]?.[c]?.fg })),
     );
-  let out = composite(base, braille);
+  let out = composite(fill, braille);
 
   if (layers.markers?.length) {
     const top: Cell[][] = Array.from({ length: rows }, () =>
       Array.from({ length: cols }, () => ({ ch: " " }) as Cell),
     );
-    const labels: Array<LabelRequest & { color: RGB }> = [];
+    const labels: Array<LabelRequest & { color: RGB; glyph: string }> = [];
     for (const m of layers.markers) {
       const pt = proj([m.lon, m.lat]);
       if (!pt) continue;
@@ -425,12 +551,26 @@ export function renderWorldMap(
       const r = Math.floor(pt[1] / 4);
       const row = top[r];
       if (!row || c < 0 || c >= cols) continue;
-      row[c] = { ch: m.glyph, fg: m.color };
-      if (m.label) labels.push({ col: c, row: r, text: m.label, color: m.color });
+      // Optional markers (e.g. city dots) only appear if their label finds room.
+      if (!m.optional) row[c] = { ch: m.glyph, fg: m.color };
+      if (m.label) {
+        labels.push({
+          col: c,
+          row: r,
+          text: m.label,
+          color: m.labelColor ?? m.color,
+          glyph: m.glyph,
+          optional: m.optional,
+        });
+      }
     }
     for (const l of placeLabels(labels, cols, rows)) {
       const row = top[l.y];
       if (row) [...l.text].forEach((ch, i) => (row[l.x + i] = { ch, fg: l.color }));
+      const anchor = top[l.row]?.[l.col];
+      if (l.optional && anchor?.ch === " ") {
+        (top[l.row] as Cell[])[l.col] = { ch: l.glyph, fg: l.color };
+      }
     }
     out = composite(out, top);
   }
