@@ -1,9 +1,10 @@
 import { createStore } from "solid-js/store";
-import type { Location, Report } from "../domain/types.ts";
+import type { Hazards, Location, Report } from "../domain/types.ts";
+import { DEFAULT_TOGGLES, type LayerToggles } from "../render/hazard-layers.ts";
 import type { Units } from "../render/units.ts";
 import type { Camera } from "../render/worldmap.ts";
 
-export const VIEWS = ["now", "hourly", "daily", "map", "alerts"] as const;
+export const VIEWS = ["now", "hourly", "daily", "map", "hazards", "alerts"] as const;
 export type View = (typeof VIEWS)[number];
 
 export const VIEW_LABEL: Record<View, string> = {
@@ -11,6 +12,7 @@ export const VIEW_LABEL: Record<View, string> = {
   hourly: "Hourly",
   daily: "10-Day",
   map: "World Map",
+  hazards: "Hazards",
   alerts: "Alerts",
 };
 
@@ -19,6 +21,8 @@ export interface AppState {
   location: Location;
   units: Units;
   report?: Report;
+  hazards?: Hazards;
+  layers: LayerToggles;
   loading: boolean;
   error?: string;
   lastUpdated?: number;
@@ -37,6 +41,7 @@ export function createAppStore(init: Pick<AppState, "location" | "units" | "moti
     camera: { lon: init.location.lon, lat: 0, zoom: 1 },
     showHelp: false,
     alertIndex: 0,
+    layers: { ...DEFAULT_TOGGLES },
     ...init,
   });
 }

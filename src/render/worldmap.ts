@@ -26,6 +26,10 @@ export interface MapMarker {
 export interface MapPath {
   coords: Array<[lon: number, lat: number]>;
   color: RGB;
+  /** Draw every other pixel run, e.g. for forecast cones. */
+  dotted?: boolean;
+  /** Per-vertex colors (e.g. storm track colored by category); overrides `color`. */
+  colors?: RGB[];
 }
 
 export interface MapLayers {
@@ -192,6 +196,28 @@ export function pointInLand(lon: number, lat: number): boolean {
   return landGrid[gy * GRID_W + gx] === 1;
 }
 
+function dottedLine(canvas: PixelCanvas, a: [number, number], b: [number, number], c: RGB): void {
+  const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+  const steps = Math.max(1, Math.ceil(len));
+  for (let i = 0; i <= steps; i += 3) {
+    const t = i / steps;
+    canvas.set(a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, c);
+  }
+}
+
+/** Project lon/lat to a terminal cell for the given camera and viewport. */
+export function cellProjector(cam: Camera, cols: number, rows: number) {
+  const proj = makeProjection(cam, cols * 2, rows * 4);
+  return (lon: number, lat: number): [col: number, row: number] | undefined => {
+    const pt = proj([lon, lat]);
+    if (!pt) return undefined;
+    const c = Math.floor(pt[0] / 2);
+    const r = Math.floor(pt[1] / 4);
+    if (c < 0 || r < 0 || c >= cols || r >= rows) return undefined;
+    return [c, r];
+  };
+}
+
 /**
  * Render the world map with overlays into a grid of styled cells.
  * Layering: half-block fill (ocean/land/field) → braille coast+borders → markers.
@@ -215,13 +241,16 @@ export function renderWorldMap(
   geoPath(proj, canvasContext(lines, theme.coast) as never)(landGeo());
   for (const p of layers.paths ?? []) {
     let prev: [number, number] | null = null;
-    for (const c of p.coords) {
+    p.coords.forEach((c, i) => {
       const pt = proj(c);
+      // Skip segments that wrap around the antimeridian.
       if (pt && prev && Math.abs(pt[0] - prev[0]) < lines.width / 2) {
-        lines.line(prev[0], prev[1], pt[0], pt[1], p.color);
+        const color = p.colors?.[i] ?? p.color;
+        if (p.dotted) dottedLine(lines, prev, pt, color);
+        else lines.line(prev[0], prev[1], pt[0], pt[1], color);
       }
       prev = pt;
-    }
+    });
   }
   // Braille glyphs take the base cell's background so lines sit on the fill.
   const braille = lines

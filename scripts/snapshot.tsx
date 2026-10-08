@@ -4,6 +4,7 @@ import { testRender } from "@opentui/solid";
 import envPaths from "env-paths";
 import { DiskCache } from "../src/cache/disk-cache.ts";
 import { resolveLocation } from "../src/providers/location.ts";
+import { fetchHazards } from "../src/hazards.ts";
 import { buildReport } from "../src/report.ts";
 import { App } from "../src/tui/app.tsx";
 import { createAppStore, VIEWS } from "../src/tui/store.ts";
@@ -14,12 +15,14 @@ const http = createHttpClient(new DiskCache(envPaths("weather-outlook", { suffix
 const location = await resolveLocation(http, place);
 const report = await buildReport(http, location, "imperial");
 const [state, setState] = createAppStore({ location, units: "imperial", motion: false });
-setState({ report, loading: false, lastUpdated: Date.now() });
+setState({ report, hazards: await fetchHazards(http), loading: false, lastUpdated: Date.now() });
 const t = await testRender(() => <App state={state} setState={setState} refresh={() => {}} quit={() => {}} />, {
   width: Number(w),
   height: Number(h),
 });
+const only = process.env.VIEW;
 for (const v of VIEWS) {
+  if (only && only !== v) continue;
   setState("view", v);
   await t.renderOnce();
   console.log(`\n===== ${v} =====`);

@@ -18,10 +18,11 @@ import { lineChart, sparkline } from "../render/charts.ts";
 import { aqiScale, hex, type RGB, scale, temperatureScale } from "../render/color.ts";
 import { type FxKind, WeatherFx } from "../render/fx.ts";
 import { compass, distance, precip, pressure, speed, temp, windArrow } from "../render/units.ts";
-import { type MapMarker, type MapPath, renderWorldMap } from "../render/worldmap.ts";
 import { CellCanvas, type DrawApi } from "./cell-canvas.ts";
 import { type AppState, VIEW_LABEL, VIEWS } from "./store.ts";
 import { T, theme, toHexStr } from "./theme.ts";
+import { HazardsView } from "./views/hazards.tsx";
+import { MapView } from "./views/map.tsx";
 
 extend({ cell_canvas: CellCanvas });
 
@@ -93,13 +94,13 @@ function Header(props: { state: AppState }) {
     });
   return (
     <box flexDirection="row" height={1} paddingLeft={1} paddingRight={1} backgroundColor={T.panel}>
-      <text>
+      <text wrapMode="none">
         <span style={{ fg: T.accent }}>◆ weather-outlook </span>
         <span style={{ fg: T.text }}>{place()}</span>
         <span style={{ fg: T.dim }}> · {clock()}</span>
       </text>
       <box flexGrow={1} />
-      <text>
+      <text wrapMode="none">
         <For each={[...VIEWS]}>
           {(v, i) => (
             <span
@@ -127,13 +128,13 @@ function Footer(props: { state: AppState }) {
   };
   const hints = () =>
     props.state.view === "map"
-      ? "←↑↓→ pan  +/- zoom  c center  0 reset"
+      ? "←↑↓→ pan  +/- zoom  c center  0 reset  S/F/H/Q/A layers"
       : props.state.view === "alerts"
         ? "↑↓ select alert"
-        : "tab/1-5 views";
+        : "tab/1-6 views";
   return (
     <box flexDirection="row" height={1} paddingLeft={1} paddingRight={1} backgroundColor={T.panel}>
-      <text>
+      <text wrapMode="none">
         <span style={{ fg: T.dim }}>{hints()}</span>
         <span style={{ fg: T.faint }}> │ </span>
         <span style={{ fg: T.dim }}>u units r refresh ? help q quit</span>
@@ -193,7 +194,7 @@ function Scene(props: {
 
 function Metric(props: { label: string; value: string; color?: string }) {
   return (
-    <text>
+    <text wrapMode="none">
       <span style={{ fg: T.dim }}>{props.label.padEnd(12)}</span>
       <span style={{ fg: props.color ?? T.text }}>{props.value}</span>
     </text>
@@ -267,7 +268,7 @@ function NowView(props: { state: AppState; report: Report }) {
                 </text>
                 <Show when={today()}>
                   {(d: () => DailyPoint) => (
-                    <text>
+                    <text wrapMode="none">
                       <span style={{ fg: T.dim }}>high </span>
                       <span style={{ fg: tcolor(d().tempMax) }}>{temp(d().tempMax, u())}</span>
                       <span style={{ fg: T.dim }}> low </span>
@@ -338,7 +339,7 @@ function NowView(props: { state: AppState; report: Report }) {
                 </box>
                 <ChartCanvas cells={chartCells} />
               </box>
-              <text>
+              <text wrapMode="none">
                 <span style={{ fg: T.dim }}>rain </span>
                 <For
                   each={sparkline(
@@ -412,7 +413,7 @@ function HourlyView(props: { state: AppState; report: Report }) {
               timeZone: tz(),
             });
             return (
-              <text>
+              <text wrapMode="none">
                 <span style={{ fg: T.dim }}>
                   {`${day} ${fmtTime(h.time, tz(), false)}`.padEnd(10)}
                 </span>
@@ -474,7 +475,7 @@ function DailyView(props: { state: AppState; report: Report }) {
           });
           return (
             <box flexDirection="column" height={2}>
-              <text>
+              <text wrapMode="none">
                 <span style={{ fg: T.text }}>{name.padEnd(12)}</span>
                 <span style={{ fg: T.accent }}>{conditionGlyph(d.condition).padEnd(3)}</span>
                 <span style={{ fg: T.dim }}>{CONDITION_LABEL[d.condition].padEnd(24)}</span>
@@ -503,42 +504,6 @@ function DailyView(props: { state: AppState; report: Report }) {
           );
         }}
       </For>
-    </box>
-  );
-}
-
-// ─── Map view ──────────────────────────────────────────────────────────────
-
-function MapView(props: { state: AppState; report?: Report }) {
-  let cacheKey = "";
-  let cached: Cell[][] = [];
-  const draw = (api: DrawApi, w: number, h: number) => {
-    const cam = props.state.camera;
-    const loc = props.state.location;
-    const alerts = props.report?.alerts ?? [];
-    const key = `${w}x${h}:${cam.lon.toFixed(2)},${cam.lat.toFixed(2)},${cam.zoom}:${alerts.length}`;
-    if (key !== cacheKey) {
-      const markers: MapMarker[] = [
-        { lon: loc.lon, lat: loc.lat, glyph: "◉", color: theme.accent, label: loc.name },
-      ];
-      const paths: MapPath[] = alerts.flatMap((a) =>
-        (a.polygon ?? []).map((ring) => ({ coords: ring, color: SEVERITY_COLOR[a.severity] })),
-      );
-      cached = renderWorldMap(w, h, cam, { markers, paths });
-      cacheKey = key;
-    }
-    api.grid(cached);
-    api.text(
-      1,
-      h - 1,
-      ` ${cam.lat.toFixed(1)}°, ${cam.lon.toFixed(1)}°  ×${cam.zoom} `,
-      theme.dim,
-      theme.panel,
-    );
-  };
-  return (
-    <box flexGrow={1} border borderStyle="rounded" borderColor={T.border} title=" world ">
-      <cell_canvas flexGrow={1} height="100%" draw={draw} />
     </box>
   );
 }
@@ -617,13 +582,14 @@ function AlertsView(props: { state: AppState; report: Report }) {
 // ─── Help overlay ──────────────────────────────────────────────────────────
 
 const HELP: Array<[string, string]> = [
-  ["1-5 / tab", "switch view"],
+  ["1-6 / tab", "switch view"],
   ["u", "toggle °C / °F"],
   ["r", "refresh now"],
   ["m", "toggle animations"],
   ["←↑↓→ / hjkl", "pan map"],
   ["+ / -", "zoom map"],
   ["c", "center map on location"],
+  ["S F H Q A", "map layers: storms fires hotspots quakes alerts"],
   ["?", "toggle help"],
   ["q / ctrl+c", "quit"],
 ];
@@ -646,7 +612,7 @@ function Help() {
     >
       <For each={HELP}>
         {([k, d]) => (
-          <text>
+          <text wrapMode="none">
             <span style={{ fg: T.accent }}>{k.padEnd(14)}</span>
             <span style={{ fg: T.text }}>{d}</span>
           </text>
@@ -667,7 +633,7 @@ export function App(props: Props): JSX.Element {
     if (n === "q" || (key.ctrl && n === "c")) return props.quit();
     if (n === "?") return setState("showHelp", (v) => !v);
     if (n === "escape") return setState("showHelp", false);
-    if (/^[1-5]$/.test(n)) return setState("view", VIEWS[Number(n) - 1] ?? "now");
+    if (/^[1-6]$/.test(n)) return setState("view", VIEWS[Number(n) - 1] ?? "now");
     if (n === "tab") {
       const i = VIEWS.indexOf(state.view);
       return setState(
@@ -678,6 +644,11 @@ export function App(props: Props): JSX.Element {
     if (n === "u") return setState("units", (u) => (u === "metric" ? "imperial" : "metric"));
     if (n === "r") return props.refresh();
     if (n === "m") return setState("motion", (m) => !m);
+    if (state.view === "map" && key.shift) {
+      const toggle = { s: "storms", f: "fires", h: "hotspots", q: "quakes", a: "alerts" } as const;
+      const layer = toggle[n as keyof typeof toggle];
+      if (layer) return setState("layers", layer, (v) => !v);
+    }
     if (state.view === "map") {
       const step = 30 / state.camera.zoom;
       if (n === "left" || n === "h")
@@ -736,7 +707,10 @@ export function App(props: Props): JSX.Element {
                 <DailyView state={state} report={report()} />
               </Match>
               <Match when={state.view === "map"}>
-                <MapView state={state} report={report()} />
+                <MapView state={state} />
+              </Match>
+              <Match when={state.view === "hazards"}>
+                <HazardsView state={state} />
               </Match>
               <Match when={state.view === "alerts"}>
                 <AlertsView state={state} report={report()} />

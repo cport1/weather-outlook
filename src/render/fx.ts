@@ -135,7 +135,7 @@ export class WeatherFx {
           vy,
           ch:
             slant > 0.25 ? "/" : slant < -0.25 ? "\\" : heavy ? "|" : this.rand() > 0.5 ? "'" : "|",
-          color: RAIN_COLORS[Math.floor(this.rand() * RAIN_COLORS.length)] ?? RAIN_COLORS[0]!,
+          color: RAIN_COLORS[Math.floor(this.rand() * RAIN_COLORS.length)] ?? hex("#4fc3f7"),
         };
       }
     }

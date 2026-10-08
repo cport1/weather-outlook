@@ -1,6 +1,7 @@
 import { createCliRenderer } from "@opentui/core";
 import { render } from "@opentui/solid";
 import type { Location } from "../domain/types.ts";
+import { fetchHazards } from "../hazards.ts";
 import type { Units } from "../render/units.ts";
 import { buildReport } from "../report.ts";
 import type { HttpClient } from "../util/http.ts";
@@ -44,6 +45,14 @@ export async function runDashboard(opts: DashboardOptions): Promise<void> {
     }
   };
 
+  const refreshHazards = async () => {
+    try {
+      setState("hazards", await fetchHazards(opts.http));
+    } catch {
+      // Individual providers already degrade gracefully; nothing to surface here.
+    }
+  };
+
   const quit = () => {
     renderer.destroy();
     process.exit(0);
@@ -54,4 +63,6 @@ export async function runDashboard(opts: DashboardOptions): Promise<void> {
     renderer,
   );
   void refresh();
+  void refreshHazards();
+  setInterval(() => void refreshHazards(), 15 * 60_000);
 }

@@ -235,3 +235,15 @@ export const Report = z.object({
   errors: z.array(ProviderError),
 });
 export type Report = z.infer<typeof Report>;
+
+export const Hazards = z.object({
+  schemaVersion: z.literal(SCHEMA_VERSION),
+  generatedAt: z.string(),
+  storms: z.array(Storm),
+  fires: z.array(Fire),
+  hotspots: z.array(Fire),
+  quakes: z.array(Quake),
+  space: SpaceWeather.optional(),
+  errors: z.array(ProviderError),
+});
+export type Hazards = z.infer<typeof Hazards>;

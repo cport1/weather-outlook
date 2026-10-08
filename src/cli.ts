@@ -4,7 +4,9 @@ import envPaths from "env-paths";
 import pkg from "../package.json" with { type: "json" };
 import { DiskCache } from "./cache/disk-cache.ts";
 import { detectCapabilities } from "./capabilities.ts";
+import { fetchHazards } from "./hazards.ts";
 import { resolveLocation } from "./providers/location.ts";
+import { renderHazardsOneShot } from "./render/hazards-oneshot.ts";
 import { renderOneShot } from "./render/oneshot.ts";
 import { defaultUnits, type Units } from "./render/units.ts";
 import { buildReport } from "./report.ts";
@@ -68,6 +70,27 @@ const program = new Command()
     }
     const report = await buildReport(http, location, units, { refresh: opts.refresh });
     process.stdout.write(`${renderOneShot(report, caps)}\n`);
+  });
+
+program
+  .command("hazards")
+  .alias("planet")
+  .description("world map of hurricanes, wildfires, earthquakes and space weather")
+  .option("-j, --json", "print hazards as JSON")
+  .option("--no-hotspots", "skip the 1.5 MB satellite hotspot download")
+  .action(async (opts: { json?: boolean; hotspots?: boolean }) => {
+    const hazards = await fetchHazards(makeHttp(), { hotspots: opts.hotspots });
+    if (opts.json) {
+      process.stdout.write(`${JSON.stringify(hazards, null, 2)}\n`);
+      return;
+    }
+    const color = program.opts<GlobalOpts>().color;
+    process.stdout.write(
+      renderHazardsOneShot(
+        hazards,
+        detectCapabilities({ color: color === false ? false : undefined }),
+      ),
+    );
   });
 
 program
