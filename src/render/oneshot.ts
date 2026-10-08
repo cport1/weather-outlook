@@ -17,6 +17,7 @@ import {
   temp,
   windArrow,
 } from "./units.ts";
+import { renderDetailsOneShot } from "./details.ts";
 
 const DIM = hex("#7a8794");
 const TEXT = hex("#e6edf3");
@@ -195,6 +196,9 @@ export function renderOneShot(report: Report, caps: Capabilities): string {
     if (narrow) for (const e of extras) out.push(`  ${e}`);
     else out.push(`  ${extras.join(p("  │  ", hex("#2b3640")))}`);
   }
+
+  const details = renderDetailsOneShot(report, caps);
+  if (details.length) out.push("", ...details);
 
   if (report.alerts.length) {
     out.push("");
