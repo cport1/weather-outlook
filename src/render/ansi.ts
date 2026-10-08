@@ -76,6 +76,27 @@ export function visibleWidth(s: string): number {
   return [...stripAnsi(s)].length;
 }
 
+/** Cut a styled string to `width` visible columns, keeping escapes balanced. */
+export function truncateAnsi(s: string, width: number): string {
+  if (visibleWidth(s) <= width) return s;
+  let out = "";
+  let cols = 0;
+  let styled = false;
+  for (const part of s.split(/(\x1b\[[0-9;]*m)/)) {
+    if (part.startsWith("\x1b[")) {
+      out += part;
+      styled = part !== "\x1b[0m";
+      continue;
+    }
+    for (const ch of part) {
+      if (cols >= width) break;
+      out += ch;
+      cols++;
+    }
+  }
+  return styled ? `${out}\x1b[0m` : out;
+}
+
 export function padEnd(s: string, width: number): string {
   return s + " ".repeat(Math.max(0, width - visibleWidth(s)));
 }
