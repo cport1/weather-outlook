@@ -157,6 +157,7 @@ weather-outlook cache <clear|path|prune>
 | <kbd>S</kbd> <kbd>F</kbd> <kbd>H</kbd> <kbd>Q</kbd> <kbd>A</kbd> | Map layers: storms · fires · hotspots · quakes · alerts |
 | <kbd>T</kbd> <kbd>W</kbd> <kbd>P</kbd> <kbd>C</kbd> | Map fields (one at a time, with legend): temperature · wind · precipitation · clouds |
 | <kbd>N</kbd> <kbd>O</kbd> <kbd>L</kbd> | Map overlays: night shading · aurora oval · city names |
+| <kbd>E</kbd> <kbd>R</kbd> | Map layers: events (volcanoes, floods, droughts) · US risk outlooks (SPC/WPC) |
 | <kbd>g</kbd> | Map: type a place and fly there |
 | <kbd>i</kbd> / click | Map: inspect hazards — <kbd>Tab</kbd> next, <kbd>Enter</kbd> open its forecast, <kbd>Esc</kbd> exit |
 | <kbd>Space</kbd> · <kbd>,</kbd> <kbd>.</kbd> | Radar play/pause · step frames |
@@ -221,19 +222,21 @@ Everything works out of the box — no accounts, no keys. Responses are cached o
 | Data | Source | Coverage |
 | --- | --- | --- |
 | Forecast, air quality, geocoding | [Open-Meteo](https://open-meteo.com) (CC BY 4.0) | 🌐 Global |
-| Weather alerts | [NWS](https://www.weather.gov/documentation/services-web-api) | 🇺🇸 US |
+| Weather alerts | [NWS](https://www.weather.gov/documentation/services-web-api) · [Environment Canada](https://api.weather.gc.ca) · [MET Norway](https://api.met.no/weatherapi/metalerts/2.0/documentation) · [MeteoAlarm](https://meteoalarm.org) · [WMO SWIC](https://severeweather.wmo.int) | 🇺🇸 🇨🇦 🇳🇴 🇪🇺 · 🌐 headlines |
+| Severe, fire-weather & flood outlooks | [NOAA SPC](https://www.spc.noaa.gov) · [WPC](https://www.wpc.ncep.noaa.gov) | 🇺🇸 US |
 | Hurricane tracks & cones | [NOAA NHC](https://www.nhc.noaa.gov) via NOAA map services | Atlantic & Pacific |
-| Tropical cyclones elsewhere | [GDACS](https://www.gdacs.org) | 🌐 Global |
-| Wildfire incidents | [NIFC WFIGS](https://data-nifc.opendata.arcgis.com) | 🇺🇸 US |
+| Tropical cyclones elsewhere | [JTWC](https://www.metoc.navy.mil/jtwc/jtwc.html) tracks + ATCF best tracks · [GDACS](https://www.gdacs.org) | 🌐 Global |
+| Wildfire incidents & perimeters | [NIFC WFIGS](https://data-nifc.opendata.arcgis.com) · [CAL FIRE](https://www.fire.ca.gov) · [CWFIS](https://cwfis.cfs.nrcan.gc.ca) | 🇺🇸 US · 🇨🇦 Canada |
 | Satellite fire hotspots | [NASA FIRMS](https://firms.modaps.eosdis.nasa.gov) (MODIS, 24h) | 🌐 Global |
-| Earthquakes | [USGS](https://earthquake.usgs.gov/earthquakes/feed/) | 🌐 Global |
+| Earthquakes | [USGS](https://earthquake.usgs.gov/earthquakes/feed/) feeds + FDSN nearby search | 🌐 Global |
+| Volcanoes, floods, droughts | [USGS HANS](https://volcanoes.usgs.gov/hans-public/) · [NASA EONET](https://eonet.gsfc.nasa.gov) · [GDACS](https://www.gdacs.org) | 🌐 Global |
 | Space weather & aurora | [NOAA SWPC](https://www.swpc.noaa.gov) | 🌐 Global |
 | Radar | [RainViewer](https://www.rainviewer.com/api.html) · [IEM NEXRAD](https://mesonet.agron.iastate.edu) (inside the US) | 🌐 Global · 🇺🇸 US |
 | Satellite | [NASA GIBS](https://earthdata.nasa.gov/gibs): GOES-East/West GeoColor, Himawari IR, VIIRS | 🌐 Global |
 | Base map | [Natural Earth](https://www.naturalearthdata.com) via world-atlas | Public domain |
 | Sun & moon | Computed locally with [SunCalc](https://github.com/mourner/suncalc) | — |
 
-Planned next: MeteoAlarm & Environment Canada alerts, SPC outlooks, tides & buoys, model comparison, and optional keyed providers — see the [roadmap](https://github.com/cport1/weather-outlook/milestones).
+Planned next: tides & buoys, model comparison, and optional keyed providers — see the [roadmap](https://github.com/cport1/weather-outlook/milestones).
 
 ## 🖥️ Terminal support
 
