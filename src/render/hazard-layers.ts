@@ -9,13 +9,7 @@ import type {
 } from "../domain/types.ts";
 import { type Bbox, pointInRing, ringBbox } from "../util/geo.ts";
 import { hex, lerp, type RGB, stormCategoryColor } from "./color.ts";
-import {
-  DEFAULT_THEME,
-  type MapLayers,
-  type MapMarker,
-  type MapPath,
-  pointInLand,
-} from "./worldmap.ts";
+import type { MapLayers, MapMarker, MapPath, PixelShader } from "./worldmap.ts";
 
 export interface LayerToggles {
   storms: boolean;
@@ -91,10 +85,11 @@ export function eventColor(e: GeoEvent): RGB {
 }
 
 /**
- * Half-block color field that tints land/ocean under the Day 1 SPC categorical
- * outlook. Bboxes are precomputed so the per-pixel test stays cheap.
+ * Pixel shader that tints whatever is underneath (land/ocean or a weather
+ * field) with the Day 1 SPC categorical outlook, so it composes with the
+ * field layers and runs before night shading. Bboxes keep the per-pixel test cheap.
  */
-export function outlookField(areas: RiskArea[]): MapLayers["field"] {
+export function outlookShader(areas: RiskArea[]): PixelShader | undefined {
   const day1 = areas
     .filter((a) => a.product === "categorical" && a.day === 1)
     .sort((a, b) => b.level - a.level)
@@ -102,11 +97,9 @@ export function outlookField(areas: RiskArea[]): MapLayers["field"] {
   if (!day1.length) return undefined;
   const inBox = (b: Bbox, lon: number, lat: number) =>
     lon >= b.west && lon <= b.east && lat >= b.south && lat <= b.north;
-  return (lon, lat) => {
+  return (lon, lat, c) => {
     const hit = day1.find((d) => inBox(d.box, lon, lat) && pointInRing(lon, lat, d.ring));
-    if (!hit) return undefined;
-    const base = pointInLand(lon, lat) ? DEFAULT_THEME.land : DEFAULT_THEME.ocean;
-    return lerp(base, hit.color, 0.55);
+    return hit ? lerp(c, hit.color, 0.55) : c;
   };
 }
 
@@ -152,10 +145,11 @@ export function buildHazardLayers(
 ): MapLayers {
   const markers: MapMarker[] = [];
   const paths: MapPath[] = [];
-  let field: MapLayers["field"];
+  const shaders: PixelShader[] = [];
 
   if (toggles.outlooks && hazards?.outlooks?.length) {
-    field = outlookField(hazards.outlooks);
+    const risk = outlookShader(hazards.outlooks);
+    if (risk) shaders.push(risk);
     // Excessive rainfall and fire weather as dotted outlines so they don't fight the fill.
     for (const a of hazards.outlooks) {
       if (a.day !== 1 || (a.product !== "rainfall" && a.product !== "fire")) continue;
@@ -173,7 +167,7 @@ export function buildHazardLayers(
         paths.push({ coords: ring, color: SEVERITY_COLOR[a.severity] });
     }
   }
-  if (!hazards) return { markers, paths, field };
+  if (!hazards) return { markers, paths, shaders };
 
   if (toggles.fires && zoom >= 4) {
     for (const p of hazards.perimeters ?? []) {
@@ -236,7 +230,7 @@ export function buildHazardLayers(
       }
     }
   }
-  return { markers, paths, field };
+  return { markers, paths, shaders };
 }
 
 const SPIRAL = ["@", "@", "6", "9"];

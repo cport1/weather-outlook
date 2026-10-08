@@ -46,11 +46,19 @@ const LEGEND: Array<[keyof AppState["layers"], string, string, string]> = [
   ["quakes", "Q", "●", "quakes"],
   ["alerts", "A", "▢", "alerts"],
   ["events", "E", "∆", "events"],
-  ["outlooks", "O", "▓", "risk"],
+  ["outlooks", "R", "▓", "risk"],
 ];
 const FIELD_KEYS: Record<string, FieldKind> = { t: "temp", w: "wind", p: "precip", c: "clouds" };
 const OVERLAY_KEYS: Record<string, keyof MapOverlays> = { n: "night", o: "aurora", l: "places" };
-const LAYER_KEYS = { s: "storms", f: "fires", h: "hotspots", q: "quakes", a: "alerts" } as const;
+const LAYER_KEYS = {
+  s: "storms",
+  f: "fires",
+  h: "hotspots",
+  q: "quakes",
+  a: "alerts",
+  e: "events",
+  r: "outlooks",
+} as const;
 
 const CITY = hex("#9aa8b5");
 const PIN = hex("#f0abfc");
@@ -174,7 +182,8 @@ export function MapView(props: Props) {
     const { hazards, layers, mapOverlays: ov, mapField } = props.state;
     const alerts = props.state.report?.alerts ?? [];
     const map = buildHazardLayers(hazards, alerts, layers, cam.zoom);
-    const shaders: PixelShader[] = [];
+    // Order: risk-outlook tint over the weather field, then night, then the aurora.
+    const shaders: PixelShader[] = [...(map.shaders ?? [])];
     if (ov.night) shaders.push(nightShader(new Date(), mapField ? 0.45 : 0.6));
     if (ov.aurora && aurora) shaders.push(auroraShader(aurora));
     const field = mapField && grid ? fieldLayer(grid, mapField) : {};

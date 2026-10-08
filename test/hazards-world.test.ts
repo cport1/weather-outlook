@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { alertSourceFor } from "../src/alerts.ts";
+import { providerForUrl } from "../src/attribution.ts";
 import type { Alert, Fire, GeoEvent, Hazards, Location, Storm } from "../src/domain/types.ts";
 import { mergeStorms } from "../src/hazards.ts";
 import {
@@ -36,6 +37,7 @@ import { parseNwsAlerts, resolveAlertZones } from "../src/providers/nws.ts";
 import { parseEro, parseSpcOutlook, risksAt } from "../src/providers/spc.ts";
 import { parseQuakes } from "../src/providers/usgs.ts";
 import { buildHazardLayers, DEFAULT_TOGGLES, riskColor } from "../src/render/hazard-layers.ts";
+import { inspectables } from "../src/render/inspect.ts";
 import { createAlertNotifier, notificationSequence } from "../src/tui/notify.ts";
 import { riskBadges } from "../src/tui/views/risk-badge.tsx";
 import type { HttpClient } from "../src/util/http.ts";
@@ -417,8 +419,12 @@ describe("map layers", () => {
   };
   test("outlook fill, event markers, perimeters only when zoomed in", () => {
     const world = buildHazardLayers(hazards, [], DEFAULT_TOGGLES, 1);
-    expect(world.field?.(-95, 35)).toBeDefined();
-    expect(world.field?.(0, 0)).toBeUndefined();
+    // Risk tint is a shader so it composes with weather fields and night shading.
+    expect(world.field).toBeUndefined();
+    const tint = world.shaders?.[0];
+    const under: [number, number, number] = [10, 20, 30];
+    expect(tint?.(-95, 35, under)).not.toEqual(under);
+    expect(tint?.(0, 0, under)).toEqual(under);
     expect(world.markers?.some((m) => m.glyph === "∆")).toBe(true);
     // Only the dotted ERO outline at world zoom; the perimeter appears at zoom 4.
     expect(world.paths).toHaveLength(1);
@@ -429,8 +435,39 @@ describe("map layers", () => {
       { ...DEFAULT_TOGGLES, outlooks: false, events: false },
       1,
     );
-    expect(off.field).toBeUndefined();
+    expect(off.shaders).toHaveLength(0);
     expect(off.markers).toHaveLength(0);
+  });
+  test("events are inspectable on the map", () => {
+    const items = inspectables(hazards, [], DEFAULT_TOGGLES, Date.parse("2026-10-08T00:00:00Z"));
+    const v = items.find((i) => i.kind === "event");
+    expect(v).toMatchObject({ key: "event:v", title: "V volcano", place: "V" });
+    expect(v?.lines[0]).toBe("orange alert");
+    expect(inspectables(hazards, [], { ...DEFAULT_TOGGLES, events: false }).length).toBe(0);
+  });
+  test("every new provider host is credited", () => {
+    for (const url of [
+      "https://www.metoc.navy.mil/jtwc/rss/jtwc.rss",
+      "https://hurricanes.ral.ucar.edu/realtime/plots/x.dat",
+      "https://ftp.nhc.noaa.gov/atcf/btk/bep152026.dat",
+      "https://www.spc.noaa.gov/products/outlook/day1otlk_cat.nolyr.geojson",
+      "https://www.wpc.ncep.noaa.gov/exper/eromap/geojson/Day1_Latest.geojson",
+      "https://api.weather.gc.ca/collections/weather-alerts/items",
+      "https://api.met.no/weatherapi/metalerts/2.0/current.json",
+      "https://feeds.meteoalarm.org/api/v1/warnings/feeds-germany",
+      "https://severeweather.wmo.int/v2/json/wmo_all.json",
+      "https://api.weather.gov/zones/forecast/CAZ087",
+      "https://www.fire.ca.gov/umbraco/api/IncidentApi/GeoJsonList",
+      "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows",
+      "https://geoserver.cwfif.nrcan.gc.ca/geoserver/wfs",
+      "https://volcanoes.usgs.gov/hans-public/api/volcano/getElevatedVolcanoes",
+      "https://eonet.gsfc.nasa.gov/api/v3/events",
+      "https://www.gdacs.org/gdacsapi/api/events/geteventlist/EVENTS4APP",
+    ]) {
+      expect(providerForUrl(url)?.id, url).toBeDefined();
+    }
+    expect(providerForUrl("https://volcanoes.usgs.gov/x")?.id).toBe("usgs-volcanoes");
+    expect(providerForUrl("https://api.weather.gc.ca/x")?.id).toBe("eccc");
   });
   test("SPC categorical colors", () => {
     expect(riskColor({ product: "categorical", label: "SLGT" })).toEqual([255, 224, 102]);

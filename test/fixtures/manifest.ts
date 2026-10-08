@@ -39,6 +39,15 @@ export const FIXTURES: Fixture[] = [
     match: "api.weather.gov/alerts/active",
     record: (http) => fetchNwsAlertsForPoint(http, DENVER.lat, DENVER.lon),
   },
+  // Day 1 outlooks fetched by buildReport for US locations.
+  ...(
+    [
+      ["spc-day1-cat", "www.spc.noaa.gov/products/outlook/day1otlk_cat.nolyr.geojson"],
+      ["spc-day1-fw-windrh", "www.spc.noaa.gov/products/fire_wx/day1fw_windrh.nolyr.geojson"],
+      ["spc-day1-fw-dryt", "www.spc.noaa.gov/products/fire_wx/day1fw_dryt.nolyr.geojson"],
+      ["wpc-ero-day1", "www.wpc.ncep.noaa.gov/exper/eromap/geojson/Day1_Latest.geojson"],
+    ] as const
+  ).map(([name, match]) => ({ name, match, record: get(`https://${match}`) })),
   { name: "ipapi", match: "ipapi.co/json/", kind: "ip", record: get("https://ipapi.co/json/") },
   { name: "ipwho", match: "ipwho.is/", kind: "ip", record: get("https://ipwho.is/") },
   {
