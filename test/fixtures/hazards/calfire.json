@@ -1,0 +1,101 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-121.72983, 36.224857]
+      },
+      "properties": {
+        "Name": "Timber Fire ",
+        "Final": false,
+        "Updated": "2026-10-08T00:23:36Z",
+        "Started": "2026-08-09T03:35:00Z",
+        "AdminUnit": "Monterey County Sheriff's Department;Unified Command: Los Padres National Forest",
+        "AdminUnitUrl": null,
+        "County": "Monterey",
+        "Location": "Southeast of Loma Vista",
+        "AcresBurned": 25351.9,
+        "PercentContained": 94,
+        "ControlStatement": null,
+        "AgencyNames": "",
+        "Longitude": -121.72983,
+        "Latitude": 36.224857,
+        "Type": "Wildfire",
+        "UniqueId": "b7e4a30e-67ab-4964-882e-751da30b44e0",
+        "Url": "https://www.fire.ca.gov/incidents/2026/8/8/timber-fire/",
+        "ExtinguishedDate": "",
+        "ExtinguishedDateOnly": "",
+        "StartedDateOnly": "2026-08-09",
+        "IsActive": true,
+        "CalFireIncident": false,
+        "NotificationDesired": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-119.61289, 37.57]
+      },
+      "properties": {
+        "Name": "Dome Fire ",
+        "Final": false,
+        "Updated": "2026-10-08T01:04:03Z",
+        "Started": "2026-09-15T15:28:00Z",
+        "AdminUnit": "National Park Service",
+        "AdminUnitUrl": null,
+        "County": "Mariposa",
+        "Location": "North of Wawona Dome, Yosemite National Park ",
+        "AcresBurned": 6815,
+        "PercentContained": 55,
+        "ControlStatement": null,
+        "AgencyNames": "",
+        "Longitude": -119.61289,
+        "Latitude": 37.57,
+        "Type": "Wildfire",
+        "UniqueId": "4883092e-485f-429d-878d-819f01172840",
+        "Url": "https://www.fire.ca.gov/incidents/2026/9/15/dome-fire/",
+        "ExtinguishedDate": "",
+        "ExtinguishedDateOnly": "",
+        "StartedDateOnly": "2026-09-15",
+        "IsActive": true,
+        "CalFireIncident": false,
+        "NotificationDesired": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-117.1638398, 34.3968294]
+      },
+      "properties": {
+        "Name": "Juniper Fire",
+        "Final": false,
+        "Updated": "2026-10-08T01:04:14Z",
+        "Started": "2026-09-25T20:34:50Z",
+        "AdminUnit": "BLM - California Desert District",
+        "AdminUnitUrl": null,
+        "County": "San Bernardino",
+        "Location": "Bowen Ranch Road and Juniper Flats Road, Apple Valley",
+        "AcresBurned": 73,
+        "PercentContained": 100,
+        "ControlStatement": null,
+        "AgencyNames": "",
+        "Longitude": -117.1638398,
+        "Latitude": 34.3968294,
+        "Type": "Wildfire",
+        "UniqueId": "172a0cf6-6745-4cc1-bd58-98af7a8aac4e",
+        "Url": "https://www.fire.ca.gov/incidents/2026/9/25/juniper-fire/",
+        "ExtinguishedDate": "",
+        "ExtinguishedDateOnly": "",
+        "StartedDateOnly": "2026-09-25",
+        "IsActive": true,
+        "CalFireIncident": false,
+        "NotificationDesired": false
+      }
+    }
+  ]
+}

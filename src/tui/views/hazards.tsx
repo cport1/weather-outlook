@@ -1,9 +1,10 @@
 import { For, Show } from "solid-js";
-import type { Fire, Hazards, Quake, SpaceWeather, Storm } from "../../domain/types.ts";
+import type { Fire, GeoEvent, Hazards, Quake, SpaceWeather, Storm } from "../../domain/types.ts";
 import { auroraLatitude } from "../../providers/swpc.ts";
 import { hex, type RGB, scale, stormCategoryColor, toHex } from "../../render/color.ts";
-import { quakeColor } from "../../render/hazard-layers.ts";
+import { eventColor, eventGlyph, quakeColor } from "../../render/hazard-layers.ts";
 import { speed } from "../../render/units.ts";
+import { distanceKm } from "../../util/geo.ts";
 import type { AppState } from "../store.ts";
 import { T } from "../theme.ts";
 
@@ -29,14 +30,6 @@ function titleCase(s: string): string {
     .toLowerCase()
     .replace(/^\d+\s+/, "")
     .replace(/\b\w/g, (m) => m.toUpperCase());
-}
-
-function distanceKm(aLat: number, aLon: number, bLat: number, bLon: number): number {
-  const r = (d: number) => (d * Math.PI) / 180;
-  const h =
-    Math.sin(r(bLat - aLat) / 2) ** 2 +
-    Math.cos(r(aLat)) * Math.cos(r(bLat)) * Math.sin(r(bLon - aLon) / 2) ** 2;
-  return 6371 * 2 * Math.asin(Math.sqrt(h));
 }
 
 function catLabel(s: Storm): string {
@@ -95,8 +88,17 @@ export function HazardsView(props: { state: AppState }) {
       .map((q) => ({ ...q, km: distanceKm(loc().lat, loc().lon, q.lat, q.lon) }))
       .sort((a, b) => b.magnitude - a.magnitude)
       .slice(0, 12);
+  // Small local quakes from the FDSN radius query, newest first (excluding ones already listed).
+  const localQuakes = (): Array<Quake & { km: number }> => {
+    const shown = new Set(nearbyQuakes().map((q) => q.id));
+    return (hz()?.nearbyQuakes ?? [])
+      .filter((q) => !shown.has(q.id))
+      .map((q) => ({ ...q, km: distanceKm(loc().lat, loc().lon, q.lat, q.lon) }))
+      .slice(0, 4);
+  };
   const bigFires = (): Fire[] =>
     (hz()?.fires ?? []).filter((f) => (f.containment ?? 0) < 100).slice(0, 12);
+  const events = (): GeoEvent[] => (hz()?.events ?? []).slice(0, 12);
   return (
     <Show
       when={hz()}
@@ -169,42 +171,78 @@ export function HazardsView(props: { state: AppState }) {
               }}
             </Show>
           </box>
-          <box
-            flexGrow={1}
-            flexDirection="column"
-            border
-            borderStyle="rounded"
-            borderColor={T.border}
-            title={` wildfires · ${h().fires.length} US · ${h().hotspots.length.toLocaleString()} hotspots `}
-            paddingLeft={1}
-          >
-            <text wrapMode="none" fg={T.dim}>
-              {"name                   acres     contained"}
-            </text>
-            <For each={bigFires()}>
-              {(f) => {
-                const pct = f.containment ?? 0;
-                return (
-                  <text wrapMode="none">
-                    <span style={{ fg: c(hex("#ff7043")) }}>▲ </span>
-                    <span style={{ fg: T.text }}>
-                      {titleCase(f.name ?? "Unnamed")
-                        .slice(0, 22)
-                        .padEnd(23)}
-                    </span>
-                    <span style={{ fg: T.warn }}>
-                      {Math.round(f.acres ?? 0)
-                        .toLocaleString()
-                        .padStart(9)}
-                    </span>
-                    <span style={{ fg: T.dim }}> </span>
-                    <span style={{ fg: T.ok }}>{"█".repeat(Math.round(pct / 12.5))}</span>
-                    <span style={{ fg: T.faint }}>{"░".repeat(8 - Math.round(pct / 12.5))}</span>
-                    <span style={{ fg: T.dim }}> {Math.round(pct)}%</span>
-                  </text>
-                );
-              }}
-            </For>
+          <box flexGrow={1} flexDirection="column" gap={0}>
+            <box
+              flexGrow={1}
+              flexDirection="column"
+              border
+              borderStyle="rounded"
+              borderColor={T.border}
+              title={` wildfires · ${h().fires.length} incidents · ${h().hotspots.length.toLocaleString()} hotspots `}
+              paddingLeft={1}
+            >
+              <text wrapMode="none" fg={T.dim}>
+                {"name                   acres     contained"}
+              </text>
+              <For each={bigFires()}>
+                {(f) => {
+                  const pct = f.containment ?? 0;
+                  return (
+                    <text wrapMode="none">
+                      <span style={{ fg: c(hex("#ff7043")) }}>▲ </span>
+                      <span style={{ fg: T.text }}>
+                        {(f.provider === "cwfif" ? (f.name ?? "") : titleCase(f.name ?? "Unnamed"))
+                          .slice(0, 22)
+                          .padEnd(23)}
+                      </span>
+                      <span style={{ fg: T.warn }}>
+                        {Math.round(f.acres ?? 0)
+                          .toLocaleString()
+                          .padStart(9)}
+                      </span>
+                      <span style={{ fg: T.dim }}> </span>
+                      <Show
+                        when={f.containment === undefined && f.status}
+                        fallback={
+                          <>
+                            <span style={{ fg: T.ok }}>{"█".repeat(Math.round(pct / 12.5))}</span>
+                            <span style={{ fg: T.faint }}>
+                              {"░".repeat(8 - Math.round(pct / 12.5))}
+                            </span>
+                            <span style={{ fg: T.dim }}> {Math.round(pct)}%</span>
+                          </>
+                        }
+                      >
+                        <span style={{ fg: T.dim }}>{f.status}</span>
+                      </Show>
+                    </text>
+                  );
+                }}
+              </For>
+            </box>
+            <Show when={events().length}>
+              <box
+                height={Math.min(events().length, 8) + 2}
+                flexDirection="column"
+                border
+                borderStyle="rounded"
+                borderColor={T.border}
+                title={` events (${h().events?.length ?? 0}) · volcanoes floods droughts `}
+                paddingLeft={1}
+              >
+                <For each={events().slice(0, 8)}>
+                  {(e) => (
+                    <text wrapMode="none">
+                      <span style={{ fg: c(eventColor(e)) }}>{eventGlyph(e)} </span>
+                      <span style={{ fg: T.text }}>{e.title.slice(0, 30).padEnd(31)}</span>
+                      <span style={{ fg: T.dim }}>
+                        {[e.detail, ago(e.updated)].filter(Boolean).join(" · ").slice(0, 28)}
+                      </span>
+                    </text>
+                  )}
+                </For>
+              </box>
+            </Show>
           </box>
           <box
             width="32%"
@@ -212,9 +250,29 @@ export function HazardsView(props: { state: AppState }) {
             border
             borderStyle="rounded"
             borderColor={T.border}
-            title={` earthquakes 24h (${h().quakes.length}) `}
+            title={` earthquakes 24h (${h().quakes.length})${h().nearbyQuakes ? ` · ${h().nearbyQuakes?.length ?? 0} within 300 km` : ""} `}
             paddingLeft={1}
           >
+            <Show when={localQuakes().length}>
+              <text wrapMode="none" fg={T.accent}>
+                near you, last 7 days
+              </text>
+              <For each={localQuakes()}>
+                {(q) => (
+                  <text wrapMode="none">
+                    <span style={{ fg: c(quakeColor(q)) }}>M{q.magnitude.toFixed(1)} </span>
+                    <span style={{ fg: T.text }}>{q.place.slice(0, 22)}</span>
+                    <span style={{ fg: T.dim }}>
+                      {" "}
+                      {ago(q.time)} · {Math.round(q.km)} km
+                    </span>
+                  </text>
+                )}
+              </For>
+              <text wrapMode="none" fg={T.accent}>
+                strongest worldwide
+              </text>
+            </Show>
             <For each={nearbyQuakes()}>
               {(q) => (
                 <box flexDirection="column">

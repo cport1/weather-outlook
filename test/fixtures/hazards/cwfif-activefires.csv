@@ -1,0 +1,5 @@
+FID,agency_code,national_fire_id,agency_fire_id,percent_contained,fire_size,stage_of_control_status,situation_report_date,latitude,longitude
+cwfif_national_activefires.fid-1332b8d_1a119b4d149_-58b9,AB,2026_AB_HWF-151-2026,HWF-151-2026,-1,0.15,BH,2026-10-07T16:56:00,59.2329,-119.2139
+cwfif_national_activefires.fid-1332b8d_1a119b4d149_-58b8,AB,2026_AB_MWF-056-2026,MWF-056-2026,-1,0.97,BH,2026-10-05T17:16:00,56.7393,-111.3581
+cwfif_national_activefires.fid-1332b8d_1a119b4d149_-58b7,BC,2026_BC_2026-N72306,2026-N72306,-1,0.31,BH,2026-10-03T12:14:00,49.2002,-116.5695
+cwfif_national_activefires.fid-1332b8d_1a119b4d149_-58b6,BC,2026_BC_2026-K22314,2026-K22314,-1,0.1,UC,2026-10-06T10:19:00,50.5782,-120.0094

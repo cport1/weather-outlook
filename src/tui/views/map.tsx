@@ -45,6 +45,8 @@ const LEGEND: Array<[keyof AppState["layers"], string, string, string]> = [
   ["hotspots", "H", "·", "hotspots"],
   ["quakes", "Q", "●", "quakes"],
   ["alerts", "A", "▢", "alerts"],
+  ["events", "E", "∆", "events"],
+  ["outlooks", "O", "▓", "risk"],
 ];
 const FIELD_KEYS: Record<string, FieldKind> = { t: "temp", w: "wind", p: "precip", c: "clouds" };
 const OVERLAY_KEYS: Record<string, keyof MapOverlays> = { n: "night", o: "aurora", l: "places" };

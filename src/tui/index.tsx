@@ -6,6 +6,7 @@ import type { Units } from "../render/units.ts";
 import { buildReport } from "../report.ts";
 import type { HttpClient } from "../util/http.ts";
 import { App } from "./app.tsx";
+import { createAlertNotifier } from "./notify.ts";
 import { createAppStore } from "./store.ts";
 
 export interface DashboardOptions {
@@ -34,6 +35,7 @@ export async function runDashboard(opts: DashboardOptions): Promise<void> {
   });
   if (opts.images === "off") setState("radarMode", "cells");
 
+  const notifyAlerts = createAlertNotifier();
   let inflight = false;
   const refresh = async (force = false) => {
     if (inflight) return;
@@ -43,6 +45,7 @@ export async function runDashboard(opts: DashboardOptions): Promise<void> {
       // Units only affect rendering, so reports are always fetched the same way.
       const report = await buildReport(opts.http, state.location, state.units, { refresh: force });
       setState({ report, loading: false, lastUpdated: Date.now() });
+      notifyAlerts(report.alerts, state.location.name);
     } catch (err) {
       setState({ loading: false, error: err instanceof Error ? err.message : String(err) });
     } finally {
@@ -52,7 +55,8 @@ export async function runDashboard(opts: DashboardOptions): Promise<void> {
 
   const refreshHazards = async () => {
     try {
-      setState("hazards", await fetchHazards(opts.http));
+      const near = { lat: state.location.lat, lon: state.location.lon };
+      setState("hazards", await fetchHazards(opts.http, { near, alertZones: 40 }));
     } catch {
       // Individual providers already degrade gracefully; nothing to surface here.
     }

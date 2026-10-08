@@ -176,8 +176,59 @@ export const Fire = z.object({
   confidence: z.string().optional(),
   discovered: z.string().optional(),
   kind: z.enum(["incident", "hotspot"]),
+  /** Agency stage of control, e.g. "out of control" (Canada). */
+  status: z.string().optional(),
+  url: z.string().optional(),
 });
 export type Fire = z.infer<typeof Fire>;
+
+const Ring = z.array(z.tuple([z.number(), z.number()]));
+
+/** Mapped fire perimeter outline. */
+export const FirePerimeter = z.object({
+  id: z.string(),
+  provider: z.string(),
+  name: z.string().optional(),
+  acres: z.number().optional(),
+  rings: z.array(Ring),
+});
+export type FirePerimeter = z.infer<typeof FirePerimeter>;
+
+/** Point events from global disaster feeds (volcanoes, floods, droughts…). */
+export const GeoEvent = z.object({
+  id: z.string(),
+  provider: z.string(),
+  kind: z.enum(["volcano", "flood", "drought", "landslide", "dust", "snow", "heat", "other"]),
+  title: z.string(),
+  lat: z.number(),
+  lon: z.number(),
+  /** Normalized alert color (GDACS level / USGS aviation color code). */
+  level: z.enum(["green", "yellow", "orange", "red"]).optional(),
+  detail: z.string().optional(),
+  updated: z.string().optional(),
+  url: z.string().optional(),
+});
+export type GeoEvent = z.infer<typeof GeoEvent>;
+
+/** One risk polygon from an outlook product (SPC convective/fire, WPC excessive rainfall). */
+export const RiskArea = z.object({
+  product: z.enum(["categorical", "tornado", "wind", "hail", "probabilistic", "fire", "rainfall"]),
+  day: z.number(),
+  /** Short code, e.g. TSTM MRGL SLGT ENH MDT HIGH, or "5%". */
+  label: z.string(),
+  name: z.string(),
+  /** Ordinal risk within the product, higher is worse. */
+  level: z.number(),
+  fill: z.string().optional(),
+  valid: z.string().optional(),
+  expires: z.string().optional(),
+  rings: z.array(Ring),
+});
+export type RiskArea = z.infer<typeof RiskArea>;
+
+/** Risk at the report location (highest level per product). */
+export const RiskSummary = RiskArea.omit({ rings: true });
+export type RiskSummary = z.infer<typeof RiskSummary>;
 
 export const Quake = z.object({
   id: z.string(),
@@ -232,6 +283,8 @@ export const Report = z.object({
   airQuality: AirQuality.optional(),
   astronomy: Astronomy.optional(),
   alerts: z.array(Alert),
+  /** US outlook risks covering the location (SPC/WPC), when available. */
+  risks: z.array(RiskSummary).optional(),
   errors: z.array(ProviderError),
 });
 export type Report = z.infer<typeof Report>;
@@ -244,6 +297,13 @@ export const Hazards = z.object({
   hotspots: z.array(Fire),
   quakes: z.array(Quake),
   space: SpaceWeather.optional(),
+  /** Regional alerts with polygons for the map (NWS national, Canada, Norway). */
+  alerts: z.array(Alert).optional(),
+  /** Small quakes near the user (FDSN radius query). */
+  nearbyQuakes: z.array(Quake).optional(),
+  perimeters: z.array(FirePerimeter).optional(),
+  events: z.array(GeoEvent).optional(),
+  outlooks: z.array(RiskArea).optional(),
   errors: z.array(ProviderError),
 });
 export type Hazards = z.infer<typeof Hazards>;

@@ -1,0 +1,57 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "hotspots_last24hrs.32402776",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-124.12159729, 55.16923141]
+      },
+      "geometry_name": "geometry",
+      "properties": {
+        "rep_date": "2026-10-07T04:29:00Z",
+        "agency": "BC",
+        "frp": 15.7
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "hotspots_last24hrs.32402775",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-127.09159851, 54.24340057]
+      },
+      "geometry_name": "geometry",
+      "properties": {
+        "rep_date": "2026-10-07T04:29:00Z",
+        "agency": "BC",
+        "frp": 33.22
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "hotspots_last24hrs.32402774",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-127.07623291, 54.24526978]
+      },
+      "geometry_name": "geometry",
+      "properties": {
+        "rep_date": "2026-10-07T04:29:00Z",
+        "agency": "BC",
+        "frp": 17.47
+      }
+    }
+  ],
+  "totalFeatures": 189,
+  "numberMatched": 189,
+  "numberReturned": 189,
+  "timeStamp": "2026-10-08T04:11:12.771Z",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::4326"
+    }
+  }
+}

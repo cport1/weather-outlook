@@ -1,0 +1,213 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "bbox": [4.2976, 43.96, 4.2976, 43.96],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [4.2976, 43.96]
+      },
+      "properties": {
+        "eventtype": "FL",
+        "eventid": 1104202,
+        "episodeid": 3,
+        "eventname": "",
+        "glide": "",
+        "name": "Flood in France",
+        "description": "Flood in France",
+        "htmldescription": "Green Flood in France from: 29 Sep 2026 01 to: 08 Oct 2026 01.",
+        "icon": "https://www.gdacs.org/images/gdacs_icons/maps/Green/FL.png",
+        "iconoverall": "https://www.gdacs.org/images/gdacs_icons/maps/Green/FL.png",
+        "url": {
+          "geometry": "https://www.gdacs.org/gdacsapi/api/polygons/getgeometry?eventtype=FL&eventid=1104202&episodeid=3",
+          "report": "https://www.gdacs.org/report.aspx?eventid=1104202&episodeid=3&eventtype=FL",
+          "details": "https://www.gdacs.org/gdacsapi/api/events/geteventdata?eventtype=FL&eventid=1104202"
+        },
+        "alertlevel": "Green",
+        "alertscore": 1,
+        "episodealertlevel": "Green",
+        "episodealertscore": 0.5,
+        "istemporary": "false",
+        "iscurrent": "true",
+        "country": "France",
+        "fromdate": "2026-09-29T01:00:00",
+        "todate": "2026-10-08T01:00:00",
+        "datemodified": "2026-10-07T10:43:17",
+        "iso3": "FRA",
+        "source": "GLOFAS",
+        "sourceid": "",
+        "polygonlabel": "Centroid",
+        "Class": "Point_Centroid",
+        "affectedcountries": [
+          {
+            "iso2": "FR",
+            "iso3": "FRA",
+            "countryname": "France"
+          }
+        ],
+        "severitydata": {
+          "severity": 0,
+          "severitytext": "Magnitude 0 ",
+          "severityunit": ""
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [-3.7716, 40.5248, -3.7716, 40.5248],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-3.7716, 40.5248]
+      },
+      "properties": {
+        "eventtype": "FL",
+        "eventid": 1104199,
+        "episodeid": 13,
+        "eventname": "",
+        "glide": "",
+        "name": "Flood in Spain",
+        "description": "Flood in Spain",
+        "htmldescription": "Green Flood in Spain from: 28 Sep 2026 01 to: 08 Oct 2026 01.",
+        "icon": "https://www.gdacs.org/images/gdacs_icons/maps/Green/FL.png",
+        "iconoverall": "https://www.gdacs.org/images/gdacs_icons/maps/Green/FL.png",
+        "url": {
+          "geometry": "https://www.gdacs.org/gdacsapi/api/polygons/getgeometry?eventtype=FL&eventid=1104199&episodeid=13",
+          "report": "https://www.gdacs.org/report.aspx?eventid=1104199&episodeid=13&eventtype=FL",
+          "details": "https://www.gdacs.org/gdacsapi/api/events/geteventdata?eventtype=FL&eventid=1104199"
+        },
+        "alertlevel": "Green",
+        "alertscore": 1,
+        "episodealertlevel": "Green",
+        "episodealertscore": 0.5,
+        "istemporary": "false",
+        "iscurrent": "true",
+        "country": "Spain",
+        "fromdate": "2026-09-28T01:00:00",
+        "todate": "2026-10-08T01:00:00",
+        "datemodified": "2026-10-07T10:45:49",
+        "iso3": "ESP",
+        "source": "GLOFAS",
+        "sourceid": "",
+        "polygonlabel": "Centroid",
+        "Class": "Point_Centroid",
+        "affectedcountries": [
+          {
+            "iso2": "ES",
+            "iso3": "ESP",
+            "countryname": "Spain"
+          }
+        ],
+        "severitydata": {
+          "severity": 0,
+          "severitytext": "Magnitude 0 ",
+          "severityunit": ""
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [14.3516, 39.2061, 14.3516, 39.2061],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [14.3516, 39.2061]
+      },
+      "properties": {
+        "eventtype": "EQ",
+        "eventid": 1570035,
+        "episodeid": 1738335,
+        "eventname": "",
+        "glide": "",
+        "name": "Earthquake in Italy",
+        "description": "Earthquake in Italy",
+        "htmldescription": "Green M 4.9 Earthquake in Italy at: 08 Oct 2026 03:42:52.",
+        "icon": "https://www.gdacs.org/images/gdacs_icons/maps/Green/EQ.png",
+        "iconoverall": "https://www.gdacs.org/images/gdacs_icons/maps/Green/EQ.png",
+        "url": {
+          "geometry": "https://www.gdacs.org/gdacsapi/api/polygons/getgeometry?eventtype=EQ&eventid=1570035&episodeid=1738335",
+          "report": "https://www.gdacs.org/report.aspx?eventid=1570035&episodeid=1738335&eventtype=EQ",
+          "details": "https://www.gdacs.org/gdacsapi/api/events/geteventdata?eventtype=EQ&eventid=1570035"
+        },
+        "alertlevel": "Green",
+        "alertscore": 1,
+        "episodealertlevel": "Green",
+        "episodealertscore": 0,
+        "istemporary": "true",
+        "iscurrent": "true",
+        "country": "Italy",
+        "fromdate": "2026-10-08T03:42:52",
+        "todate": "2026-10-08T03:42:52",
+        "datemodified": "2026-10-08T03:54:04",
+        "iso3": "ITA",
+        "source": "NEIC",
+        "sourceid": "",
+        "polygonlabel": "Centroid",
+        "Class": "Point_Centroid",
+        "affectedcountries": [
+          {
+            "iso2": "IT",
+            "iso3": "ITA",
+            "countryname": "Italy"
+          }
+        ],
+        "severitydata": {
+          "severity": 4.9,
+          "severitytext": "Magnitude 4.9M, Depth:367.078km",
+          "severityunit": "M"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [141.0995, -7.8786, 141.0995, -7.8786],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [141.0995, -7.8786]
+      },
+      "properties": {
+        "eventtype": "WF",
+        "eventid": 1032630,
+        "episodeid": 1,
+        "eventname": "",
+        "glide": "",
+        "name": "Forest fires in Papua New Guinea",
+        "description": "Forest fires in Papua New Guinea",
+        "htmldescription": "Green Forest fires in Papua New Guinea from: 25 Sep 2026 to: 07 Oct 2026.",
+        "icon": "https://www.gdacs.org/images/gdacs_icons/maps/Green/WF.png",
+        "iconoverall": "https://www.gdacs.org/images/gdacs_icons/maps/Green/WF.png",
+        "url": {
+          "geometry": "https://www.gdacs.org/gdacsapi/api/polygons/getgeometry?eventtype=WF&eventid=1032630&episodeid=1",
+          "report": "https://www.gdacs.org/report.aspx?eventid=1032630&episodeid=1&eventtype=WF",
+          "details": "https://www.gdacs.org/gdacsapi/api/events/geteventdata?eventtype=WF&eventid=1032630"
+        },
+        "alertlevel": "Green",
+        "alertscore": 1,
+        "episodealertlevel": "Green",
+        "episodealertscore": 0.5,
+        "istemporary": "false",
+        "iscurrent": "true",
+        "country": "Papua New Guinea",
+        "fromdate": "2026-09-25T00:00:00",
+        "todate": "2026-10-07T00:00:00",
+        "datemodified": "2026-10-08T03:13:44",
+        "iso3": "PNG",
+        "source": "GWIS",
+        "sourceid": "",
+        "polygonlabel": "Centroid",
+        "Class": "Point_Centroid",
+        "affectedcountries": [
+          {
+            "iso2": "PG",
+            "iso3": "PNG",
+            "countryname": "Papua New Guinea"
+          }
+        ],
+        "severitydata": {
+          "severity": 15364,
+          "severitytext": "Green impact for forestfire in 15364 ha",
+          "severityunit": "ha"
+        }
+      }
+    }
+  ]
+}

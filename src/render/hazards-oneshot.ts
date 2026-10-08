@@ -2,7 +2,16 @@ import type { Capabilities } from "../capabilities.ts";
 import type { Hazards } from "../domain/types.ts";
 import { cellsToAnsi, paint } from "./ansi.ts";
 import { hex, stormCategoryColor } from "./color.ts";
-import { buildHazardLayers, DEFAULT_TOGGLES, quakeColor, stormLabel } from "./hazard-layers.ts";
+import {
+  buildHazardLayers,
+  DEFAULT_TOGGLES,
+  eventColor,
+  eventGlyph,
+  quakeColor,
+  riskColor,
+  SEVERITY_COLOR,
+  stormLabel,
+} from "./hazard-layers.ts";
 import { placeMarkers } from "./places.ts";
 import { renderWorldMap } from "./worldmap.ts";
 
@@ -67,11 +76,11 @@ export function renderHazardsOneShot(h: Hazards, caps: Capabilities): string {
   }
   out.push(
     "",
-    ` ${p(`Largest active US wildfires (${h.fires.length} total, ${h.hotspots.length.toLocaleString()} satellite hotspots worldwide)`, ACCENT)}`,
+    ` ${p(`Largest active wildfires, US + Canada (${h.fires.length} total, ${h.hotspots.length.toLocaleString()} satellite hotspots worldwide)`, ACCENT)}`,
   );
   for (const f of h.fires.filter((x) => (x.containment ?? 0) < 100).slice(0, 5)) {
     out.push(
-      `   ${p("▲", FIRE)} ${p(titleCase(f.name ?? "Unnamed").padEnd(24))}${p(`${Math.round(f.acres ?? 0).toLocaleString()} ac`.padStart(12), hex("#ffb74d"))}  ${p(`${Math.round(f.containment ?? 0)}% contained`, DIM)}`,
+      `   ${p("▲", FIRE)} ${p((f.provider === "cwfif" ? (f.name ?? "") : titleCase(f.name ?? "Unnamed")).padEnd(24))}${p(`${Math.round(f.acres ?? 0).toLocaleString()} ac`.padStart(12), hex("#ffb74d"))}  ${p(f.containment === undefined && f.status ? f.status : `${Math.round(f.containment ?? 0)}% contained`, DIM)}`,
     );
   }
   out.push("", ` ${p(`Strongest earthquakes, last 24h (${h.quakes.length})`, ACCENT)}`);
@@ -79,6 +88,46 @@ export function renderHazardsOneShot(h: Hazards, caps: Capabilities): string {
     out.push(
       `   ${p(`M${q.magnitude.toFixed(1)}`, quakeColor(q))} ${p(q.place)}${q.tsunami ? p("  ≋ tsunami", hex("#ff5252")) : ""}`,
     );
+  }
+  if (h.nearbyQuakes?.length) {
+    out.push(
+      `   ${p(`${h.nearbyQuakes.length} smaller quakes within 300 km of you this week`, DIM)}`,
+    );
+  }
+  const events = h.events ?? [];
+  if (events.length) {
+    out.push("", ` ${p(`Volcanoes, floods & other events (${events.length})`, ACCENT)}`);
+    for (const e of events.slice(0, 6)) {
+      out.push(
+        `   ${p(eventGlyph(e), eventColor(e))} ${p(e.title.slice(0, 36).padEnd(37))}${p(e.detail ?? e.level ?? "", DIM)}`,
+      );
+    }
+  }
+  const alerts = h.alerts ?? [];
+  const worst = alerts.filter((a) => a.severity === "extreme" || a.severity === "severe");
+  if (alerts.length) {
+    const byProvider = [...new Set(alerts.map((a) => a.provider))].join(", ");
+    out.push(
+      "",
+      ` ${p(`Mapped weather alerts (${alerts.length}, ${byProvider})`, ACCENT)}  ${p(`${worst.length} severe or extreme`, worst.length ? SEVERITY_COLOR.severe : DIM)}`,
+    );
+    const counts = new Map<string, number>();
+    for (const a of worst) counts.set(a.event, (counts.get(a.event) ?? 0) + 1);
+    const top = [...counts].sort((a, b) => b[1] - a[1]).slice(0, 4);
+    if (top.length) out.push(`   ${p(top.map(([e, n]) => `${e} ×${n}`).join(" · "), DIM)}`);
+  }
+  const cat = (h.outlooks ?? [])
+    .filter((o) => o.product === "categorical" && o.day === 1)
+    .sort((a, b) => b.level - a.level)[0];
+  const rain = (h.outlooks ?? [])
+    .filter((o) => o.product === "rainfall" && o.day === 1)
+    .sort((a, b) => b.level - a.level)[0];
+  if (cat || rain) {
+    const parts = [
+      cat ? `${p(cat.label, riskColor(cat))} ${p(cat.name, DIM)}` : "",
+      rain ? `${p("  excessive rain ", DIM)}${p(rain.label, riskColor(rain))}` : "",
+    ];
+    out.push("", ` ${p("US outlook today (SPC/WPC)", ACCENT)}  ${parts.join("")}`);
   }
   if (h.space) {
     out.push(
