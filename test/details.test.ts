@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
+import { providerForUrl } from "../src/attribution.ts";
 import { Climate, Marine, ModelComparison, Nowcast, Nws } from "../src/domain/details.ts";
 import { AirQuality } from "../src/domain/types.ts";
 import { buildClimate, funFact, percentileRank } from "../src/providers/climate.ts";
@@ -23,6 +24,7 @@ import {
   isoDurationMs,
   parseObservation,
   parsePeriods,
+  reflow,
   summarizeGrid,
 } from "../src/providers/nws-forecast.ts";
 import { parseAirQuality } from "../src/providers/open-meteo.ts";
@@ -296,5 +298,45 @@ describe("air quality", () => {
     expect(s?.readings.pm25).toEqual({ value: 7.2, units: "µg/m³" });
     expect(s?.readings.no2).toBeUndefined();
     expect(s?.time).toBe("2024-04-12T15:00:00Z");
+  });
+});
+
+describe("NWS text reflow", () => {
+  test("joins hard-wrapped prose but keeps headers, bullets and blank lines", () => {
+    const text = [
+      ".SHORT TERM...",
+      "Another hot day. Inland temperatures have already climbed into",
+      "the 90s, and the hottest spots will get close to 100 degrees.",
+      "",
+      " - Hot inland temperatures continue through Thursday",
+      "&&",
+    ].join("\n");
+    expect(reflow(text).split("\n")).toEqual([
+      ".SHORT TERM...",
+      "Another hot day. Inland temperatures have already climbed into the 90s, and the hottest spots will get close to 100 degrees.",
+      "",
+      " - Hot inland temperatures continue through Thursday",
+      "&&",
+    ]);
+  });
+});
+
+describe("attribution for detail sources", () => {
+  test("every new host is credited", () => {
+    const cases: Array<[string, string]> = [
+      ["https://archive-api.open-meteo.com/v1/archive", "open-meteo-archive"],
+      ["https://marine-api.open-meteo.com/v1/marine", "open-meteo-marine"],
+      ["https://ensemble-api.open-meteo.com/v1/ensemble", "open-meteo"],
+      ["https://api.met.no/weatherapi/nowcast/2.0/complete", "met-norway"],
+      ["https://api.tidesandcurrents.noaa.gov/api/prod/datagetter", "noaa-coops"],
+      ["https://www.ndbc.noaa.gov/data/latest_obs/latest_obs.txt", "ndbc"],
+      ["https://api.openaq.org/v3/locations", "openaq"],
+      ["https://api.openweathermap.org/data/2.5/weather", "openweathermap"],
+      ["https://api.tomorrow.io/v4/weather/forecast", "tomorrow-io"],
+      ["https://api.pirateweather.net/forecast/k/1,2", "pirateweather"],
+      ["https://api.weatherapi.com/v1/forecast.json", "weatherapi"],
+      ["https://weather.visualcrossing.com/VisualCrossingWebServices/rest", "visualcrossing"],
+    ];
+    for (const [url, id] of cases) expect(providerForUrl(url)?.id).toBe(id);
   });
 });
