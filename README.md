@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/weather-outlook"><img alt="npm (next)" src="https://img.shields.io/npm/v/weather-outlook/next?style=flat-square&label=npm%40next&color=7dd3fc&labelColor=0a0f16"></a>
+  <a href="https://www.npmjs.com/package/weather-outlook"><img alt="npm" src="https://img.shields.io/npm/v/weather-outlook?style=flat-square&label=npm&color=7dd3fc&labelColor=0a0f16"></a>
   <a href="https://github.com/cport1/weather-outlook/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/cport1/weather-outlook/ci.yml?branch=master&style=flat-square&label=CI&labelColor=0a0f16"></a>
   <img alt="runtime: Bun" src="https://img.shields.io/badge/runtime-Bun-ffd54f?style=flat-square&labelColor=0a0f16">
   <img alt="API keys: none" src="https://img.shields.io/badge/API%20keys-none-69f0ae?style=flat-square&labelColor=0a0f16">
@@ -24,20 +24,20 @@
 ## ⚡ Quick start
 
 ```sh
-bunx weather-outlook@next              # try it instantly
-bunx weather-outlook@next "Tokyo"      # any city, postcode, or "lat,lon"
+bunx weather-outlook                   # try it instantly
+bunx weather-outlook "Tokyo"           # any city, postcode, or "lat,lon"
 ```
 
 Or install it globally:
 
 ```sh
-npm i -g weather-outlook@next          # or: bun add -g weather-outlook@next
+npm i -g weather-outlook               # or: bun add -g weather-outlook
 weather-outlook                        # dashboard for wherever you are (IP location)
 wo Denver --once                       # short alias + one-shot summary
 ```
 
 > [!NOTE]
-> v2 is in alpha on the `next` tag and runs on [Bun](https://bun.sh) (the TUI engine needs Bun's FFI).
+> The npm package runs on [Bun](https://bun.sh) (the TUI engine needs Bun's FFI).
 > If Bun isn't installed, the `weather-outlook` command tells you how to get it.
 > Standalone binaries that need nothing at all (macOS, Linux glibc/musl, Windows) are attached to each
 > [GitHub release](https://github.com/cport1/weather-outlook/releases) with SHA256 checksums.
