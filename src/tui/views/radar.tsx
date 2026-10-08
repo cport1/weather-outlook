@@ -159,8 +159,12 @@ export function RadarView(props: {
   // (Re)load all frames whenever the location, radar zoom or viewport shape changes.
   // A generation counter drops results from loads that were superseded mid-flight.
   let generation = 0;
+  // New frames arrive every 5–10 minutes; reload the loop while the view is open.
+  const [reloadTick, setReloadTick] = createSignal(0);
+  const reloadTimer = setInterval(() => setReloadTick((n) => n + 1), 5 * 60_000);
+  onCleanup(() => clearInterval(reloadTimer));
   createEffect(
-    on(bbox, async (b) => {
+    on([bbox, reloadTick] as const, async ([b]) => {
       const gen = ++generation;
       setStatus("loading radar…");
       try {

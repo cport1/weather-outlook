@@ -59,8 +59,10 @@ interface WeatherMaps {
 export async function fetchRainViewerFrames(
   http: HttpClient,
 ): Promise<{ host: string; frames: RadarFrame[] }> {
+  // The frame index decides how current the whole loop is, so never serve it stale.
   const maps = await http.json<WeatherMaps>("https://api.rainviewer.com/public/weather-maps.json", {
     ttlMs: 5 * 60_000,
+    swr: false,
   });
   return { host: maps.host, frames: [...maps.radar.past, ...maps.radar.nowcast] };
 }
@@ -171,6 +173,7 @@ export async function fetchIemFrameTimes(
   });
   const res = await http.json<{ scans?: Array<{ ts: string }> }>(`${IEM}/json/radar.py?${params}`, {
     ttlMs: 2 * 60_000,
+    swr: false,
     timeoutMs: 10_000,
   });
   const times = (res.scans ?? []).map((s) => Math.floor(Date.parse(s.ts) / 1000));
@@ -220,6 +223,8 @@ export async function fetchIemRaster(
   const cgi = time ? "n0q-t.cgi" : "n0q.cgi";
   const bytes = await http.bytes(`${IEM}/cgi-bin/wms/nexrad/${cgi}?${params}`, {
     ttlMs: time ? 24 * 3600_000 : 4 * 60_000,
+    // Timestamped frames never change; "latest" must not be served stale.
+    swr: time ? undefined : false,
     timeoutMs: 15_000,
   });
   const img = decodePng(bytes);
@@ -322,7 +327,7 @@ export async function fetchSatellite(
   // Geostationary layers update every 10 minutes (and appear in GIBS ~1-2 h late).
   const bytes = await http.bytes(
     `https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?${params}`,
-    { ttlMs: 10 * 60_000, timeoutMs: 30_000, retries: 1 },
+    { ttlMs: 10 * 60_000, timeoutMs: 30_000, retries: 1, swr: Boolean(layer.time) },
   );
   const img = decodePng(bytes);
   return {

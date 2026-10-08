@@ -121,3 +121,16 @@ describe("attribution", () => {
     expect(text).toContain("ODbL");
   });
 });
+
+test("radar frame indexes are never served stale from the SWR cache", async () => {
+  const { fetchRainViewerFrames } = await import("../src/providers/radar.ts");
+  const seen: Array<{ url: string; swr?: boolean }> = [];
+  const http = {
+    json: async (url: string, opts: { swr?: boolean }) => {
+      seen.push({ url, swr: opts.swr });
+      return { host: "https://tilecache.rainviewer.com", radar: { past: [], nowcast: [] } };
+    },
+  } as never;
+  await fetchRainViewerFrames(http);
+  expect(seen[0]?.swr).toBe(false);
+});
