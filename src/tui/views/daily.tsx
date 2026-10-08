@@ -9,6 +9,7 @@ import { fmtTime, hexOf, precipScale, tcolor } from "../format.ts";
 import type { AppState } from "../store.ts";
 import { T } from "../theme.ts";
 import { AnimatedIcon } from "../widgets/icon.tsx";
+import { AnomalyCell } from "./details-bits.tsx";
 
 const dayName = (d: DailyPoint, long = false) =>
   new Date(`${d.date}T12:00:00Z`).toLocaleDateString("en-US", {
@@ -169,6 +170,7 @@ export function DailyView(props: {
                     {" "}
                     {`${speed(d.windGustMax, u())} gusts`}
                   </span>
+                  <AnomalyCell report={props.report} date={d.date} units={u()} bg={bg()} />
                 </text>
                 <Show when={rowHeight() === 2}>
                   <text> </text>

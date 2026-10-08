@@ -5,7 +5,16 @@ import { DEFAULT_TOGGLES, type LayerToggles } from "../render/hazard-layers.ts";
 import type { Units } from "../render/units.ts";
 import type { Camera } from "../render/worldmap.ts";
 
-export const VIEWS = ["now", "hourly", "daily", "radar", "map", "hazards", "alerts"] as const;
+export const VIEWS = [
+  "now",
+  "hourly",
+  "daily",
+  "radar",
+  "map",
+  "hazards",
+  "alerts",
+  "details",
+] as const;
 export type View = (typeof VIEWS)[number];
 
 export const VIEW_LABEL: Record<View, string> = {
@@ -16,6 +25,7 @@ export const VIEW_LABEL: Record<View, string> = {
   map: "World Map",
   hazards: "Hazards",
   alerts: "Alerts",
+  details: "Details",
 };
 
 export interface AppState {

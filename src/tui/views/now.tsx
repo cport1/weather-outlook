@@ -25,6 +25,7 @@ import { T } from "../theme.ts";
 import { GAUGES_HEIGHT, Gauges } from "../widgets/gauges.tsx";
 import { AnimatedIcon } from "../widgets/icon.tsx";
 import { fitFont } from "../widgets/splash.tsx";
+import { NowcastLine } from "./details-bits.tsx";
 import { RiskBadges } from "./risk-badge.tsx";
 
 // ─── Sky scene ─────────────────────────────────────────────────────────────
@@ -343,7 +344,7 @@ export function NowView(props: { state: AppState; report: Report }) {
                     </text>
                   )}
                 </Show>
-                <text> </text>
+                <NowcastLine report={props.report} />
                 <Metric
                   label="wind"
                   value={`${windArrow(c().windDirection)} ${speed(c().windSpeed, u())} ${compass(c().windDirection)}`}
