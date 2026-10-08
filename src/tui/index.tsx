@@ -3,6 +3,7 @@ import { render } from "@opentui/solid";
 import type { Location } from "../domain/types.ts";
 import { fetchHazards } from "../hazards.ts";
 import type { Units } from "../render/units.ts";
+import type { ResolvedProvider } from "../providers/registry.ts";
 import { buildReport } from "../report.ts";
 import type { HttpClient } from "../util/http.ts";
 import { App } from "./app.tsx";
@@ -22,6 +23,8 @@ export interface DashboardOptions {
   theme?: ThemeName | string;
   /** Saved places (from config) that `s` cycles through alongside recent ones. */
   savedLocations?: Location[];
+  /** Primary forecast source (`--provider`); defaults to Open-Meteo. */
+  provider?: ResolvedProvider;
 }
 
 /**
@@ -96,7 +99,10 @@ export async function runDashboard(opts: DashboardOptions): Promise<void> {
     const loc = state.location;
     try {
       // Units only affect rendering, so reports are always fetched the same way.
-      const report = await buildReport(opts.http, loc, state.units, { refresh: force });
+      const report = await buildReport(opts.http, loc, state.units, {
+        refresh: force,
+        provider: opts.provider,
+      });
       if (loc === state.location) {
         setState({ report, loading: false, lastUpdated: Date.now() });
         notifyAlerts(report.alerts, state.location.name);

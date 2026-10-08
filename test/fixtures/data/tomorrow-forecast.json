@@ -1,0 +1,138 @@
+{
+  "timelines": {
+    "minutely": [
+      {
+        "time": "2023-01-19T12:00:00Z",
+        "values": {
+          "temperature": 4.2,
+          "temperatureApparent": 1.9,
+          "humidity": 84,
+          "dewPoint": 1.7,
+          "pressureSurfaceLevel": 1016.5,
+          "windSpeed": 3.1,
+          "windGust": 6.2,
+          "windDirection": 250,
+          "cloudCover": 100,
+          "visibility": 16,
+          "uvIndex": 1,
+          "weatherCode": 1001,
+          "precipitationProbability": 0,
+          "rainIntensity": 0,
+          "snowIntensity": 0,
+          "sleetIntensity": 0,
+          "freezingRainIntensity": 0
+        }
+      },
+      {
+        "time": "2023-01-19T12:15:00Z",
+        "values": {
+          "temperature": 4.1,
+          "precipitationProbability": 5,
+          "rainIntensity": 0,
+          "snowIntensity": 0,
+          "sleetIntensity": 0,
+          "freezingRainIntensity": 0
+        }
+      },
+      {
+        "time": "2023-01-19T12:30:00Z",
+        "values": {
+          "temperature": 4.0,
+          "precipitationProbability": 40,
+          "rainIntensity": 0.4,
+          "snowIntensity": 0,
+          "sleetIntensity": 0,
+          "freezingRainIntensity": 0
+        }
+      },
+      {
+        "time": "2023-01-19T12:45:00Z",
+        "values": {
+          "temperature": 3.9,
+          "precipitationProbability": 60,
+          "rainIntensity": 1.2,
+          "snowIntensity": 0,
+          "sleetIntensity": 0,
+          "freezingRainIntensity": 0
+        }
+      }
+    ],
+    "hourly": [
+      {
+        "time": "2023-01-19T12:00:00Z",
+        "values": {
+          "temperature": 4.2,
+          "temperatureApparent": 1.9,
+          "humidity": 84,
+          "windSpeed": 3.1,
+          "windGust": 6.2,
+          "windDirection": 250,
+          "cloudCover": 100,
+          "uvIndex": 1,
+          "weatherCode": 1001,
+          "precipitationProbability": 0,
+          "rainIntensity": 0,
+          "snowIntensity": 0,
+          "sleetIntensity": 0,
+          "freezingRainIntensity": 0
+        }
+      },
+      {
+        "time": "2023-01-19T13:00:00Z",
+        "values": {
+          "temperature": 3.8,
+          "temperatureApparent": 1.2,
+          "humidity": 90,
+          "windSpeed": 3.6,
+          "windGust": 7.1,
+          "windDirection": 255,
+          "cloudCover": 100,
+          "uvIndex": 0,
+          "weatherCode": 4200,
+          "precipitationProbability": 65,
+          "rainIntensity": 1.1,
+          "snowIntensity": 0,
+          "sleetIntensity": 0,
+          "freezingRainIntensity": 0
+        }
+      }
+    ],
+    "daily": [
+      {
+        "time": "2023-01-19T05:00:00Z",
+        "values": {
+          "temperatureMax": 6.4,
+          "temperatureMin": -0.5,
+          "precipitationProbabilityMax": 65,
+          "rainAccumulationSum": 3.2,
+          "snowAccumulationLweSum": 0,
+          "windSpeedMax": 5.2,
+          "windGustMax": 11.1,
+          "uvIndexMax": 2,
+          "weatherCodeMax": 4001,
+          "weatherCodeMin": 1001,
+          "sunriseTime": "2023-01-19T12:16:00Z",
+          "sunsetTime": "2023-01-19T21:48:00Z"
+        }
+      },
+      {
+        "time": "2023-01-20T05:00:00Z",
+        "values": {
+          "temperatureMax": 3.1,
+          "temperatureMin": -2.2,
+          "precipitationProbabilityMax": 10,
+          "rainAccumulationSum": 0,
+          "snowAccumulationLweSum": 0,
+          "windSpeedMax": 4.0,
+          "windGustMax": 8.5,
+          "uvIndexMax": 2,
+          "weatherCodeMax": 10000,
+          "weatherCodeMin": 10000,
+          "sunriseTime": "2023-01-20T12:15:00Z",
+          "sunsetTime": "2023-01-20T21:49:00Z"
+        }
+      }
+    ]
+  },
+  "location": { "lat": 42.3478, "lon": -71.0466, "name": "Boston", "type": "administrative" }
+}

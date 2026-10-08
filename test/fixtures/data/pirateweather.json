@@ -1,0 +1,141 @@
+{
+  "latitude": 45.42,
+  "longitude": -75.69,
+  "timezone": "America/Toronto",
+  "offset": -5.0,
+  "elevation": 69,
+  "currently": {
+    "time": 1674318840,
+    "summary": "Snow",
+    "icon": "snow",
+    "nearestStormDistance": 0,
+    "nearestStormBearing": 0,
+    "precipIntensity": 0.79,
+    "precipProbability": 0.81,
+    "precipIntensityError": 0.2,
+    "precipType": "snow",
+    "temperature": -2.93,
+    "apparentTemperature": -7.49,
+    "dewPoint": -4.5,
+    "humidity": 0.88,
+    "pressure": 1011.38,
+    "windSpeed": 3.43,
+    "windGust": 7.1,
+    "windBearing": 58,
+    "cloudCover": 1.0,
+    "uvIndex": 0.1,
+    "visibility": 2.32,
+    "ozone": 395.16
+  },
+  "minutely": {
+    "summary": "Snow for the hour.",
+    "icon": "snow",
+    "data": [
+      {
+        "time": 1674318840,
+        "precipIntensity": 0.79,
+        "precipProbability": 0.81,
+        "precipIntensityError": 0.2,
+        "precipType": "snow"
+      },
+      {
+        "time": 1674318900,
+        "precipIntensity": 0.8,
+        "precipProbability": 0.82,
+        "precipIntensityError": 0.2,
+        "precipType": "snow"
+      },
+      {
+        "time": 1674318960,
+        "precipIntensity": 0.0,
+        "precipProbability": 0.1,
+        "precipIntensityError": 0.0,
+        "precipType": "none"
+      }
+    ]
+  },
+  "hourly": {
+    "summary": "Snow until this evening.",
+    "icon": "snow",
+    "data": [
+      {
+        "time": 1674316800,
+        "icon": "snow",
+        "summary": "Snow",
+        "precipIntensity": 0.85,
+        "precipProbability": 0.8,
+        "precipAccumulation": 0.84,
+        "precipType": "snow",
+        "temperature": -3.0,
+        "apparentTemperature": -7.6,
+        "dewPoint": -4.4,
+        "humidity": 0.9,
+        "pressure": 1011.4,
+        "windSpeed": 3.5,
+        "windGust": 7.0,
+        "windBearing": 60,
+        "cloudCover": 1.0,
+        "uvIndex": 0.1,
+        "visibility": 2.0
+      },
+      {
+        "time": 1674320400,
+        "icon": "cloudy",
+        "summary": "Cloudy",
+        "precipIntensity": 0.0,
+        "precipProbability": 0.2,
+        "precipAccumulation": 0.0,
+        "precipType": "none",
+        "temperature": -2.6,
+        "apparentTemperature": -6.9,
+        "dewPoint": -4.6,
+        "humidity": 0.86,
+        "pressure": 1011.9,
+        "windSpeed": 3.2,
+        "windGust": 6.4,
+        "windBearing": 55,
+        "cloudCover": 0.97,
+        "uvIndex": 0.2,
+        "visibility": 10.0
+      }
+    ]
+  },
+  "daily": {
+    "summary": "Snow today.",
+    "icon": "snow",
+    "data": [
+      {
+        "time": 1674277200,
+        "icon": "snow",
+        "summary": "Snow",
+        "sunriseTime": 1674304860,
+        "sunsetTime": 1674338580,
+        "moonPhase": 0.0,
+        "precipIntensity": 0.4,
+        "precipIntensityMax": 1.1,
+        "precipProbability": 0.9,
+        "precipAccumulation": 0.95,
+        "precipType": "snow",
+        "temperatureHigh": -1.2,
+        "temperatureLow": -8.9,
+        "temperatureMin": -6.1,
+        "temperatureMax": -1.0,
+        "apparentTemperatureHigh": -5.0,
+        "dewPoint": -5.0,
+        "humidity": 0.86,
+        "pressure": 1012.0,
+        "windSpeed": 3.1,
+        "windGust": 8.0,
+        "windBearing": 61,
+        "cloudCover": 0.95,
+        "uvIndex": 1.1,
+        "visibility": 8.0
+      }
+    ]
+  },
+  "flags": {
+    "sources": ["ETOPO1", "hrrrsubh", "hrrr_0-18", "nbm", "gfs", "gefs"],
+    "units": "si",
+    "version": "V1.4"
+  }
+}
