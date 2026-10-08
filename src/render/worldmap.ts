@@ -72,6 +72,11 @@ function land50Geo(): FeatureCollection {
   return land50Feature;
 }
 
+/** Land outlines for coastline drawing; 50m detail when zoomed in. */
+export function coastlineGeo(fine: boolean): FeatureCollection {
+  return fine ? land50Geo() : landGeo();
+}
+
 function borders(): MultiLineString {
   borderMesh ??= mesh(
     countriesTopo,
@@ -278,6 +283,33 @@ function dottedLine(canvas: PixelCanvas, a: [number, number], b: [number, number
     const t = i / steps;
     canvas.set(a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, c);
   }
+}
+
+/** Lon/lat bounds visible for a camera over a viewport of the given pixel aspect (width / height). */
+export function viewportBbox(cam: Camera, aspect: number) {
+  const w = 1000;
+  const h = Math.max(1, Math.round(w / aspect));
+  const proj = makeProjection(cam, w, h);
+  let west = 180;
+  let east = -180;
+  let south = 90;
+  let north = -90;
+  for (let i = 0; i <= 8; i++) {
+    for (const [x, y] of [
+      [(w * i) / 8, 0],
+      [(w * i) / 8, h],
+      [0, (h * i) / 8],
+      [w, (h * i) / 8],
+    ] as const) {
+      const ll = proj.invert?.([x, y]);
+      if (!ll || !Number.isFinite(ll[0]) || !Number.isFinite(ll[1])) continue;
+      west = Math.min(west, ll[0]);
+      east = Math.max(east, ll[0]);
+      south = Math.min(south, ll[1]);
+      north = Math.max(north, ll[1]);
+    }
+  }
+  return { west, east, south: Math.max(-85, south), north: Math.min(85, north) };
 }
 
 /** Project lon/lat to a terminal cell for the given camera and viewport. */

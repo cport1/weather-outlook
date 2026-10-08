@@ -30,6 +30,8 @@ export interface AppState {
   camera: Camera;
   /** Map zoom used by the radar view (360 / zoom = degrees of longitude shown). */
   radarZoom: number;
+  /** "auto" uses Kitty/Sixel images when the terminal supports them; "cells" forces half-blocks. */
+  radarMode: "auto" | "cells";
   showHelp: boolean;
   motion: boolean;
   /** Overrides the live condition for demos (`--simulate rain`). */
@@ -43,6 +45,7 @@ export function createAppStore(init: Pick<AppState, "location" | "units" | "moti
     loading: true,
     camera: { lon: init.location.lon, lat: 0, zoom: 1 },
     radarZoom: 24,
+    radarMode: "auto",
     showHelp: false,
     alertIndex: 0,
     layers: { ...DEFAULT_TOGGLES },

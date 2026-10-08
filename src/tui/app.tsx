@@ -589,6 +589,7 @@ function AlertsView(props: { state: AppState; report: Report }) {
 const HELP: Array<[string, string]> = [
   ["1-7 / tab", "switch view"],
   ["space , .", "radar play/pause, step frames"],
+  ["i", "radar: real image ↔ text cells"],
   ["u", "toggle °C / °F"],
   ["r", "refresh now"],
   ["m", "toggle animations"],
@@ -654,6 +655,7 @@ export function App(props: Props): JSX.Element {
     if (n === "m") return setState("motion", (m) => !m);
     if (state.view === "radar") {
       if (n === "space") return radar?.toggle();
+      if (n === "i") return setState("radarMode", (m) => (m === "auto" ? "cells" : "auto"));
       if (n === "," || n === "<") return radar?.step(-1);
       if (n === "." || n === ">") return radar?.step(1);
       if (n === "+" || n === "=") return setState("radarZoom", (z) => Math.min(60, z * 1.5));
