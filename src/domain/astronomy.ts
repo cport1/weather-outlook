@@ -41,6 +41,35 @@ export function computeAstronomy(lat: number, lon: number, date = new Date()): A
   };
 }
 
+/** Where a body sits in the sky, in degrees. Azimuth is measured from south, west positive (suncalc). */
+export interface SkyPosition {
+  altitude: number;
+  azimuth: number;
+}
+
+// suncalc 2.x reports degrees with a north-based azimuth; normalize to south-based, west positive.
+const fromNorth = (az: number) => ((((az - 180) % 360) + 540) % 360) - 180;
+
+export function sunPosition(lat: number, lon: number, date = new Date()): SkyPosition {
+  const p = SunCalc.getPosition(date, lat, lon);
+  return { altitude: p.altitude, azimuth: fromNorth(p.azimuth) };
+}
+
+export function moonPosition(
+  lat: number,
+  lon: number,
+  date = new Date(),
+): SkyPosition & { phase: number; fraction: number } {
+  const p = SunCalc.getMoonPosition(date, lat, lon);
+  const m = SunCalc.getMoonIllumination(date);
+  return {
+    altitude: p.altitude,
+    azimuth: fromNorth(p.azimuth),
+    phase: m.phase,
+    fraction: m.fraction,
+  };
+}
+
 /** Moon phase as a single emoji-free glyph sequence for terminals without emoji fonts. */
 export function moonGlyph(phase: number): string {
   const glyphs = ["●", "◑", "◑", "◑", "○", "◐", "◐", "◐"]; // waxing = right side lit (N. hemisphere)

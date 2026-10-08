@@ -72,6 +72,7 @@ export const HourlyPoint = z.object({
   humidity: z.number().optional(),
   cloudCover: z.number().optional(),
   uvIndex: z.number().optional(),
+  pressure: z.number().optional(),
   condition: Condition,
   isDay: z.boolean(),
 });

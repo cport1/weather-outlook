@@ -35,6 +35,7 @@ const HOURLY_VARS = [
   "uv_index",
   "weather_code",
   "is_day",
+  "pressure_msl",
 ];
 const DAILY_VARS = [
   "weather_code",
@@ -92,6 +93,7 @@ export function parseForecast(raw: ForecastResponse, now = new Date()): Forecast
     humidity: at(raw.hourly, "relative_humidity_2m", i),
     cloudCover: at(raw.hourly, "cloud_cover", i),
     uvIndex: at(raw.hourly, "uv_index", i),
+    pressure: at(raw.hourly, "pressure_msl", i),
     condition: fromWmo(at(raw.hourly, "weather_code", i) ?? -1),
     isDay: at(raw.hourly, "is_day", i) === 1,
   }));
