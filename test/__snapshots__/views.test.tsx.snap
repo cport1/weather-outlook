@@ -153,7 +153,7 @@ exports[`80x24 boot splash while the first fetch runs 1`] = `
                  █ █ ██▀▀▄▀█▀█▀█ ██▀▀█▀█▄▄█▀██ █▀█▀█  █▀██▀██▄▀                 
                  ▀▄▀▄▀██▄█▀█ █ █▀███▄█▀▄  █▄██▄█ █ █▄▄█▄██▄██ █                 
                                                                                 
-                         weather-outlook 2.0.0-alpha.1                          
+<version line>
                                                                                 
                  ⠋ fetching the sky over Denver, Colorado, US…                  
                                                                                 
@@ -455,7 +455,7 @@ exports[`160x48 boot splash while the first fetch runs 1`] = `
                  ╚███╔███╔╝███████╗██║  ██║   ██║   ██║  ██║███████╗██║  ██║      ╚██████╔╝╚██████╔╝   ██║   ███████╗╚██████╔╝╚██████╔╝██║  ██╗                 
                   ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝       ╚═════╝  ╚═════╝    ╚═╝   ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝                 
                                                                                                                                                                 
-                                                                 weather-outlook 2.0.0-alpha.1                                                                  
+<version line>
                                                                                                                                                                 
                                                          ⠋ fetching the sky over Denver, Colorado, US…                                                          
                                                                                                                                                                 

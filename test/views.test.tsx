@@ -4,6 +4,7 @@ import { App } from "../src/tui/app.tsx";
 import { createAppStore, type View } from "../src/tui/store.ts";
 import { resolveThemeName, setTheme } from "../src/tui/theme.ts";
 import { FIXTURE_NOW, fixtureHazards, fixtureReport, offlineHttp } from "./fixtures/report.ts";
+import pkg from "../package.json" with { type: "json" };
 
 // Headless frames of every view from fixture data (no network, frozen clock,
 // no motion) so layout regressions show up as snapshot diffs.
@@ -78,7 +79,13 @@ describe.each(SIZES)("%ix%i", (width, height) => {
     await t.renderOnce();
     const frame = t.captureCharFrame();
     expect(frame).toContain("fetching the sky over Denver");
-    expect(frame).toMatchSnapshot();
+    expect(frame).toContain(`weather-outlook ${pkg.version}`);
+    // The splash shows the package version, which every release bumps.
+    const stable = frame
+      .split("\n")
+      .map((line) => (line.includes(`weather-outlook ${pkg.version}`) ? "<version line>" : line))
+      .join("\n");
+    expect(stable).toMatchSnapshot();
   });
 });
 
