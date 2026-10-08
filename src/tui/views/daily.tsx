@@ -1,7 +1,7 @@
 import { useTerminalDimensions } from "@opentui/solid";
 import { For, Show } from "solid-js";
 import type { SetStoreFunction } from "solid-js/store";
-import { CONDITION_LABEL, conditionGlyph } from "../../domain/conditions.ts";
+import { CONDITION_LABEL, conditionGlyph, padGlyph } from "../../domain/conditions.ts";
 import type { DailyPoint, Report } from "../../domain/types.ts";
 import { uvScale } from "../../render/gauges.ts";
 import { precip, speed, temp } from "../../render/units.ts";
@@ -120,7 +120,7 @@ export function DailyView(props: {
                     {`${isSel() ? "▸" : " "}${dayName(d)}`.padEnd(13)}
                   </span>
                   <span style={{ fg: T.accent, bg: bg() }}>
-                    {conditionGlyph(d.condition).padEnd(3)}
+                    {padGlyph(conditionGlyph(d.condition), 3)}
                   </span>
                   <Show when={showLabel()}>
                     <span style={{ fg: T.dim, bg: bg() }}>

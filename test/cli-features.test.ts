@@ -356,6 +356,25 @@ describe("http: Expires, If-Modified-Since, SWR, rate limits", () => {
     now += 10_000;
     expect(await http.json<{ n: number }>("https://x/b", { ttlMs: 100 })).toEqual({ n: 2 });
   });
+  test("SWR never serves short-TTL data hours stale (current conditions)", async () => {
+    let now = 1_000;
+    const dir = await mkdtemp(join(tmpdir(), "wo-http-"));
+    const cache = new DiskCache(dir, () => now);
+    let n = 0;
+    const fakeFetch = (async () =>
+      new Response(JSON.stringify({ n: ++n }), { status: 200 })) as unknown as typeof fetch;
+    // Default 24h cap, as the dashboard uses it.
+    const http = createHttpClient(cache, fakeFetch, { swr: true });
+    const forecast = { ttlMs: 10 * 60_000 };
+    await http.json("https://x/forecast", forecast);
+    // 20 minutes later: within the short stale window, served instantly.
+    now += 20 * 60_000;
+    expect(await http.json<{ n: number }>("https://x/forecast", forecast)).toEqual({ n: 1 });
+    await http.settled?.();
+    // 5 hours later (the morning-cache bug): fetched fresh before answering.
+    now += 5 * 3600_000;
+    expect(await http.json<{ n: number }>("https://x/forecast", forecast)).toEqual({ n: 3 });
+  });
   test("per-host rate limiter spaces requests", async () => {
     let t = 0;
     const waits: number[] = [];

@@ -92,3 +92,8 @@ export function precipKind(c: Condition): "rain" | "snow" | "storm" | "fog" | "n
       return "none";
   }
 }
+
+/** Pad a glyph to `width` terminal cells; ⛅ and ⚡ are two cells wide, the rest one. */
+export function padGlyph(glyph: string, width: number): string {
+  return glyph + " ".repeat(Math.max(0, width - Bun.stringWidth(glyph)));
+}
