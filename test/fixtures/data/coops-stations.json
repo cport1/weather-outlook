@@ -1,0 +1,271 @@
+{
+  "count": 3502,
+  "units": null,
+  "stations": [
+    {
+      "state": "CA",
+      "tidepredoffsets": {
+        "self": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/9414131/tidepredoffsets.json"
+      },
+      "type": "R",
+      "timemeridian": -120,
+      "reference_id": "",
+      "timezonecorr": -8,
+      "id": "9414131",
+      "name": "Pillar Point Harbor, Half Moon Bay",
+      "lat": 37.5025,
+      "lng": -122.4821666666667,
+      "affiliations": "",
+      "portscode": "",
+      "products": null,
+      "disclaimers": null,
+      "notices": null,
+      "self": null,
+      "expand": null,
+      "tideType": ""
+    },
+    {
+      "state": "CA",
+      "tidepredoffsets": {
+        "self": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/9414262/tidepredoffsets.json"
+      },
+      "type": "S",
+      "timemeridian": -120,
+      "reference_id": "9414290",
+      "timezonecorr": -8,
+      "id": "9414262",
+      "name": "Southeast Farallon Island",
+      "lat": 37.7,
+      "lng": -123,
+      "affiliations": "",
+      "portscode": "",
+      "products": null,
+      "disclaimers": null,
+      "notices": null,
+      "self": null,
+      "expand": null,
+      "tideType": ""
+    },
+    {
+      "state": "CA",
+      "tidepredoffsets": {
+        "self": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/9414275/tidepredoffsets.json"
+      },
+      "type": "S",
+      "timemeridian": -120,
+      "reference_id": "9414290",
+      "timezonecorr": -8,
+      "id": "9414275",
+      "name": "Ocean Beach, outer coast",
+      "lat": 37.775,
+      "lng": -122.513,
+      "affiliations": "",
+      "portscode": "",
+      "products": null,
+      "disclaimers": null,
+      "notices": null,
+      "self": null,
+      "expand": null,
+      "tideType": ""
+    },
+    {
+      "state": "CA",
+      "tidepredoffsets": {
+        "self": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/9414290/tidepredoffsets.json"
+      },
+      "type": "R",
+      "timemeridian": 0,
+      "reference_id": "",
+      "timezonecorr": -8,
+      "id": "9414290",
+      "name": "SAN FRANCISCO (Golden Gate)",
+      "lat": 37.80630555555555,
+      "lng": -122.4658888888889,
+      "affiliations": "",
+      "portscode": "",
+      "products": null,
+      "disclaimers": null,
+      "notices": null,
+      "self": null,
+      "expand": null,
+      "tideType": ""
+    },
+    {
+      "state": "CA",
+      "tidepredoffsets": {
+        "self": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/9414305/tidepredoffsets.json"
+      },
+      "type": "S",
+      "timemeridian": -120,
+      "reference_id": "9414290",
+      "timezonecorr": -8,
+      "id": "9414305",
+      "name": "San Francisco, North Point, Pier 41",
+      "lat": 37.81,
+      "lng": -122.413,
+      "affiliations": "",
+      "portscode": "",
+      "products": null,
+      "disclaimers": null,
+      "notices": null,
+      "self": null,
+      "expand": null,
+      "tideType": ""
+    },
+    {
+      "state": "CA",
+      "tidepredoffsets": {
+        "self": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/9414317/tidepredoffsets.json"
+      },
+      "type": "R",
+      "timemeridian": -120,
+      "reference_id": "",
+      "timezonecorr": -8,
+      "id": "9414317",
+      "name": "Rincon Point, Pier 22 1/2",
+      "lat": 37.79,
+      "lng": -122.387,
+      "affiliations": "",
+      "portscode": "",
+      "products": null,
+      "disclaimers": null,
+      "notices": null,
+      "self": null,
+      "expand": null,
+      "tideType": ""
+    },
+    {
+      "state": "CA",
+      "tidepredoffsets": {
+        "self": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/9414334/tidepredoffsets.json"
+      },
+      "type": "S",
+      "timemeridian": -120,
+      "reference_id": "9414290",
+      "timezonecorr": -8,
+      "id": "9414334",
+      "name": "Potrero Point",
+      "lat": 37.7583,
+      "lng": -122.383,
+      "affiliations": "",
+      "portscode": "",
+      "products": null,
+      "disclaimers": null,
+      "notices": null,
+      "self": null,
+      "expand": null,
+      "tideType": ""
+    },
+    {
+      "state": "CA",
+      "tidepredoffsets": {
+        "self": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/9414358/tidepredoffsets.json"
+      },
+      "type": "R",
+      "timemeridian": -120,
+      "reference_id": "",
+      "timezonecorr": -8,
+      "id": "9414358",
+      "name": "Hunters Point",
+      "lat": 37.73,
+      "lng": -122.357,
+      "affiliations": "",
+      "portscode": "",
+      "products": null,
+      "disclaimers": null,
+      "notices": null,
+      "self": null,
+      "expand": null,
+      "tideType": ""
+    },
+    {
+      "state": "CA",
+      "tidepredoffsets": {
+        "self": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/9414391/tidepredoffsets.json"
+      },
+      "type": "S",
+      "timemeridian": -120,
+      "reference_id": "9414290",
+      "timezonecorr": -8,
+      "id": "9414391",
+      "name": "South San Francisco",
+      "lat": 37.6667,
+      "lng": -122.39,
+      "affiliations": "",
+      "portscode": "",
+      "products": null,
+      "disclaimers": null,
+      "notices": null,
+      "self": null,
+      "expand": null,
+      "tideType": ""
+    },
+    {
+      "state": "CA",
+      "tidepredoffsets": {
+        "self": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/9414392/tidepredoffsets.json"
+      },
+      "type": "S",
+      "timemeridian": -120,
+      "reference_id": "9414290",
+      "timezonecorr": -8,
+      "id": "9414392",
+      "name": "Oyster Point Marina",
+      "lat": 37.665,
+      "lng": -122.377,
+      "affiliations": "",
+      "portscode": "",
+      "products": null,
+      "disclaimers": null,
+      "notices": null,
+      "self": null,
+      "expand": null,
+      "tideType": ""
+    },
+    {
+      "state": "CA",
+      "tidepredoffsets": {
+        "self": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/9414402/tidepredoffsets.json"
+      },
+      "type": "S",
+      "timemeridian": -120,
+      "reference_id": "9414290",
+      "timezonecorr": -8,
+      "id": "9414402",
+      "name": "Point San Bruno",
+      "lat": 37.65,
+      "lng": -122.377,
+      "affiliations": "",
+      "portscode": "",
+      "products": null,
+      "disclaimers": null,
+      "notices": null,
+      "self": null,
+      "expand": null,
+      "tideType": ""
+    },
+    {
+      "state": "CA",
+      "tidepredoffsets": {
+        "self": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/9414413/tidepredoffsets.json"
+      },
+      "type": "S",
+      "timemeridian": -120,
+      "reference_id": "9414290",
+      "timezonecorr": -8,
+      "id": "9414413",
+      "name": "Seaplane Harbor",
+      "lat": 37.6367,
+      "lng": -122.383,
+      "affiliations": "",
+      "portscode": "",
+      "products": null,
+      "disclaimers": null,
+      "notices": null,
+      "self": null,
+      "expand": null,
+      "tideType": ""
+    }
+  ],
+  "self": null
+}
