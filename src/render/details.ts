@@ -4,7 +4,7 @@ import type { Report } from "../domain/types.ts";
 import { paint } from "./ansi.ts";
 import { blockBar } from "./charts-multi.ts";
 import { aqiScale, hex, type RGB, scale } from "./color.ts";
-import { compass, temp } from "./units.ts";
+import { clockTime, compass, temp } from "./units.ts";
 import { height, ordinal, tempDelta } from "./units-more.ts";
 
 /** Shared colors/formatting for the detail sections (one-shot and dashboard). */
@@ -59,11 +59,9 @@ export function nextTides(events: TideEvent[], now = Date.now(), count = 2): Tid
   return events.filter((e) => Date.parse(e.time) >= now).slice(0, count);
 }
 
+/** Compact clock time ("6:33am" or "18:33"), honoring the 12/24-hour setting. */
 function fmtTime(iso: string, tz?: string): string {
-  return new Date(iso)
-    .toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: tz })
-    .replace(" ", "")
-    .toLowerCase();
+  return clockTime(iso, tz).replace(" ", "").toLowerCase();
 }
 
 const truncate = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1)}…` : s);
