@@ -1,23 +1,200 @@
-# Weather Outlook
+<p align="center">
+  <img src="docs/media/banner.svg" alt="weather-outlook — the terminal weather dashboard" width="100%">
+</p>
 
-Weather Outlook is a cli to tell you the weather and forecast in your terminal.
+<p align="center">
+  <a href="https://www.npmjs.com/package/weather-outlook"><img alt="npm (next)" src="https://img.shields.io/npm/v/weather-outlook/next?style=flat-square&label=npm%40next&color=7dd3fc&labelColor=0a0f16"></a>
+  <a href="https://github.com/cport1/weather-outlook/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/cport1/weather-outlook/ci.yml?branch=master&style=flat-square&label=CI&labelColor=0a0f16"></a>
+  <img alt="runtime: Bun" src="https://img.shields.io/badge/runtime-Bun-ffd54f?style=flat-square&labelColor=0a0f16">
+  <img alt="API keys: none" src="https://img.shields.io/badge/API%20keys-none-69f0ae?style=flat-square&labelColor=0a0f16">
+  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/github/license/cport1/weather-outlook?style=flat-square&color=c4b5fd&labelColor=0a0f16"></a>
+</p>
 
-### Version
-1.0.1
+<p align="center">
+  <b>Forecasts, animated radar, live hurricane tracks, wildfires, earthquakes, alerts and space weather —<br>
+  in a full-screen terminal dashboard that runs anywhere and needs zero API keys.</b>
+</p>
 
-[![npm](https://img.shields.io/npm/l/express.svg)]()
-### Tech
+<p align="center">
+  <img src="docs/media/hero.gif" alt="weather-outlook dashboard: storm sky, animated radar loop, hazard world map and hazards view" width="100%">
+</p>
 
-Weather Outlook uses a number of open source projects to work properly:
+---
 
-### Installation
+## ⚡ Quick start
 
 ```sh
-$ npm i -g weather-outlook
+bunx weather-outlook@next              # try it instantly
+bunx weather-outlook@next "Tokyo"      # any city, postcode, or "lat,lon"
 ```
 
+Or install it globally:
 
-### Development
+```sh
+npm i -g weather-outlook@next          # or: bun add -g weather-outlook@next
+weather-outlook                        # dashboard for wherever you are (IP location)
+wo Denver --once                       # short alias + one-shot summary
+```
 
-Want to contribute? Great!
+> [!NOTE]
+> v2 is in alpha on the `next` tag and runs on [Bun](https://bun.sh) (the TUI engine needs Bun's FFI).
+> If Bun isn't installed, the `weather-outlook` command tells you how to get it.
+> Standalone binaries that need nothing at all are [on the roadmap](https://github.com/cport1/weather-outlook/milestone/9).
 
+## ✨ What's inside
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>☔ Now — a living sky</h3>
+      Particle rain, snow, fog, twinkling stars and lightning that follow the <i>real</i> conditions (wind slants the rain). Big temperature, feels-like, wind, humidity, pressure, UV, AQI, sun & moon.
+      <br><br><img src="docs/media/view-now.png" alt="Now view">
+    </td>
+    <td width="50%" valign="top">
+      <h3>📡 Radar — the last two hours, looping</h3>
+      13 RainViewer frames animated over a coastline map, with play/pause and frame stepping. Kitty / Sixel terminals get <b>real pixels</b>; everyone else gets crisp half-block cells.
+      <br><br><img src="docs/media/view-radar.png" alt="Radar view">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>🌍 World Map — the planet, live</h3>
+      Braille coastlines over a half-block globe with hurricane tracks & forecast cones (spinning, by category), US wildfires, thousands of satellite fire hotspots, pulsing earthquakes and alert polygons. Pan, zoom, toggle layers.
+      <br><br><img src="docs/media/view-map.png" alt="World map view">
+    </td>
+    <td width="50%" valign="top">
+      <h3>🌀 Hazards — what's going wrong, everywhere</h3>
+      Active tropical cyclones with intensity sparklines (past → forecast), the largest wildfires with containment, the strongest quakes with distance from you, and a Kp-based "can I see the aurora tonight?" verdict.
+      <br><br><img src="docs/media/view-hazards.png" alt="Hazards view">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>🕐 Hourly — the next 48 hours</h3>
+      Temperature and feels-like colored on a heat scale, rain probability bars, precipitation, wind with direction arrows, humidity.
+      <br><br><img src="docs/media/view-hourly.png" alt="Hourly view">
+    </td>
+    <td width="50%" valign="top">
+      <h3>📅 10-Day — ranges at a glance</h3>
+      Every day's low→high drawn as a gradient bar on one shared scale, so warm-ups and cold snaps jump out.
+      <br><br><img src="docs/media/view-daily.png" alt="10-day view">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>⚠️ Alerts — official warnings</h3>
+      Active NWS alerts for your location, sorted by severity, with the full text and safety instructions.
+      <br><br><img src="docs/media/view-alerts.png" alt="Alerts view">
+    </td>
+    <td width="50%" valign="top">
+      <h3>⌨️ Keyboard-first</h3>
+      Seven views on <kbd>1</kbd>–<kbd>7</kbd>, vim-style map panning, <kbd>?</kbd> for help anywhere, auto-refresh every 10 minutes, and it respects <code>NO_COLOR</code> and reduced motion.
+      <br><br><img src="docs/media/view-help.png" alt="Help overlay">
+    </td>
+  </tr>
+</table>
+
+## 🖨️ One-shot mode
+
+Not every moment needs a dashboard. `--once` prints a summary and exits — it's also what you get automatically when piping:
+
+```sh
+weather-outlook Denver --once
+```
+
+<img src="docs/media/oneshot-denver.png" alt="One-shot summary for Denver" width="100%">
+
+And the whole planet in one command:
+
+```sh
+weather-outlook hazards        # alias: weather-outlook planet
+```
+
+<img src="docs/media/oneshot-hazards.png" alt="Planet hazards map with storms, fires and quakes" width="100%">
+
+## 🧰 Usage
+
+```text
+weather-outlook [location] [options]
+weather-outlook hazards [--json] [--no-hotspots]
+weather-outlook cache <clear|path>
+```
+
+| Option | |
+| --- | --- |
+| `location` | City (`Paris`, `Paris, TX`, `London, UK`), postcode (`10001`), or `lat,lon`. Omit to use your IP location. |
+| `-1, --once` | Print a one-shot summary instead of opening the dashboard |
+| `-j, --json` | Print the full report as JSON (schema-versioned, stable contract) |
+| `-u, --units <metric\|imperial>` | Override units (default: based on the location's country) |
+| `--simulate <rain\|snow\|storm\|fog\|clear\|cloudy>` | Force the sky animation — great for demos |
+| `--no-motion` | Disable animations (also `WEATHER_OUTLOOK_REDUCE_MOTION=1`) |
+| `--no-color` | Disable colors (also respects `NO_COLOR`) |
+| `-r, --refresh` | Bypass the response cache |
+
+### Keys
+
+| Key | Action |
+| --- | --- |
+| <kbd>1</kbd>–<kbd>7</kbd> · <kbd>Tab</kbd> | Now · Hourly · 10-Day · Radar · World Map · Hazards · Alerts |
+| <kbd>u</kbd> | Toggle °C / °F |
+| <kbd>r</kbd> | Refresh now |
+| <kbd>m</kbd> | Toggle animations |
+| <kbd>←↑↓→</kbd> / <kbd>h j k l</kbd> | Pan the map |
+| <kbd>+</kbd> / <kbd>-</kbd> | Zoom the map or radar |
+| <kbd>c</kbd> · <kbd>0</kbd> | Center on your location · reset the map |
+| <kbd>S</kbd> <kbd>F</kbd> <kbd>H</kbd> <kbd>Q</kbd> <kbd>A</kbd> | Map layers: storms · fires · hotspots · quakes · alerts |
+| <kbd>Space</kbd> · <kbd>,</kbd> <kbd>.</kbd> | Radar play/pause · step frames |
+| <kbd>i</kbd> | Radar: real image ↔ text cells |
+| <kbd>?</kbd> · <kbd>q</kbd> | Help · quit |
+
+### JSON for scripts
+
+```sh
+weather-outlook "Reykjavik" --json | jq '.forecast.current | {temperature, condition, windSpeed}'
+weather-outlook hazards --json | jq '.storms[] | {name, category, windKt}'
+```
+
+## 🛰️ Data sources
+
+Everything works out of the box — no accounts, no keys. Responses are cached on disk and served stale if you go offline.
+
+| Data | Source | Coverage |
+| --- | --- | --- |
+| Forecast, air quality, geocoding | [Open-Meteo](https://open-meteo.com) (CC BY 4.0) | 🌐 Global |
+| Weather alerts | [NWS](https://www.weather.gov/documentation/services-web-api) | 🇺🇸 US |
+| Hurricane tracks & cones | [NOAA NHC](https://www.nhc.noaa.gov) via NOAA map services | Atlantic & Pacific |
+| Tropical cyclones elsewhere | [GDACS](https://www.gdacs.org) | 🌐 Global |
+| Wildfire incidents | [NIFC WFIGS](https://data-nifc.opendata.arcgis.com) | 🇺🇸 US |
+| Satellite fire hotspots | [NASA FIRMS](https://firms.modaps.eosdis.nasa.gov) (MODIS, 24h) | 🌐 Global |
+| Earthquakes | [USGS](https://earthquake.usgs.gov/earthquakes/feed/) | 🌐 Global |
+| Space weather & aurora | [NOAA SWPC](https://www.swpc.noaa.gov) | 🌐 Global |
+| Radar | [RainViewer](https://www.rainviewer.com/api.html) · [IEM NEXRAD](https://mesonet.agron.iastate.edu) | 🌐 Global · 🇺🇸 US |
+| Base map | [Natural Earth](https://www.naturalearthdata.com) via world-atlas | Public domain |
+| Sun & moon | Computed locally with [SunCalc](https://github.com/mourner/suncalc) | — |
+
+Planned next: MeteoAlarm & Environment Canada alerts, SPC outlooks, tides & buoys, model comparison, and optional keyed providers — see the [roadmap](https://github.com/cport1/weather-outlook/milestones).
+
+## 🖥️ Terminal support
+
+Any modern truecolor terminal whose font includes braille glyphs will look great. Terminals that speak the **Kitty graphics** or **Sixel** protocols render radar as real images — detected automatically by querying the terminal, never guessed from environment variables. Fewer colors, no unicode, or `NO_COLOR` all degrade gracefully.
+
+## 🛠️ Development
+
+```sh
+git clone https://github.com/cport1/weather-outlook && cd weather-outlook
+bun install
+bun dev Miami              # run the dashboard from source
+bun test                   # unit tests + a real-PTY boot test of the built CLI
+bun run typecheck && bun run lint
+```
+
+Built with [OpenTUI](https://github.com/anomalyco/opentui) + Solid, TypeScript, d3-geo, zod and citty. Handy tools:
+
+- `HTML=out.html VIEW=map bun scripts/snapshot.tsx Miami 150 42` — render any view headlessly to colored HTML
+- `vhs docs/tapes/hero.tape` — re-record the README media with [VHS](https://github.com/charmbracelet/vhs)
+
+Releases are automatic: [Conventional Commits](https://www.conventionalcommits.org) on `master` feed a release PR, and merging it publishes to npm with provenance.
+
+## 📜 License
+
+[MIT](LICENSE) © Chris Portscheller
