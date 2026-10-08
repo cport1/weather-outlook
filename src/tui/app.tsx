@@ -17,7 +17,16 @@ import type { Cell } from "../render/canvas.ts";
 import { lineChart, sparkline } from "../render/charts.ts";
 import { aqiScale, hex, type RGB, scale, temperatureScale } from "../render/color.ts";
 import { type FxKind, WeatherFx } from "../render/fx.ts";
-import { compass, distance, precip, pressure, speed, temp, windArrow } from "../render/units.ts";
+import {
+  clockTime,
+  compass,
+  distance,
+  precip,
+  pressure,
+  speed,
+  temp,
+  windArrow,
+} from "../render/units.ts";
 import type { HttpClient } from "../util/http.ts";
 import { CellCanvas, type DrawApi } from "./cell-canvas.ts";
 import { type AppState, VIEW_LABEL, VIEWS } from "./store.ts";
@@ -60,11 +69,7 @@ interface Props {
 
 function fmtTime(iso: string | undefined, tz?: string, withMinutes = true): string {
   if (!iso) return "--";
-  return new Date(iso).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: withMinutes ? "2-digit" : undefined,
-    timeZone: tz,
-  });
+  return clockTime(iso, tz, withMinutes);
 }
 
 function sceneKind(cond: Condition, isDay: boolean): FxKind {
@@ -89,12 +94,7 @@ const SIMULATE: Record<string, Condition> = {
 function Header(props: { state: AppState }) {
   const loc = () => props.state.location;
   const place = () => [loc().name, loc().region, loc().countryCode].filter(Boolean).join(", ");
-  const clock = () =>
-    new Date().toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      timeZone: loc().timezone,
-    });
+  const clock = () => clockTime(new Date(), loc().timezone);
   return (
     <box flexDirection="row" height={1} paddingLeft={1} paddingRight={1} backgroundColor={T.panel}>
       <text wrapMode="none">
