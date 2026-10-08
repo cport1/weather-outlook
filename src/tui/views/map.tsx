@@ -208,7 +208,12 @@ export function MapView(props: Props) {
     if (ov.places) {
       // Density cap per screen area; collision avoidance thins further.
       let budget = Math.round((w * h) / 300);
+      // Don't repeat a name already on the map (your location, the goto pin).
+      const named = new Set(
+        [loc.name, pin?.name].map((s) => s?.split(",")[0]?.trim().toLowerCase()),
+      );
       for (const m of placeMarkers(cam.zoom, CITY)) {
+        if (named.has(m.label?.toLowerCase())) continue;
         const at = project(m.lon, m.lat);
         if (at && m.label && budget-- > 0)
           req.push({
