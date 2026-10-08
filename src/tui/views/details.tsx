@@ -29,9 +29,10 @@ import {
   nextTides,
 } from "../../render/details.ts";
 import { compass, precip, pressure, speed, temp, windArrow } from "../../render/units.ts";
-import { height, ordinal, tempDelta } from "../../render/units-more.ts";
+import { height, ordinal, tempDelta, wordWrap } from "../../render/units-more.ts";
 import type { DrawApi } from "../cell-canvas.ts";
 import { hexOf, tcolor } from "../format.ts";
+import { scrollbarGutter } from "../scroll.ts";
 import type { AppState } from "../store.ts";
 import { T, theme } from "../theme.ts";
 
@@ -161,6 +162,7 @@ function NwsPanel(props: {
   scroll: (s: ScrollBoxRenderable) => void;
 }) {
   const nws = () => props.report.nws;
+  const [wrapWidth, setWrapWidth] = createSignal(80);
   const u = () => props.state.units;
   const tz = () => props.state.location.timezone;
   return (
@@ -208,7 +210,7 @@ function NwsPanel(props: {
               )}
             </Show>
             <Panel title={`forecast · ${n().office}`}>
-              <scrollbox flexGrow={1}>
+              <scrollbox flexGrow={1} scrollX={false} contentOptions={scrollbarGutter()}>
                 <For each={n().periods}>
                   {(p) => (
                     <box flexDirection="column" paddingBottom={1}>
@@ -236,8 +238,22 @@ function NwsPanel(props: {
                 : "area forecast discussion"
             }
           >
-            <scrollbox flexGrow={1} ref={(r: ScrollBoxRenderable) => props.scroll(r)}>
-              <text fg={T.text}>{reflow(n().discussion?.text ?? "Not available.")}</text>
+            <scrollbox
+              flexGrow={1}
+              scrollX={false}
+              ref={(r: ScrollBoxRenderable) => {
+                props.scroll(r);
+                // Wrap to the measured viewport ourselves: OpenTUI's text measure lets
+                // long paragraphs overflow by a column, which the scrollbar then hides.
+                // Scrollbox width minus the scrollbar and a one-column margin.
+                const sync = () => r.width > 12 && setWrapWidth(r.width - 2);
+                r.onSizeChange = sync;
+                sync();
+              }}
+            >
+              <text fg={T.text} wrapMode="none">
+                {wordWrap(reflow(n().discussion?.text ?? "Not available."), wrapWidth())}
+              </text>
             </scrollbox>
           </Panel>
         </box>

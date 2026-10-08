@@ -19,3 +19,26 @@ export function ordinal(n: number): string {
   const s = r % 100 >= 11 && r % 100 <= 13 ? "th" : (["th", "st", "nd", "rd"][r % 10] ?? "th");
   return `${r}${s}`;
 }
+
+/** Greedy word-wrap that keeps existing line breaks and indentation. */
+export function wordWrap(text: string, width: number): string {
+  const w = Math.max(10, Math.floor(width));
+  return text
+    .split("\n")
+    .flatMap((line) => {
+      if (line.length <= w) return [line];
+      const indent = /^\s*/.exec(line)?.[0] ?? "";
+      const out: string[] = [];
+      let cur = "";
+      for (const word of line.trim().split(/\s+/)) {
+        const next = cur ? `${cur} ${word}` : `${indent}${word}`;
+        if (next.length > w && cur) {
+          out.push(cur);
+          cur = `${indent}${word}`;
+        } else cur = next;
+      }
+      if (cur) out.push(cur);
+      return out;
+    })
+    .join("\n");
+}
