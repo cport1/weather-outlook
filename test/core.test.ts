@@ -105,3 +105,45 @@ describe("http + cache", () => {
     expect(calls).toBe(2);
   });
 });
+
+describe("land mask across the antimeridian", () => {
+  test("no phantom land band at Fiji's latitude", () => {
+    // Fiji's ring crosses 180°; a naive scanline fill turned the whole South
+    // Pacific east of it into "land" at this latitude.
+    for (const lon of [-170, -150, -120, -90]) expect(pointInLand(lon, -16.5)).toBe(false);
+  });
+  test("Fiji, Chukotka and Antarctica are land; polar ocean is not", () => {
+    expect(pointInLand(178.0, -17.8)).toBe(true); // Viti Levu
+    expect(pointInLand(-175, 66.5)).toBe(true); // Chukotka (east of 180°)
+    expect(pointInLand(0, -80)).toBe(true); // Antarctica
+    expect(pointInLand(0, -60)).toBe(false); // Southern Ocean
+  });
+});
+
+describe("label placement", () => {
+  test("colliding labels move to the left instead of overlapping", async () => {
+    const { placeLabels } = await import("../src/render/labels.ts");
+    const placed = placeLabels(
+      [
+        { col: 10, row: 5, text: "Miami" },
+        { col: 9, row: 5, text: "Isaias TS" },
+      ],
+      80,
+      20,
+    );
+    expect(placed).toHaveLength(2);
+    expect(placed[0]?.x).toBe(12);
+    // Second label must not overlap the first or either anchor.
+    const second = placed[1];
+    expect(second && (second.y !== 5 || second.x + 9 < 9)).toBe(true);
+  });
+});
+
+describe("location hints", () => {
+  test("US state abbreviations expand for disambiguation", async () => {
+    const { hintTerms } = await import("../src/providers/location.ts");
+    expect(hintTerms("TX")).toEqual(["texas", "us"]);
+    expect(hintTerms("New South Wales")).toEqual(["new", "south", "wales"]);
+    expect(hintTerms("france")).toEqual(["france"]);
+  });
+});

@@ -22,7 +22,8 @@ export function renderHazardsOneShot(h: Hazards, caps: Capabilities): string {
   const lvl = caps.color;
   const p = (s: string, c = TEXT) => paint(s, c, lvl);
   const cols = Math.max(60, Math.min(caps.columns - 2, 160));
-  const rows = Math.round(cols / 3.2);
+  // Natural Earth is ~1.95:1 and braille pixels (2×4 per cell) are about square.
+  const rows = Math.round(cols / 3.9);
   const layers = buildHazardLayers(h, [], DEFAULT_TOGGLES, 1);
   for (const s of h.storms) {
     layers.markers?.push({

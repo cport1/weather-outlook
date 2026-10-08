@@ -7,6 +7,7 @@ import land50 from "world-atlas/land-50m.json" with { type: "json" };
 import land110 from "world-atlas/land-110m.json" with { type: "json" };
 import { type Cell, composite, HalfBlockField, PixelCanvas } from "./canvas.ts";
 import { hex, type RGB } from "./color.ts";
+import { type LabelRequest, placeLabels } from "./labels.ts";
 
 export interface Camera {
   /** Center longitude/latitude. */
@@ -170,35 +171,85 @@ const GRID_RES = 0.5;
 const GRID_W = 360 / GRID_RES;
 const GRID_H = 180 / GRID_RES;
 
-function buildLandGrid(): Uint8Array {
-  const grid = new Uint8Array(GRID_W * GRID_H);
-  const rings: Array<Array<[number, number]>> = [];
-  for (const f of landGeo().features) {
+type Ring = Array<[number, number]>;
+
+/**
+ * Make rings safe for scanline filling on a wrapping longitude axis:
+ * longitudes are unwrapped so no edge jumps across the antimeridian, and
+ * rings that encircle a pole (Antarctica) are closed through that pole.
+ */
+export function normalizeRings(geo: FeatureCollection): Ring[] {
+  const out: Ring[] = [];
+  for (const f of geo.features) {
     const g = f.geometry;
-    if (g.type === "Polygon") for (const r of g.coordinates) rings.push(r as [number, number][]);
-    if (g.type === "MultiPolygon")
-      for (const p of g.coordinates) for (const r of p) rings.push(r as [number, number][]);
-  }
-  // Scanline even-odd fill per grid row.
-  for (let gy = 0; gy < GRID_H; gy++) {
-    const lat = 90 - (gy + 0.5) * GRID_RES;
-    const xs: number[] = [];
-    for (const ring of rings) {
-      for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-        const a = ring[i];
-        const b = ring[j];
-        if (!a || !b) continue;
-        if (a[1] > lat !== b[1] > lat) {
-          xs.push(a[0] + ((lat - a[1]) / (b[1] - a[1])) * (b[0] - a[0]));
+    const polys =
+      g.type === "Polygon" ? [g.coordinates] : g.type === "MultiPolygon" ? g.coordinates : [];
+    for (const poly of polys) {
+      for (const raw of poly) {
+        const first = raw[0];
+        if (!first) continue;
+        const ring: Ring = [[first[0] ?? 0, first[1] ?? 0]];
+        let offset = 0;
+        let latSum = first[1] ?? 0;
+        for (let i = 1; i < raw.length; i++) {
+          const prev = raw[i - 1];
+          const cur = raw[i];
+          if (!prev || !cur) continue;
+          const dx = (cur[0] ?? 0) - (prev[0] ?? 0);
+          if (dx > 180) offset -= 360;
+          else if (dx < -180) offset += 360;
+          ring.push([(cur[0] ?? 0) + offset, cur[1] ?? 0]);
+          latSum += cur[1] ?? 0;
         }
+        if (offset !== 0) {
+          const pole = latSum / raw.length < 0 ? -90 : 90;
+          const last = ring[ring.length - 1] as [number, number];
+          ring.push([last[0], pole], [first[0] ?? 0, pole]);
+        }
+        out.push(ring);
       }
     }
+  }
+  return out;
+}
+
+/** Even-odd fill one row: crossings grouped per ring, XOR-toggled with longitude wrap. */
+function fillRow(row: Uint8Array, crossingsByRing: Iterable<number[]>, res: number): void {
+  const w = row.length;
+  for (const xs of crossingsByRing) {
     xs.sort((p, q) => p - q);
     for (let k = 0; k + 1 < xs.length; k += 2) {
-      const from = Math.max(0, Math.floor(((xs[k] ?? 0) + 180) / GRID_RES));
-      const to = Math.min(GRID_W - 1, Math.floor(((xs[k + 1] ?? 0) + 180) / GRID_RES));
-      for (let gx = from; gx <= to; gx++) grid[gy * GRID_W + gx] = 1;
+      const from = Math.floor(((xs[k] ?? 0) + 180) / res);
+      const to = Math.floor(((xs[k + 1] ?? 0) + 180) / res);
+      const span = Math.min(w, to - from + 1);
+      for (let i = 0; i < span; i++) {
+        const gx = (((from + i) % w) + w) % w;
+        row[gx] = (row[gx] ?? 0) ^ 1;
+      }
     }
+  }
+}
+
+function crossing(a: [number, number], b: [number, number], lat: number): number | undefined {
+  if (a[1] > lat === b[1] > lat) return undefined;
+  return a[0] + ((lat - a[1]) / (b[1] - a[1])) * (b[0] - a[0]);
+}
+
+function buildLandGrid(): Uint8Array {
+  const grid = new Uint8Array(GRID_W * GRID_H);
+  const rings = normalizeRings(landGeo());
+  for (let gy = 0; gy < GRID_H; gy++) {
+    const lat = 90 - (gy + 0.5) * GRID_RES;
+    const perRing: number[][] = [];
+    for (const ring of rings) {
+      const xs: number[] = [];
+      for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+        const x = crossing(ring[i] as [number, number], ring[j] as [number, number], lat);
+        if (x !== undefined) xs.push(x);
+      }
+      if (xs.length) perRing.push(xs);
+    }
+    fillRow(grid.subarray(gy * GRID_W, (gy + 1) * GRID_W), perRing, GRID_RES);
   }
   return grid;
 }
@@ -206,26 +257,19 @@ function buildLandGrid(): Uint8Array {
 // --- fine point-in-land: 0.05° rows from 50m data, built lazily per row ---
 const FINE_RES = 0.05;
 const FINE_W = Math.round(360 / FINE_RES);
-let fineEdges: Float64Array | undefined; // [ax, ay, bx, by] per edge, sorted by min lat
+let fineEdges: Float64Array | undefined; // [ax, ay, bx, by, ring] per edge, sorted by min lat
 let fineMinLat: Float64Array | undefined;
 const fineRows = new Map<number, Uint8Array>();
 
 function buildFineEdges(): void {
   const edges: number[][] = [];
-  for (const f of land50Geo().features) {
-    const g = f.geometry;
-    const polys =
-      g.type === "Polygon" ? [g.coordinates] : g.type === "MultiPolygon" ? g.coordinates : [];
-    for (const poly of polys) {
-      for (const ring of poly) {
-        for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-          const a = ring[i];
-          const b = ring[j];
-          if (a && b && a[1] !== b[1]) edges.push([a[0] ?? 0, a[1] ?? 0, b[0] ?? 0, b[1] ?? 0]);
-        }
-      }
+  normalizeRings(land50Geo()).forEach((ring, id) => {
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const a = ring[i];
+      const b = ring[j];
+      if (a && b && a[1] !== b[1]) edges.push([a[0], a[1], b[0], b[1], id]);
     }
-  }
+  });
   edges.sort((p, q) => Math.min(p[1] ?? 0, p[3] ?? 0) - Math.min(q[1] ?? 0, q[3] ?? 0));
   fineEdges = new Float64Array(edges.flat());
   fineMinLat = new Float64Array(edges.map((e) => Math.min(e[1] ?? 0, e[3] ?? 0)));
@@ -238,21 +282,22 @@ function fineRow(gy: number): Uint8Array {
   const edges = fineEdges as Float64Array;
   const minLat = fineMinLat as Float64Array;
   const lat = 90 - (gy + 0.5) * FINE_RES;
-  const xs: number[] = [];
+  const perRing = new Map<number, number[]>();
   for (let k = 0; k < minLat.length && (minLat[k] ?? 0) <= lat; k++) {
-    const ax = edges[k * 4] ?? 0;
-    const ay = edges[k * 4 + 1] ?? 0;
-    const bx = edges[k * 4 + 2] ?? 0;
-    const by = edges[k * 4 + 3] ?? 0;
-    if (ay > lat !== by > lat) xs.push(ax + ((lat - ay) / (by - ay)) * (bx - ax));
+    const o = k * 5;
+    const x = crossing(
+      [edges[o] ?? 0, edges[o + 1] ?? 0],
+      [edges[o + 2] ?? 0, edges[o + 3] ?? 0],
+      lat,
+    );
+    if (x === undefined) continue;
+    const id = edges[o + 4] ?? 0;
+    const list = perRing.get(id);
+    if (list) list.push(x);
+    else perRing.set(id, [x]);
   }
-  xs.sort((p, q) => p - q);
   row = new Uint8Array(FINE_W);
-  for (let k = 0; k + 1 < xs.length; k += 2) {
-    const from = Math.max(0, Math.floor(((xs[k] ?? 0) + 180) / FINE_RES));
-    const to = Math.min(FINE_W - 1, Math.floor(((xs[k + 1] ?? 0) + 180) / FINE_RES));
-    row.fill(1, from, to + 1);
-  }
+  fillRow(row, perRing.values(), FINE_RES);
   if (fineRows.size > 4000) fineRows.clear();
   fineRows.set(gy, row);
   return row;
@@ -372,6 +417,7 @@ export function renderWorldMap(
     const top: Cell[][] = Array.from({ length: rows }, () =>
       Array.from({ length: cols }, () => ({ ch: " " }) as Cell),
     );
+    const labels: Array<LabelRequest & { color: RGB }> = [];
     for (const m of layers.markers) {
       const pt = proj([m.lon, m.lat]);
       if (!pt) continue;
@@ -380,11 +426,11 @@ export function renderWorldMap(
       const row = top[r];
       if (!row || c < 0 || c >= cols) continue;
       row[c] = { ch: m.glyph, fg: m.color };
-      if (m.label) {
-        [...m.label].forEach((ch, i) => {
-          if (c + 2 + i < cols) row[c + 2 + i] = { ch, fg: m.color };
-        });
-      }
+      if (m.label) labels.push({ col: c, row: r, text: m.label, color: m.color });
+    }
+    for (const l of placeLabels(labels, cols, rows)) {
+      const row = top[l.y];
+      if (row) [...l.text].forEach((ch, i) => (row[l.x + i] = { ch, fg: l.color }));
     }
     out = composite(out, top);
   }
