@@ -30,6 +30,72 @@ export async function locateByIp(http: HttpClient): Promise<Location> {
   };
 }
 
+const US_STATES: Record<string, string> = {
+  AL: "Alabama",
+  AK: "Alaska",
+  AZ: "Arizona",
+  AR: "Arkansas",
+  CA: "California",
+  CO: "Colorado",
+  CT: "Connecticut",
+  DE: "Delaware",
+  DC: "District of Columbia",
+  FL: "Florida",
+  GA: "Georgia",
+  HI: "Hawaii",
+  ID: "Idaho",
+  IL: "Illinois",
+  IN: "Indiana",
+  IA: "Iowa",
+  KS: "Kansas",
+  KY: "Kentucky",
+  LA: "Louisiana",
+  ME: "Maine",
+  MD: "Maryland",
+  MA: "Massachusetts",
+  MI: "Michigan",
+  MN: "Minnesota",
+  MS: "Mississippi",
+  MO: "Missouri",
+  MT: "Montana",
+  NE: "Nebraska",
+  NV: "Nevada",
+  NH: "New Hampshire",
+  NJ: "New Jersey",
+  NM: "New Mexico",
+  NY: "New York",
+  NC: "North Carolina",
+  ND: "North Dakota",
+  OH: "Ohio",
+  OK: "Oklahoma",
+  OR: "Oregon",
+  PA: "Pennsylvania",
+  RI: "Rhode Island",
+  SC: "South Carolina",
+  SD: "South Dakota",
+  TN: "Tennessee",
+  TX: "Texas",
+  UT: "Utah",
+  VT: "Vermont",
+  VA: "Virginia",
+  WA: "Washington",
+  WV: "West Virginia",
+  WI: "Wisconsin",
+  WY: "Wyoming",
+  PR: "Puerto Rico",
+};
+
+/** Expand a disambiguation hint like "TX" or "Texas, US" into lowercase match terms. */
+export function hintTerms(hint: string): string[] {
+  const raw = hint.trim();
+  const state = US_STATES[raw.toUpperCase()];
+  const expanded = state ? `${state} us` : raw;
+  return expanded
+    .toLowerCase()
+    .split(/[\s,]+/)
+    .filter(Boolean);
+}
+
 const COORDS_RE = /^\s*(-?\d+(?:\.\d+)?)\s*[, ]\s*(-?\d+(?:\.\d+)?)\s*$/;
 
 export function parseCoords(q: string): { lat: number; lon: number } | undefined {
@@ -61,14 +127,15 @@ export async function resolveLocation(http: HttpClient, query?: string): Promise
   const results = await geocode(http, head, 10);
   if (!results.length) throw new Error(`No place found matching "${query}"`);
   if (!rest.length) return results[0] as Location;
-  const hint = rest.join(" ").toLowerCase();
+  const terms = hintTerms(rest.join(" "));
   const scored = results.map((r) => {
-    const hay = [r.region, r.country, r.countryCode].filter(Boolean).join(" ").toLowerCase();
-    return {
-      r,
-      score:
-        hay.includes(hint) || hint.split(/\s+/).some((h) => hay.split(/\s+/).includes(h)) ? 1 : 0,
-    };
+    const hay = [r.region, r.country, r.countryCode]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase()
+      .split(/\s+/);
+    // Count matched terms so "Springfield, IL" beats a result matching only "US".
+    return { r, score: terms.filter((t) => hay.includes(t)).length };
   });
   scored.sort((a, b) => b.score - a.score);
   return scored[0]?.r as Location;
