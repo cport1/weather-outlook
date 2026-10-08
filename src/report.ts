@@ -21,18 +21,32 @@ async function attempt<T>(
   }
 }
 
+export interface ReportOptions {
+  refresh?: boolean;
+  /** Skip providers the caller won't show (`--format`, `--fields`). All default to true. */
+  include?: { forecast?: boolean; airQuality?: boolean; alerts?: boolean };
+}
+
 export async function buildReport(
   http: HttpClient,
   location: Location,
   units: Units,
-  opts: { refresh?: boolean } = {},
+  opts: ReportOptions = {},
 ): Promise<Report> {
   const errors: ProviderError[] = [];
+  const want = { forecast: true, airQuality: true, alerts: true, ...opts.include };
   // Only ask NWS when we're plausibly in the US; unknown country → try anyway, it fails fast.
-  const wantNws = !location.countryCode || US_LIKE.has(location.countryCode.toUpperCase());
+  const wantNws =
+    want.alerts && (!location.countryCode || US_LIKE.has(location.countryCode.toUpperCase()));
   const [forecast, airQuality, alerts] = await Promise.all([
-    attempt("open-meteo", errors, () => fetchForecast(http, location, { refresh: opts.refresh })),
-    attempt("open-meteo-aq", errors, () => fetchAirQuality(http, location)),
+    want.forecast
+      ? attempt("open-meteo", errors, () =>
+          fetchForecast(http, location, { refresh: opts.refresh }),
+        )
+      : undefined,
+    want.airQuality
+      ? attempt("open-meteo-aq", errors, () => fetchAirQuality(http, location))
+      : undefined,
     wantNws
       ? attempt("nws-alerts", errors, () =>
           fetchNwsAlertsForPoint(http, location.lat, location.lon),
@@ -50,4 +64,58 @@ export async function buildReport(
     alerts: alerts ?? [],
     errors,
   };
+}
+
+/** Top-level `--fields` names; `current`, `hourly` and `daily` reach into the forecast. */
+export const REPORT_FIELDS = [
+  "location",
+  "current",
+  "hourly",
+  "daily",
+  "forecast",
+  "airQuality",
+  "astronomy",
+  "alerts",
+  "errors",
+] as const;
+export type ReportField = (typeof REPORT_FIELDS)[number];
+
+const FIELD_ALIASES: Record<string, ReportField> = { aq: "airQuality", air: "airQuality" };
+
+export function parseFields(spec: string): ReportField[] {
+  const out: ReportField[] = [];
+  for (const raw of spec.split(",")) {
+    const name = raw.trim().toLowerCase();
+    if (!name) continue;
+    const field = FIELD_ALIASES[name] ?? REPORT_FIELDS.find((f) => f.toLowerCase() === name);
+    if (!field) {
+      throw new Error(`Unknown field "${raw.trim()}". Valid fields: ${REPORT_FIELDS.join(", ")}`);
+    }
+    if (!out.includes(field)) out.push(field);
+  }
+  return out;
+}
+
+/** Providers a field projection actually needs. */
+export function fieldsNeeds(fields: ReportField[]): NonNullable<ReportOptions["include"]> {
+  const has = (...f: ReportField[]) => f.some((x) => fields.includes(x));
+  return {
+    forecast: has("current", "hourly", "daily", "forecast"),
+    airQuality: has("airQuality"),
+    alerts: has("alerts"),
+  };
+}
+
+/** `--json --fields current,alerts`: the envelope plus just the requested parts. */
+export function projectReport(report: Report, fields: ReportField[]): Record<string, unknown> {
+  const out: Record<string, unknown> = {
+    schemaVersion: report.schemaVersion,
+    generatedAt: report.generatedAt,
+    units: report.units,
+  };
+  for (const f of fields) {
+    if (f === "current" || f === "hourly" || f === "daily") out[f] = report.forecast?.[f];
+    else out[f] = report[f];
+  }
+  return out;
 }
