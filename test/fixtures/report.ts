@@ -168,6 +168,7 @@ export function fixtureReport(opts: FixtureOptions = {}): Report {
     airQuality: { provider: "fixture", usAqi: opts.aqi ?? 64, pm2_5: 12.1 },
     astronomy: computeAstronomy(loc.lat, loc.lon, now),
     alerts,
+    risks: [{ product: "categorical", day: 1, label: "SLGT", name: "Slight risk", level: 3 }],
     errors: [],
   };
 }
