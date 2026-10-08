@@ -1,5 +1,6 @@
 import { createStore } from "solid-js/store";
 import type { Hazards, Location, Report } from "../domain/types.ts";
+import type { FieldKind } from "../providers/global-grid.ts";
 import { DEFAULT_TOGGLES, type LayerToggles } from "../render/hazard-layers.ts";
 import type { Units } from "../render/units.ts";
 import type { Camera } from "../render/worldmap.ts";
@@ -27,7 +28,13 @@ export interface AppState {
   loading: boolean;
   error?: string;
   lastUpdated?: number;
+  /** Map camera target; the map view eases toward it. */
   camera: Camera;
+  /** Global field layer under the coastlines (shift+T/W/P/C), one at a time. */
+  mapField?: FieldKind;
+  mapOverlays: MapOverlays;
+  /** Key of the hazard selected in map inspect mode (see render/inspect.ts). */
+  inspect?: string;
   /** Map zoom used by the radar view (360 / zoom = degrees of longitude shown). */
   radarZoom: number;
   /** "auto" uses Kitty/Sixel images when the terminal supports them; "cells" forces half-blocks. */
@@ -37,6 +44,15 @@ export interface AppState {
   /** Overrides the live condition for demos (`--simulate rain`). */
   simulate?: string;
   alertIndex: number;
+}
+
+export interface MapOverlays {
+  /** Day/night terminator shading. */
+  night: boolean;
+  /** SWPC OVATION aurora probability glow. */
+  aurora: boolean;
+  /** City names (density by zoom). */
+  places: boolean;
 }
 
 export function createAppStore(init: Pick<AppState, "location" | "units" | "motion" | "simulate">) {
@@ -49,6 +65,7 @@ export function createAppStore(init: Pick<AppState, "location" | "units" | "moti
     showHelp: false,
     alertIndex: 0,
     layers: { ...DEFAULT_TOGGLES },
+    mapOverlays: { night: true, aurora: false, places: true },
     ...init,
   });
 }
