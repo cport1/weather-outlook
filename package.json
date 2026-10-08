@@ -17,6 +17,7 @@
     "build": "bun scripts/build.ts",
     "schema": "bun scripts/gen-schema.ts",
     "fixtures": "bun scripts/record-fixtures.ts",
+    "compile": "bun scripts/compile.ts",
     "prepublishOnly": "bun run build"
   },
   "repository": {
