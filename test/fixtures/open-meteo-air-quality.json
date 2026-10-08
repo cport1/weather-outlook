@@ -1,0 +1,41 @@
+{
+  "latitude": 39.699997,
+  "longitude": -105,
+  "generationtime_ms": 0.3235340118408203,
+  "utc_offset_seconds": 0,
+  "timezone": "GMT",
+  "timezone_abbreviation": "GMT",
+  "elevation": 1599,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "us_aqi": "USAQI",
+    "european_aqi": "EAQI",
+    "pm2_5": "μg/m³",
+    "pm10": "μg/m³",
+    "ozone": "μg/m³",
+    "nitrogen_dioxide": "μg/m³",
+    "alder_pollen": "grains/m³",
+    "birch_pollen": "grains/m³",
+    "grass_pollen": "grains/m³",
+    "mugwort_pollen": "grains/m³",
+    "olive_pollen": "grains/m³",
+    "ragweed_pollen": "grains/m³"
+  },
+  "current": {
+    "time": "2026-10-08T04:00",
+    "interval": 3600,
+    "us_aqi": 47,
+    "european_aqi": 42,
+    "pm2_5": 9.9,
+    "pm10": 10.2,
+    "ozone": 53,
+    "nitrogen_dioxide": 28.7,
+    "alder_pollen": null,
+    "birch_pollen": null,
+    "grass_pollen": null,
+    "mugwort_pollen": null,
+    "olive_pollen": null,
+    "ragweed_pollen": null
+  }
+}

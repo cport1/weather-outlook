@@ -1,0 +1,27 @@
+{
+  "ip": "203.0.113.7",
+  "success": true,
+  "type": "IPv4",
+  "continent": "North America",
+  "continent_code": "NA",
+  "country": "United States",
+  "country_code": "US",
+  "region": "Colorado",
+  "region_code": "CO",
+  "city": "Denver",
+  "latitude": 39.7392,
+  "longitude": -104.9903,
+  "is_eu": false,
+  "calling_code": "1",
+  "capital": "Washington D.C.",
+  "borders": "CA,MX",
+  "flag": {
+    "img": "https://cdn.ipwhois.io/flags/us.svg",
+    "emoji": "🇺🇸",
+    "emoji_unicode": "U+1F1FA U+1F1F8"
+  },
+  "timezone": {
+    "id": "America/Denver"
+  },
+  "readme": "https://ipwhois.io/docs"
+}

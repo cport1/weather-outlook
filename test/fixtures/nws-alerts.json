@@ -1,0 +1,237 @@
+{
+  "@context": [
+    "https://geojson.org/geojson-ld/geojson-context.jsonld",
+    {
+      "@version": "1.1",
+      "wx": "https://api.weather.gov/ontology#",
+      "@vocab": "https://api.weather.gov/ontology#"
+    }
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.b33dec6d162e53385e2d34794021ed7f38308a42.001.2",
+      "type": "Feature",
+      "geometry": null,
+      "properties": {
+        "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.b33dec6d162e53385e2d34794021ed7f38308a42.001.2",
+        "@type": "wx:Alert",
+        "id": "urn:oid:2.49.0.1.840.0.b33dec6d162e53385e2d34794021ed7f38308a42.001.2",
+        "areaDesc": "Eastern Alaska Range North of Trims Camp",
+        "geocode": {
+          "SAME": ["002240"],
+          "UGC": ["AKZ849"]
+        },
+        "affectedZones": ["https://api.weather.gov/zones/forecast/AKZ849"],
+        "references": [],
+        "sent": "2026-10-07T15:31:00-08:00",
+        "effective": "2026-10-07T15:31:00-08:00",
+        "onset": "2026-10-09T16:00:00-08:00",
+        "expires": "2026-10-08T16:00:00-08:00",
+        "ends": "2026-10-11T07:00:00-08:00",
+        "status": "Actual",
+        "messageType": "Alert",
+        "category": "Met",
+        "severity": "Severe",
+        "certainty": "Likely",
+        "urgency": "Expected",
+        "event": "High Wind Warning",
+        "sender": "w-nws.webmaster@noaa.gov",
+        "senderName": "NWS Fairbanks AK",
+        "headline": "High Wind Warning issued October 7 at 3:31PM AKDT until October 11 at 7:00AM AKDT by NWS Fairbanks AK",
+        "description": "* WHAT...South winds 35 to 45 mph with gusts up to 70 mph\nexpected.\n\n* WHERE...Isabel Pass North of Trims Camp.\n\n* WHEN...From 4 PM Friday to 7 AM AKDT Sunday.\n\n* IMPACTS...Damaging winds may blow down trees and power lines.\nTravel will be difficult, especially for high profile vehicles.",
+        "instruction": "People should avoid being outside in forested areas. Use caution\nif you must drive.",
+        "response": "Prepare",
+        "note": null,
+        "parameters": {
+          "AWIPSidentifier": ["NPWAFG"],
+          "WMOidentifier": ["WWAK73 PAFG 072331"],
+          "NWSheadline": ["HIGH WIND WARNING IN EFFECT FROM 4 PM FRIDAY TO 7 AM AKDT SUNDAY"],
+          "BLOCKCHANNEL": ["EAS", "NWEM", "CMAS"],
+          "EAS-ORG": ["WXR"],
+          "VTEC": ["/O.NEW.PAFG.HW.W.0016.261010T0000Z-261011T1500Z/"],
+          "eventEndingTime": ["2026-10-11T07:00:00-08:00"]
+        },
+        "scope": "Public",
+        "code": "IPAWSv1.0",
+        "language": "en-US",
+        "web": "http://www.weather.gov",
+        "eventCode": {
+          "SAME": ["HWW"],
+          "NationalWeatherService": ["HWW"]
+        }
+      }
+    },
+    {
+      "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.b33dec6d162e53385e2d34794021ed7f38308a42.002.2",
+      "type": "Feature",
+      "geometry": null,
+      "properties": {
+        "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.b33dec6d162e53385e2d34794021ed7f38308a42.002.2",
+        "@type": "wx:Alert",
+        "id": "urn:oid:2.49.0.1.840.0.b33dec6d162e53385e2d34794021ed7f38308a42.002.2",
+        "areaDesc": "Northern Denali Borough",
+        "geocode": {
+          "SAME": ["002068"],
+          "UGC": ["AKZ847"]
+        },
+        "affectedZones": ["https://api.weather.gov/zones/forecast/AKZ847"],
+        "references": [],
+        "sent": "2026-10-07T15:31:00-08:00",
+        "effective": "2026-10-07T15:31:00-08:00",
+        "onset": "2026-10-09T16:00:00-08:00",
+        "expires": "2026-10-08T16:00:00-08:00",
+        "ends": "2026-10-11T01:00:00-08:00",
+        "status": "Actual",
+        "messageType": "Alert",
+        "category": "Met",
+        "severity": "Moderate",
+        "certainty": "Likely",
+        "urgency": "Expected",
+        "event": "Wind Advisory",
+        "sender": "w-nws.webmaster@noaa.gov",
+        "senderName": "NWS Fairbanks AK",
+        "headline": "Wind Advisory issued October 7 at 3:31PM AKDT until October 11 at 1:00AM AKDT by NWS Fairbanks AK",
+        "description": "* WHAT...Southeast winds 20 to 30 mph with gusts up to 65 mph\nexpected.\n\n* WHERE...Windy Pass.\n\n* WHEN...From 4 PM Friday to 1 AM AKDT Sunday.\n\n* IMPACTS...Gusty winds could blow around unsecured objects.\nTree limbs could be blown down and a few power outages may\nresult.",
+        "instruction": "Use extra caution when driving, especially if operating a high\nprofile vehicle. Secure outdoor objects.",
+        "response": "Execute",
+        "note": null,
+        "parameters": {
+          "AWIPSidentifier": ["NPWAFG"],
+          "WMOidentifier": ["WWAK73 PAFG 072331"],
+          "NWSheadline": ["WIND ADVISORY IN EFFECT FROM 4 PM FRIDAY TO 1 AM AKDT SUNDAY"],
+          "BLOCKCHANNEL": ["EAS", "NWEM", "CMAS"],
+          "VTEC": ["/O.NEW.PAFG.WI.Y.0035.261010T0000Z-261011T0900Z/"],
+          "eventEndingTime": ["2026-10-11T01:00:00-08:00"]
+        },
+        "scope": "Public",
+        "code": "IPAWSv1.0",
+        "language": "en-US",
+        "web": "http://www.weather.gov",
+        "eventCode": {
+          "SAME": ["NWS"],
+          "NationalWeatherService": ["WIY"]
+        }
+      }
+    },
+    {
+      "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.9e69fd16879e42b01e35b180c770370561ad95a6.001.2",
+      "type": "Feature",
+      "geometry": null,
+      "properties": {
+        "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.9e69fd16879e42b01e35b180c770370561ad95a6.001.2",
+        "@type": "wx:Alert",
+        "id": "urn:oid:2.49.0.1.840.0.9e69fd16879e42b01e35b180c770370561ad95a6.001.2",
+        "areaDesc": "Western Arctic Coast",
+        "geocode": {
+          "SAME": ["002185"],
+          "UGC": ["AKZ801"]
+        },
+        "affectedZones": ["https://api.weather.gov/zones/forecast/AKZ801"],
+        "references": [],
+        "sent": "2026-10-07T15:17:00-08:00",
+        "effective": "2026-10-07T15:17:00-08:00",
+        "onset": "2026-10-08T10:00:00-08:00",
+        "expires": "2026-10-08T16:00:00-08:00",
+        "ends": "2026-10-09T07:00:00-08:00",
+        "status": "Actual",
+        "messageType": "Alert",
+        "category": "Met",
+        "severity": "Severe",
+        "certainty": "Likely",
+        "urgency": "Expected",
+        "event": "High Wind Warning",
+        "sender": "w-nws.webmaster@noaa.gov",
+        "senderName": "NWS Fairbanks AK",
+        "headline": "High Wind Warning issued October 7 at 3:17PM AKDT until October 9 at 7:00AM AKDT by NWS Fairbanks AK",
+        "description": "* WHAT...Southeast winds 30 to 40 mph with gusts up to 60 mph\nexpected.\n\n* WHERE...Point Hope.\n\n* WHEN...From 10 AM Thursday to 7 AM AKDT Friday.\n\n* IMPACTS...High winds may move loose debris, damage property and\ncause power outages. Travel may be difficult.",
+        "instruction": "People are urged to secure loose objects that could be blown\naround or damaged by the wind.",
+        "response": "Prepare",
+        "note": null,
+        "parameters": {
+          "AWIPSidentifier": ["NPWNSB"],
+          "WMOidentifier": ["WWAK71 PAFG 072317"],
+          "NWSheadline": ["HIGH WIND WARNING IN EFFECT FROM 10 AM THURSDAY TO 7 AM AKDT FRIDAY"],
+          "BLOCKCHANNEL": ["EAS", "NWEM", "CMAS"],
+          "EAS-ORG": ["WXR"],
+          "VTEC": ["/O.NEW.PAFG.HW.W.0015.261008T1800Z-261009T1500Z/"],
+          "eventEndingTime": ["2026-10-09T07:00:00-08:00"]
+        },
+        "scope": "Public",
+        "code": "IPAWSv1.0",
+        "language": "en-US",
+        "web": "http://www.weather.gov",
+        "eventCode": {
+          "SAME": ["HWW"],
+          "NationalWeatherService": ["HWW"]
+        }
+      }
+    },
+    {
+      "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.9c86b9438efbdb9e917e87b84aa3468d4dcbb60e.006.1",
+      "type": "Feature",
+      "geometry": null,
+      "properties": {
+        "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.9c86b9438efbdb9e917e87b84aa3468d4dcbb60e.006.1",
+        "@type": "wx:Alert",
+        "id": "urn:oid:2.49.0.1.840.0.9c86b9438efbdb9e917e87b84aa3468d4dcbb60e.006.1",
+        "areaDesc": "Shishmaref",
+        "geocode": {
+          "SAME": ["002180"],
+          "UGC": ["AKZ820"]
+        },
+        "affectedZones": ["https://api.weather.gov/zones/forecast/AKZ820"],
+        "references": [
+          {
+            "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.117823af9da3025e70b2acec0f2345f154af3320.006.1",
+            "identifier": "urn:oid:2.49.0.1.840.0.117823af9da3025e70b2acec0f2345f154af3320.006.1",
+            "sender": "w-nws.webmaster@noaa.gov",
+            "sent": "2026-10-07T07:27:00-08:00"
+          }
+        ],
+        "sent": "2026-10-07T15:01:00-08:00",
+        "effective": "2026-10-07T15:01:00-08:00",
+        "onset": "2026-10-08T10:00:00-08:00",
+        "expires": "2026-10-08T07:00:00-08:00",
+        "ends": "2026-10-10T04:00:00-08:00",
+        "status": "Actual",
+        "messageType": "Update",
+        "category": "Met",
+        "severity": "Minor",
+        "certainty": "Likely",
+        "urgency": "Expected",
+        "event": "High Surf Advisory",
+        "sender": "w-nws.webmaster@noaa.gov",
+        "senderName": "NWS Fairbanks AK",
+        "headline": "High Surf Advisory issued October 7 at 3:01PM AKDT until October 10 at 4:00AM AKDT by NWS Fairbanks AK",
+        "description": "* WHAT...High surf expected. Water levels of 2 to 4 feet above\nthe normal high tide line, peaking during high tide.\n\n* WHERE...Shishmaref.\n\n* WHEN...From 10 AM Thursday to 4 AM AKDT Saturday.\n\n* IMPACTS...Localized beach erosion may occur.\n\n* ADDITIONAL DETAILS...A low in the Western Bering Sea will send\na front moving east in the coast, resulting in south to\nsoutheast winds ramping up Thursday morning through Friday,\nbefore diminishing through Saturday. Sea levels will remain\nelevated through Friday before gradually subsiding Friday\nnight into Saturday.",
+        "instruction": "Precautions should be taken to protect property.",
+        "response": "Avoid",
+        "note": null,
+        "parameters": {
+          "AWIPSidentifier": ["CFWAFG"],
+          "WMOidentifier": ["WHAK49 PAFG 072301"],
+          "NWSheadline": [
+            "HIGH SURF ADVISORY REMAINS IN EFFECT FROM 10 AM THURSDAY TO 4 AM AKDT SATURDAY"
+          ],
+          "BLOCKCHANNEL": ["EAS", "NWEM", "CMAS"],
+          "VTEC": ["/O.CON.PAFG.SU.Y.0008.261008T1800Z-261010T1200Z/"],
+          "eventEndingTime": ["2026-10-10T04:00:00-08:00"],
+          "expiredReferences": [
+            "w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.100a48824455ed0b5969cc0c8e3e618c02d03e0b.005.1,2026-10-06T15:32:00-08:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.04249b5da55655f3b9bf579b2846bc0dd10ff722.005.1,2026-10-06T01:20:00-08:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.88d78983f1827dda6433d355cf6bd254c84926b7.005.1,2026-10-05T14:51:00-08:00"
+          ]
+        },
+        "scope": "Public",
+        "code": "IPAWSv1.0",
+        "language": "en-US",
+        "web": "http://www.weather.gov",
+        "eventCode": {
+          "SAME": ["NWS"],
+          "NationalWeatherService": ["SUY"]
+        }
+      }
+    }
+  ],
+  "title": "Current watches, warnings, and advisories for Alaska",
+  "updated": "2026-10-08T04:13:49+00:00"
+}

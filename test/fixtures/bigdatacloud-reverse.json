@@ -1,0 +1,98 @@
+{
+  "latitude": 39.7392,
+  "lookupSource": "coordinates",
+  "longitude": -104.9903,
+  "localityLanguageRequested": "en",
+  "continent": "North America",
+  "continentCode": "NA",
+  "countryName": "United States of America",
+  "countryCode": "US",
+  "principalSubdivision": "Colorado",
+  "principalSubdivisionCode": "US-CO",
+  "city": "Denver",
+  "locality": "Denver",
+  "postcode": "80202",
+  "plusCode": "85FQP2Q5+MV",
+  "fips": {
+    "state": "08",
+    "county": "031",
+    "countySubdivision": "91007",
+    "place": "20000"
+  },
+  "localityInfo": {
+    "administrative": [
+      {
+        "name": "United States of America",
+        "description": "country in North America",
+        "isoName": "United States of America",
+        "order": 2,
+        "adminLevel": 2,
+        "isoCode": "US",
+        "wikidataId": "Q30",
+        "geonameId": 6252001
+      },
+      {
+        "name": "Colorado",
+        "description": "state of the United States of America",
+        "isoName": "Colorado",
+        "order": 6,
+        "adminLevel": 4,
+        "isoCode": "US-CO",
+        "wikidataId": "Q1261",
+        "geonameId": 5417618
+      },
+      {
+        "name": "Denver",
+        "description": "consolidated city-county and capital of the U.S. state of Colorado",
+        "order": 9,
+        "adminLevel": 6,
+        "wikidataId": "Q16554",
+        "geonameId": 5419384
+      }
+    ],
+    "informative": [
+      {
+        "name": "North America",
+        "description": "continent in the Americas",
+        "isoName": "North America",
+        "order": 1,
+        "isoCode": "NA",
+        "wikidataId": "Q49",
+        "geonameId": 6255149
+      },
+      {
+        "name": "contiguous United States",
+        "description": "the 48 states of the United States (all but Alaska and Hawaii) and the District of Columbia",
+        "order": 3,
+        "wikidataId": "Q578170"
+      },
+      {
+        "name": "America/Denver",
+        "description": "time zone",
+        "order": 4
+      },
+      {
+        "name": "Four Corners",
+        "description": "region of the United States consisting of the southwestern corner of Colorado, northwestern corner of New Mexico, northeastern corner of Arizona and southeastern corner of Utah",
+        "order": 5,
+        "wikidataId": "Q15672",
+        "geonameId": 5539379
+      },
+      {
+        "name": "08-20000",
+        "description": "FIPS code",
+        "order": 7
+      },
+      {
+        "name": "08-031-91007",
+        "description": "FIPS code",
+        "order": 8
+      },
+      {
+        "name": "80202",
+        "description": "postal code",
+        "order": 10
+      }
+    ]
+  }
+}
