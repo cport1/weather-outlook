@@ -4,8 +4,12 @@ Source "docs/tapes/_theme.tape"
 Set Framerate 20
 Source "docs/tapes/_setup.tape"
 
-Type "weather-outlook Miami --simulate storm" Sleep 400ms Enter
-Sleep 5.5s
+# Start off-camera so the GIF opens on the live dashboard, not a blank terminal.
+Hide
+Type "weather-outlook Miami --simulate storm" Enter
+Sleep 4s
+Show
+Sleep 4s
 # VHS reports Sixel support but can't capture image layers, so use text-cell radar.
 Type "4"
 Sleep 300ms
