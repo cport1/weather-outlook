@@ -1,4 +1,13 @@
 import { z } from "zod";
+import {
+  AqHourlyPoint,
+  AqStation,
+  Climate,
+  Marine,
+  ModelComparison,
+  Nowcast,
+  Nws,
+} from "./details.ts";
 
 /**
  * Domain model. These schemas are the public `--json` contract, so
@@ -111,6 +120,8 @@ export const AirQuality = z.object({
   ozone: z.number().optional(),
   no2: z.number().optional(),
   pollen: z.record(z.string(), z.number()).optional(),
+  hourly: z.array(AqHourlyPoint).optional(),
+  stations: z.array(AqStation).optional(),
 });
 export type AirQuality = z.infer<typeof AirQuality>;
 
@@ -287,6 +298,11 @@ export const Report = z.object({
   /** US outlook risks covering the location (SPC/WPC), when available. */
   risks: z.array(RiskSummary).optional(),
   errors: z.array(ProviderError),
+  nowcast: Nowcast.optional(),
+  nws: Nws.optional(),
+  models: ModelComparison.optional(),
+  marine: Marine.optional(),
+  climate: Climate.optional(),
 });
 export type Report = z.infer<typeof Report>;
 
