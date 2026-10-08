@@ -1,6 +1,21 @@
-import type { Alert, Hazards, Quake, Severity, Storm } from "../domain/types.ts";
+import type {
+  Alert,
+  GeoEvent,
+  Hazards,
+  Quake,
+  RiskArea,
+  Severity,
+  Storm,
+} from "../domain/types.ts";
+import { type Bbox, pointInRing, ringBbox } from "../util/geo.ts";
 import { hex, lerp, type RGB, stormCategoryColor } from "./color.ts";
-import type { MapLayers, MapMarker, MapPath } from "./worldmap.ts";
+import {
+  DEFAULT_THEME,
+  type MapLayers,
+  type MapMarker,
+  type MapPath,
+  pointInLand,
+} from "./worldmap.ts";
 
 export interface LayerToggles {
   storms: boolean;
@@ -8,6 +23,10 @@ export interface LayerToggles {
   hotspots: boolean;
   quakes: boolean;
   alerts: boolean;
+  /** Volcanoes, floods, droughts… (GeoEvent markers). */
+  events: boolean;
+  /** SPC/WPC risk outlooks (filled polygons). */
+  outlooks: boolean;
 }
 
 export const DEFAULT_TOGGLES: LayerToggles = {
@@ -16,7 +35,80 @@ export const DEFAULT_TOGGLES: LayerToggles = {
   hotspots: true,
   quakes: true,
   alerts: true,
+  events: true,
+  outlooks: true,
 };
+
+/** SPC categorical palette (matches the official outlook maps). */
+export const RISK_COLOR: Record<string, RGB> = {
+  TSTM: hex("#c1e9c1"),
+  MRGL: hex("#66a366"),
+  SLGT: hex("#ffe066"),
+  ENH: hex("#ffa366"),
+  MDT: hex("#e06666"),
+  HIGH: hex("#ee99ee"),
+};
+
+export function riskColor(a: Pick<RiskArea, "label" | "fill" | "product">): RGB {
+  if (a.product === "categorical" && RISK_COLOR[a.label]) return RISK_COLOR[a.label] as RGB;
+  return a.fill ? hex(a.fill) : hex("#b0bec5");
+}
+
+const EVENT_GLYPH: Record<GeoEvent["kind"], string> = {
+  volcano: "∆",
+  flood: "≈",
+  drought: "◇",
+  landslide: "⌂",
+  dust: "░",
+  snow: "*",
+  heat: "∴",
+  other: "◆",
+};
+const EVENT_COLOR: Record<GeoEvent["kind"], RGB> = {
+  volcano: hex("#ff7043"),
+  flood: hex("#4fc3f7"),
+  drought: hex("#d7a86e"),
+  landslide: hex("#a1887f"),
+  dust: hex("#bcaaa4"),
+  snow: hex("#e1f5fe"),
+  heat: hex("#ff8a65"),
+  other: hex("#b0bec5"),
+};
+const LEVEL_COLOR: Record<NonNullable<GeoEvent["level"]>, RGB> = {
+  red: hex("#ff1744"),
+  orange: hex("#ff9100"),
+  yellow: hex("#ffd600"),
+  green: hex("#66bb6a"),
+};
+
+export function eventGlyph(e: GeoEvent): string {
+  return EVENT_GLYPH[e.kind];
+}
+
+export function eventColor(e: GeoEvent): RGB {
+  // Green GDACS levels mean "low impact", so keep the kind color for those.
+  return e.level && e.level !== "green" ? LEVEL_COLOR[e.level] : EVENT_COLOR[e.kind];
+}
+
+/**
+ * Half-block color field that tints land/ocean under the Day 1 SPC categorical
+ * outlook. Bboxes are precomputed so the per-pixel test stays cheap.
+ */
+export function outlookField(areas: RiskArea[]): MapLayers["field"] {
+  const day1 = areas
+    .filter((a) => a.product === "categorical" && a.day === 1)
+    .sort((a, b) => b.level - a.level)
+    .flatMap((a) => a.rings.map((r) => ({ ring: r, box: ringBbox(r), color: riskColor(a) })));
+  if (!day1.length) return undefined;
+  const inBox = (b: Bbox, lon: number, lat: number) =>
+    lon >= b.west && lon <= b.east && lat >= b.south && lat <= b.north;
+  return (lon, lat) => {
+    const hit = day1.find((d) => inBox(d.box, lon, lat) && pointInRing(lon, lat, d.ring));
+    if (!hit) return undefined;
+    const base = pointInLand(lon, lat) ? DEFAULT_THEME.land : DEFAULT_THEME.ocean;
+    return lerp(base, hit.color, 0.55);
+  };
+}
 
 export const SEVERITY_COLOR: Record<Severity, RGB> = {
   extreme: hex("#ff1744"),
@@ -60,14 +152,39 @@ export function buildHazardLayers(
 ): MapLayers {
   const markers: MapMarker[] = [];
   const paths: MapPath[] = [];
+  let field: MapLayers["field"];
 
+  if (toggles.outlooks && hazards?.outlooks?.length) {
+    field = outlookField(hazards.outlooks);
+    // Excessive rainfall and fire weather as dotted outlines so they don't fight the fill.
+    for (const a of hazards.outlooks) {
+      if (a.day !== 1 || (a.product !== "rainfall" && a.product !== "fire")) continue;
+      const color = a.product === "fire" ? hex("#ff8a65") : riskColor(a);
+      for (const ring of a.rings) paths.push({ coords: ring, color, dotted: true });
+    }
+  }
   if (toggles.alerts) {
-    for (const a of alerts) {
+    // Local (report) alerts first, then regional map alerts not already drawn.
+    const seen = new Set<string>();
+    for (const a of [...alerts, ...(hazards?.alerts ?? [])]) {
+      if (seen.has(a.id)) continue;
+      seen.add(a.id);
       for (const ring of a.polygon ?? [])
         paths.push({ coords: ring, color: SEVERITY_COLOR[a.severity] });
     }
   }
-  if (!hazards) return { markers, paths };
+  if (!hazards) return { markers, paths, field };
+
+  if (toggles.fires && zoom >= 4) {
+    for (const p of hazards.perimeters ?? []) {
+      for (const ring of p.rings) paths.push({ coords: ring, color: FIRE });
+    }
+  }
+  if (toggles.events) {
+    for (const e of hazards.events ?? []) {
+      markers.push({ lon: e.lon, lat: e.lat, glyph: eventGlyph(e), color: eventColor(e) });
+    }
+  }
 
   if (toggles.hotspots) {
     // Satellite hotspots: tiny dim dots, thinned at world zoom so they read as a heat haze.
@@ -119,7 +236,7 @@ export function buildHazardLayers(
       }
     }
   }
-  return { markers, paths };
+  return { markers, paths, field };
 }
 
 const SPIRAL = ["@", "@", "6", "9"];

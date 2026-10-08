@@ -1,0 +1,26 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "GeometryCollection",
+        "geometries": []
+      },
+      "properties": {
+        "DN": 0,
+        "VALID": "202610080100",
+        "EXPIRE": "202610081200",
+        "ISSUE": "202610080058",
+        "VALID_ISO": "2026-10-08T01:00:00+00:00",
+        "EXPIRE_ISO": "2026-10-08T12:00:00+00:00",
+        "ISSUE_ISO": "2026-10-08T00:58:00+00:00",
+        "FORECASTER": "Broyles",
+        "LABEL": "Less Than 2% All Areas",
+        "LABEL2": "",
+        "stroke": "",
+        "fill": ""
+      }
+    }
+  ]
+}

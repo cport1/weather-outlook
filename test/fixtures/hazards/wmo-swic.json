@@ -1,0 +1,81 @@
+{
+  "itemCount": 1247,
+  "lastUpdated": "2026-10-08 03:38:04",
+  "items": [
+    {
+      "id": "urn:oid:2.49.0.1.840.0.85edb88b3060b5b4d774dbc76e5e6c8378074775.004.1",
+      "event": "Heat Advisory",
+      "headline": "Heat Advisory issued October 7 at 8:31PM PDT until October 8 at 8:00PM PDT by NWS Los Angeles/Oxnard CA",
+      "sent": "2026-10-08 03:31:00",
+      "expires": "2026-10-09 03:00:00",
+      "areaDesc": "San Luis Obispo County Inland Central Coast; Santa Lucia Mountains; Southern Salinas Valley; San Luis Obispo County Interior Valleys; San Luis Obispo County Mountains; Santa Barbara County Inland Central Coast; Santa Ynez Valley",
+      "mid": "093",
+      "ra": "4,5",
+      "capURL": "us-noaa-nws-en/2026/10/08/03/34/41-277-159.xml",
+      "s": 2,
+      "u": 3,
+      "c": 3,
+      "effective": "2026-10-08 03:31:00"
+    },
+    {
+      "id": "urn:oid:2.49.0.1.840.0.85edb88b3060b5b4d774dbc76e5e6c8378074775.002.1",
+      "event": "Extreme Heat Warning",
+      "headline": "Extreme Heat Warning issued October 7 at 8:31PM PDT until October 8 at 8:00PM PDT by NWS Los Angeles/Oxnard CA",
+      "sent": "2026-10-08 03:31:00",
+      "expires": "2026-10-09 03:00:00",
+      "areaDesc": "Catalina and Santa Barbara Islands; Santa Clarita Valley; Ventura County Beaches; Ventura County Inland Coast; Lake Casitas; Ojai Valley; Central Ventura County Valleys; Malibu Coast; Los Angeles County Beaches; Palos Verdes Hills; Los Angeles County Inland Coast including Downtown Los Angeles; Western Santa Monica Mountains Recreational Area; Eastern Santa Monica Mountains Recreational Area; Calabasas and Agoura Hills; Western San Fernando Valley; Eastern San Fernando Valley; Southeastern Ventura County Valleys; Santa Susana Mountains; Los Angeles County San Gabriel Valley",
+      "mid": "093",
+      "ra": "4,5",
+      "capURL": "us-noaa-nws-en/2026/10/08/03/34/41-423-372.xml",
+      "s": 3,
+      "u": 3,
+      "c": 3,
+      "effective": "2026-10-08 03:31:00"
+    },
+    {
+      "effective": "2026-10-08 02:06:00",
+      "headline": "Warning to Sheep Graziers for South West, South Coastal and South East Coastal forecast districts",
+      "id": "AusBoM-IDW29000-2026-10-08T02:11:02+00:00",
+      "event": "Sheep Grazier Warning",
+      "areaDesc": "Western Australia: South West, South Coastal and South East Coastal forecast districts",
+      "sent": "2026-10-08 02:11:02",
+      "s": 2,
+      "c": 0,
+      "capURL": "au-bom-en/2026/10/08/02/15/29-587-484.xml",
+      "mid": "185",
+      "ra": "5",
+      "expires": "2026-10-09 16:00:00",
+      "u": 0
+    },
+    {
+      "ra": "5",
+      "c": 0,
+      "areaDesc": "Western Australia: Perth Local Waters, Ningaloo Coast, Perth Coast, Bunbury Geographe Coast, Leeuwin Coast, Albany Coast and Esperance Coast",
+      "event": "Wind",
+      "mid": "185",
+      "capURL": "au-bom-en/2026/10/07/23/30/42-830-859.xml",
+      "effective": "2026-10-07 23:00:00",
+      "headline": "Strong Wind Warning for coastal waters between North West Cape and Cape Cuvier and between Two Rocks and Israelite Bay and for Perth Local Waters for 08 October",
+      "sent": "2026-10-07 23:26:25",
+      "s": 2,
+      "expires": "2026-10-08 16:00:00",
+      "u": 0,
+      "id": "AusBoM-IDW20100-2026-10-07T23:26:25+00:00"
+    },
+    {
+      "id": "44060041600000_20261008113130",
+      "event": "forest fire",
+      "headline": "Foshan Meteorological Observatory issues orange forest fire warning [Level II/Severe]",
+      "sent": "2026-10-08 03:30:00",
+      "expires": "",
+      "areaDesc": "Foshan City jurisdiction",
+      "mid": "001",
+      "ra": "2",
+      "s": 3,
+      "u": 0,
+      "c": 0,
+      "url": "cn-cma-xx/2026/10/08/03/36/2026-10-08-03-36-04-206-46ea2.xml",
+      "effective": "2026-10-08 03:30:00"
+    }
+  ]
+}

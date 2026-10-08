@@ -1,0 +1,118 @@
+{
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [18.1916, 68.5366],
+            [20.0718, 69.0425],
+            [20.865, 69.3787],
+            [22.6257, 69.5218],
+            [24.1567, 69.7233],
+            [29.142, 70.2831],
+            [31.3521, 70.268],
+            [28.5103, 71.1782],
+            [23.3072, 71.1706],
+            [21.0768, 70.437],
+            [19.0606, 70.3072],
+            [17.0718, 69.6079],
+            [16.457, 69.2185],
+            [15.9766, 68.8114],
+            [16.6695, 68.4955],
+            [16.9092, 68.5633],
+            [17.2037, 68.5482],
+            [18.0343, 68.6096],
+            [18.1916, 68.5366],
+            [18.1916, 68.5366]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Mountain roads in parts of Troms and Finnmark",
+        "awarenessResponse": "Be aware",
+        "awarenessSeriousness": "Challenging situation",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "2; snow-ice",
+        "ceiling_above_sea_level": 2743,
+        "certainty": "Likely",
+        "consequences": "Locally difficult driving conditions: Some trips may experience longer travel times. ",
+        "contact": "https://www.met.no/en/contact-us",
+        "county": ["18", "55", "56"],
+        "description": "The snow level is expected to drop on Thursday and Friday, and some snow (1-5 cm) may accumulate on roads at higher elevations at times. The snow level is expected to be between 200 and 500 meters above sea level, and locally even lower  Friday morning.",
+        "event": "snow",
+        "eventAwarenessName": "Snow",
+        "eventEndingTime": "2026-10-09T10:00:00+00:00",
+        "geographicDomain": "land",
+        "id": "2.49.0.1.578.0.20261007083049.048",
+        "instruction": "Locally difficult driving conditions: Allow extra time for travel and driving. Use appropriate tires and drive according to the conditions. Check road reports on vegvesen.no/trafikk. ",
+        "municipality": [
+          "1853",
+          "5501",
+          "5503",
+          "5510",
+          "5512",
+          "5514",
+          "5516",
+          "5518",
+          "5520",
+          "5522",
+          "5524",
+          "5526",
+          "5528",
+          "5530",
+          "5532",
+          "5534",
+          "5536",
+          "5538",
+          "5540",
+          "5542",
+          "5544",
+          "5546",
+          "5601",
+          "5603",
+          "5607",
+          "5614",
+          "5616",
+          "5618",
+          "5620",
+          "5622",
+          "5624",
+          "5626",
+          "5628",
+          "5630",
+          "5632",
+          "5634",
+          "5636"
+        ],
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.20261007083049.048"
+          },
+          {
+            "description": "Map over Snow, yellow level, Mountain roads in parts of Troms and Finnmark, 2026-10-08T12:00:00+00:00, 2026-10-09T10:00:00+00:00",
+            "mimeType": "image/png",
+            "uri": "https://slaps.met.no/cap-images/c692ad1b-a3ae-46e4-aa5b-9d8983c368a1.png"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Snow, yellow level, Mountain roads in parts of Troms and Finnmark, 2026-10-08T12:00:00+00:00, 2026-10-09T10:00:00+00:00",
+        "triggerLevel": "3cm/24h",
+        "type": "Alert",
+        "web": "https://www.met.no/vaer-og-klima/ekstremvaervarsler-og-andre-farevarsler/vaerfenomener-som-kan-gi-farevarsel-fra-met/sno"
+      },
+      "type": "Feature",
+      "when": {
+        "interval": ["2026-10-08T12:00:00+00:00", "2026-10-09T10:00:00+00:00"]
+      }
+    }
+  ],
+  "lang": "en",
+  "lastChange": "2026-10-08T04:12:50+00:00",
+  "type": "FeatureCollection"
+}

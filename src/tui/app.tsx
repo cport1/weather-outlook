@@ -35,6 +35,7 @@ import { Credits, closeCredits, toggleCredits } from "./views/credits.tsx";
 import { HazardsView } from "./views/hazards.tsx";
 import { type MapControls, MapView } from "./views/map.tsx";
 import { type RadarControls, RadarView, toggleSatellite } from "./views/radar.tsx";
+import { RiskBadges } from "./views/risk-badge.tsx";
 
 extend({ cell_canvas: CellCanvas });
 
@@ -298,6 +299,7 @@ function NowView(props: { state: AppState; report: Report }) {
                 <Metric label="visibility" value={distance(c().visibility, u())} />
                 <Metric label="cloud cover" value={`${c().cloudCover ?? "--"}%`} />
                 <Metric label="UV index" value={String(Math.round(c().uvIndex ?? 0))} />
+                <RiskBadges risks={props.report.risks} />
                 <Show when={props.report.airQuality?.usAqi !== undefined}>
                   <Metric
                     label="air (AQI)"
@@ -601,6 +603,7 @@ const HELP: Array<[string, string]> = [
   ["S F H Q A", "map hazard layers"],
   ["T W P C", "map temp/wind/rain/cloud"],
   ["N O L", "night · aurora · cities"],
+  ["E R", "volcanoes/floods · US risk outlooks"],
   ["g", "map: fly to a place"],
   ["i / click", "inspect hazards (tab ⏎)"],
   ["drag / wheel", "pan / zoom at pointer"],

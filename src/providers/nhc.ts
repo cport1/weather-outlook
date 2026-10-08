@@ -98,6 +98,11 @@ const COMPASS = [
   "NNW",
 ];
 
+/** 16-point compass name for a bearing in degrees. */
+export function compassPoint(deg: number): string {
+  return COMPASS[Math.round(deg / 22.5) % 16] ?? "N";
+}
+
 function pointCoords(f: Feature<unknown>): [number, number] | undefined {
   if (f.geometry?.type !== "Point") return undefined;
   const [lon, lat] = f.geometry.coordinates as [number, number];
@@ -105,7 +110,7 @@ function pointCoords(f: Feature<unknown>): [number, number] | undefined {
 }
 
 /** ATCF dtg like 2026100418 → ISO. */
-function dtgToIso(dtg: number): string {
+export function dtgToIso(dtg: number): string {
   const s = String(dtg);
   return `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}T${s.slice(8, 10)}:00:00Z`;
 }

@@ -1,0 +1,458 @@
+{
+  "warnings": [
+    {
+      "alert": {
+        "code": [
+          "id:2.49.0.0.276.0.DWD.PVW.1790990100000.a60a5fd9-5baf-4d07-b119-6bdb46229a06",
+          "MCP:v2.0"
+        ],
+        "identifier": "2.49.0.0.276.0.DWD.PVW.1790990100000.a60a5fd9-5baf-4d07-b119-6bdb46229a06.MUL",
+        "incidents": "Alert",
+        "info": [
+          {
+            "area": [
+              {
+                "altitude": 0,
+                "areaDesc": "Kreis Vorpommern-Rügen - Binnenland",
+                "ceiling": 9842.5197,
+                "geocode": [
+                  {
+                    "value": "DE090",
+                    "valueName": "EMMA_ID"
+                  },
+                  {
+                    "value": "913073001",
+                    "valueName": "WARNCELLID"
+                  }
+                ]
+              },
+              {
+                "altitude": 0,
+                "areaDesc": "Kreis Vorpommern-Greifswald - Binnenland Nord",
+                "ceiling": 9842.5197,
+                "geocode": [
+                  {
+                    "value": "DE022",
+                    "valueName": "EMMA_ID"
+                  },
+                  {
+                    "value": "913075001",
+                    "valueName": "WARNCELLID"
+                  }
+                ]
+              },
+              {
+                "altitude": 0,
+                "areaDesc": "Kreis Mecklenburgische Seenplatte - Nord",
+                "ceiling": 9842.5197,
+                "geocode": [
+                  {
+                    "value": "DE025",
+                    "valueName": "EMMA_ID"
+                  },
+                  {
+                    "value": "913071001",
+                    "valueName": "WARNCELLID"
+                  }
+                ]
+              }
+            ],
+            "category": ["Met"],
+            "certainty": "Likely",
+            "contact": "Deutscher Wetterdienst",
+            "description": "Es tritt verbreitet Nebel mit Sichtweiten unter 150 Metern auf.",
+            "event": "NEBEL",
+            "eventCode": [
+              {
+                "value": "2.1.14",
+                "valueName": "PROFILE_VERSION"
+              },
+              {
+                "value": "© GeoBasis-DE / BKG 2021 (Daten modifiziert)",
+                "valueName": "LICENSE"
+              },
+              {
+                "value": "59",
+                "valueName": "II"
+              },
+              {
+                "value": "FOG",
+                "valueName": "GROUP"
+              },
+              {
+                "value": "255 235 59",
+                "valueName": "AREA_COLOR"
+              }
+            ],
+            "expires": "2026-10-03T09:00:00+02:00",
+            "headline": "Amtliche WARNUNG vor NEBEL",
+            "instruction": "Hinweis auf: mögliche starke Sichteinschränkungen. \nHandlungsempfehlungen: \nFahrverhalten an plötzlich auftretende Sichtbehinderungen (Nebelbänke) anpassen",
+            "language": "de-DE",
+            "onset": "2026-10-03T03:15:00+02:00",
+            "parameter": [
+              {
+                "value": "<150 [m]",
+                "valueName": "visibility"
+              },
+              {
+                "value": "mögliche starke Sichteinschränkungen",
+                "valueName": "impacts"
+              },
+              {
+                "value": "2; yellow; Moderate",
+                "valueName": "awareness_level"
+              },
+              {
+                "value": "4; Fog",
+                "valueName": "awareness_type"
+              }
+            ],
+            "responseType": ["Prepare"],
+            "senderName": "Deutscher Wetterdienst",
+            "severity": "Minor",
+            "urgency": "Immediate",
+            "web": "https://dwd.de/warnungen"
+          },
+          {
+            "area": [
+              {
+                "altitude": 0,
+                "areaDesc": "Kreis Vorpommern-Rügen - Binnenland",
+                "ceiling": 9842.5197,
+                "geocode": [
+                  {
+                    "value": "DE090",
+                    "valueName": "EMMA_ID"
+                  },
+                  {
+                    "value": "913073001",
+                    "valueName": "WARNCELLID"
+                  }
+                ]
+              },
+              {
+                "altitude": 0,
+                "areaDesc": "Kreis Vorpommern-Greifswald - Binnenland Nord",
+                "ceiling": 9842.5197,
+                "geocode": [
+                  {
+                    "value": "DE022",
+                    "valueName": "EMMA_ID"
+                  },
+                  {
+                    "value": "913075001",
+                    "valueName": "WARNCELLID"
+                  }
+                ]
+              },
+              {
+                "altitude": 0,
+                "areaDesc": "Kreis Mecklenburgische Seenplatte - Nord",
+                "ceiling": 9842.5197,
+                "geocode": [
+                  {
+                    "value": "DE025",
+                    "valueName": "EMMA_ID"
+                  },
+                  {
+                    "value": "913071001",
+                    "valueName": "WARNCELLID"
+                  }
+                ]
+              }
+            ],
+            "category": ["Met"],
+            "certainty": "Likely",
+            "contact": "Deutscher Wetterdienst",
+            "description": "There is a risk of fog (level 1 of 1).\nVisibility: < 150 m",
+            "event": "fog",
+            "eventCode": [
+              {
+                "value": "2.1.14",
+                "valueName": "PROFILE_VERSION"
+              },
+              {
+                "value": "© GeoBasis-DE / BKG 2021 (Daten modifiziert)",
+                "valueName": "LICENSE"
+              },
+              {
+                "value": "59",
+                "valueName": "II"
+              },
+              {
+                "value": "FOG",
+                "valueName": "GROUP"
+              },
+              {
+                "value": "255 235 59",
+                "valueName": "AREA_COLOR"
+              }
+            ],
+            "expires": "2026-10-03T09:00:00+02:00",
+            "headline": "Official WARNING of FOG",
+            "instruction": "Hazard(s) to expect: severely reduced visibility possible. \nRecommendations for what to do: \nAdapt your driving behaviour to sudden reduced visibility (fog banks).",
+            "language": "en",
+            "onset": "2026-10-03T03:15:00+02:00",
+            "parameter": [
+              {
+                "value": "<150 [m]",
+                "valueName": "visibility"
+              },
+              {
+                "value": "severely reduced visibility possible",
+                "valueName": "impacts"
+              },
+              {
+                "value": "2; yellow; Moderate",
+                "valueName": "awareness_level"
+              },
+              {
+                "value": "4; Fog",
+                "valueName": "awareness_type"
+              }
+            ],
+            "responseType": ["Prepare"],
+            "senderName": "Deutscher Wetterdienst",
+            "severity": "Minor",
+            "urgency": "Immediate",
+            "web": "https://dwd.de/warnungen"
+          }
+        ],
+        "msgType": "Alert",
+        "scope": "Public",
+        "sender": "opendata@dwd.de",
+        "sent": "2026-10-03T03:15:00+02:00",
+        "source": "PVW",
+        "status": "Actual"
+      },
+      "uuid": "ef8a57e6-65ea-42ae-853c-c135113a9f38"
+    },
+    {
+      "alert": {
+        "code": [
+          "id:2.49.0.0.276.0.DWD.PVW.1790996460000.a9fd355c-a494-4d0f-aaa5-1c15f35efc48",
+          "MCP:v2.0"
+        ],
+        "identifier": "2.49.0.0.276.0.DWD.PVW.1790996460000.a9fd355c-a494-4d0f-aaa5-1c15f35efc48.MUL",
+        "incidents": "Alert",
+        "info": [
+          {
+            "area": [
+              {
+                "altitude": 0,
+                "areaDesc": "Stadt Delmenhorst",
+                "ceiling": 9842.5197,
+                "geocode": [
+                  {
+                    "value": "DE337",
+                    "valueName": "EMMA_ID"
+                  },
+                  {
+                    "value": "103401000",
+                    "valueName": "WARNCELLID"
+                  }
+                ]
+              },
+              {
+                "altitude": 0,
+                "areaDesc": "Kreis Harburg",
+                "ceiling": 9842.5197,
+                "geocode": [
+                  {
+                    "value": "DE170",
+                    "valueName": "EMMA_ID"
+                  },
+                  {
+                    "value": "103353000",
+                    "valueName": "WARNCELLID"
+                  }
+                ]
+              },
+              {
+                "altitude": 0,
+                "areaDesc": "Kreis Verden",
+                "ceiling": 9842.5197,
+                "geocode": [
+                  {
+                    "value": "DE393",
+                    "valueName": "EMMA_ID"
+                  },
+                  {
+                    "value": "103361000",
+                    "valueName": "WARNCELLID"
+                  }
+                ]
+              }
+            ],
+            "category": ["Met"],
+            "certainty": "Likely",
+            "contact": "Deutscher Wetterdienst",
+            "description": "Es tritt gebietsweise Nebel mit Sichtweiten unter 150 Metern auf.",
+            "event": "NEBEL",
+            "eventCode": [
+              {
+                "value": "2.1.14",
+                "valueName": "PROFILE_VERSION"
+              },
+              {
+                "value": "© GeoBasis-DE / BKG 2021 (Daten modifiziert)",
+                "valueName": "LICENSE"
+              },
+              {
+                "value": "59",
+                "valueName": "II"
+              },
+              {
+                "value": "FOG",
+                "valueName": "GROUP"
+              },
+              {
+                "value": "255 235 59",
+                "valueName": "AREA_COLOR"
+              }
+            ],
+            "expires": "2026-10-03T09:00:00+02:00",
+            "headline": "Amtliche WARNUNG vor NEBEL",
+            "instruction": "Hinweis auf: mögliche starke Sichteinschränkungen. \nHandlungsempfehlungen: \nFahrverhalten an plötzlich auftretende Sichtbehinderungen (Nebelbänke) anpassen",
+            "language": "de-DE",
+            "onset": "2026-10-03T05:01:00+02:00",
+            "parameter": [
+              {
+                "value": "<150 [m]",
+                "valueName": "visibility"
+              },
+              {
+                "value": "mögliche starke Sichteinschränkungen",
+                "valueName": "impacts"
+              },
+              {
+                "value": "2; yellow; Moderate",
+                "valueName": "awareness_level"
+              },
+              {
+                "value": "4; Fog",
+                "valueName": "awareness_type"
+              }
+            ],
+            "responseType": ["Prepare"],
+            "senderName": "Deutscher Wetterdienst",
+            "severity": "Minor",
+            "urgency": "Immediate",
+            "web": "https://dwd.de/warnungen"
+          },
+          {
+            "area": [
+              {
+                "altitude": 0,
+                "areaDesc": "Stadt Delmenhorst",
+                "ceiling": 9842.5197,
+                "geocode": [
+                  {
+                    "value": "DE337",
+                    "valueName": "EMMA_ID"
+                  },
+                  {
+                    "value": "103401000",
+                    "valueName": "WARNCELLID"
+                  }
+                ]
+              },
+              {
+                "altitude": 0,
+                "areaDesc": "Kreis Harburg",
+                "ceiling": 9842.5197,
+                "geocode": [
+                  {
+                    "value": "DE170",
+                    "valueName": "EMMA_ID"
+                  },
+                  {
+                    "value": "103353000",
+                    "valueName": "WARNCELLID"
+                  }
+                ]
+              },
+              {
+                "altitude": 0,
+                "areaDesc": "Kreis Verden",
+                "ceiling": 9842.5197,
+                "geocode": [
+                  {
+                    "value": "DE393",
+                    "valueName": "EMMA_ID"
+                  },
+                  {
+                    "value": "103361000",
+                    "valueName": "WARNCELLID"
+                  }
+                ]
+              }
+            ],
+            "category": ["Met"],
+            "certainty": "Likely",
+            "contact": "Deutscher Wetterdienst",
+            "description": "There is a risk of fog (level 1 of 1).\nVisibility: < 150 m",
+            "event": "fog",
+            "eventCode": [
+              {
+                "value": "2.1.14",
+                "valueName": "PROFILE_VERSION"
+              },
+              {
+                "value": "© GeoBasis-DE / BKG 2021 (Daten modifiziert)",
+                "valueName": "LICENSE"
+              },
+              {
+                "value": "59",
+                "valueName": "II"
+              },
+              {
+                "value": "FOG",
+                "valueName": "GROUP"
+              },
+              {
+                "value": "255 235 59",
+                "valueName": "AREA_COLOR"
+              }
+            ],
+            "expires": "2026-10-03T09:00:00+02:00",
+            "headline": "Official WARNING of FOG",
+            "instruction": "Hazard(s) to expect: severely reduced visibility possible. \nRecommendations for what to do: \nAdapt your driving behaviour to sudden reduced visibility (fog banks).",
+            "language": "en",
+            "onset": "2026-10-03T05:01:00+02:00",
+            "parameter": [
+              {
+                "value": "<150 [m]",
+                "valueName": "visibility"
+              },
+              {
+                "value": "severely reduced visibility possible",
+                "valueName": "impacts"
+              },
+              {
+                "value": "2; yellow; Moderate",
+                "valueName": "awareness_level"
+              },
+              {
+                "value": "4; Fog",
+                "valueName": "awareness_type"
+              }
+            ],
+            "responseType": ["Prepare"],
+            "senderName": "Deutscher Wetterdienst",
+            "severity": "Minor",
+            "urgency": "Immediate",
+            "web": "https://dwd.de/warnungen"
+          }
+        ],
+        "msgType": "Alert",
+        "scope": "Public",
+        "sender": "opendata@dwd.de",
+        "sent": "2026-10-03T05:01:00+02:00",
+        "source": "PVW",
+        "status": "Actual"
+      },
+      "uuid": "f6db6652-38c1-4e95-b8b3-a14577bde6e9"
+    }
+  ]
+}

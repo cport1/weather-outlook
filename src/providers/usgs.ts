@@ -42,3 +42,26 @@ export async function fetchQuakes(http: HttpClient, feed: QuakeFeed = "2.5_day")
   );
   return parseQuakes(raw);
 }
+
+/**
+ * Small quakes near a point (FDSN event service), newest first.
+ * The start date is day-aligned so the cache key stays stable between refreshes.
+ */
+export async function fetchNearbyQuakes(
+  http: HttpClient,
+  lat: number,
+  lon: number,
+  opts: { radiusKm?: number; minMagnitude?: number; days?: number; now?: Date } = {},
+): Promise<Quake[]> {
+  const now = opts.now ?? new Date();
+  const start = new Date(now.getTime() - (opts.days ?? 7) * 86_400_000).toISOString().slice(0, 10);
+  const url =
+    "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson" +
+    `&latitude=${lat.toFixed(2)}&longitude=${lon.toFixed(2)}&maxradiuskm=${opts.radiusKm ?? 300}` +
+    `&minmagnitude=${opts.minMagnitude ?? 1.5}&starttime=${start}&orderby=time&limit=100`;
+  const raw = await http.json<{ features: UsgsFeature[] }>(url, {
+    ttlMs: 5 * 60_000,
+    timeoutMs: 15_000,
+  });
+  return parseQuakes(raw).sort((a, b) => b.time.localeCompare(a.time));
+}

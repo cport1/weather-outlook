@@ -1,11 +1,10 @@
+import { alertSourceFor, US_LIKE } from "./alerts.ts";
 import { computeAstronomy } from "./domain/astronomy.ts";
 import { type Location, type ProviderError, type Report, SCHEMA_VERSION } from "./domain/types.ts";
-import { fetchNwsAlertsForPoint } from "./providers/nws.ts";
 import { fetchAirQuality, fetchForecast } from "./providers/open-meteo.ts";
+import { fetchOutlooks, risksAt } from "./providers/spc.ts";
 import type { Units } from "./render/units.ts";
 import type { HttpClient } from "./util/http.ts";
-
-const US_LIKE = new Set(["US", "PR", "GU", "VI", "AS", "MP"]);
 
 /** Run a provider call, capturing failure as a ProviderError instead of throwing. */
 async function attempt<T>(
@@ -35,10 +34,13 @@ export async function buildReport(
 ): Promise<Report> {
   const errors: ProviderError[] = [];
   const want = { forecast: true, airQuality: true, alerts: true, ...opts.include };
-  // Only ask NWS when we're plausibly in the US; unknown country → try anyway, it fails fast.
-  const wantNws =
-    want.alerts && (!location.countryCode || US_LIKE.has(location.countryCode.toUpperCase()));
-  const [forecast, airQuality, alerts] = await Promise.all([
+  // Regional alert provider (NWS, Environment Canada, MET Norway, MeteoAlarm, WMO).
+  const alertSource = alertSourceFor(location);
+  // SPC/WPC outlooks only cover the US; ride along with alerts.
+  const cc = location.countryCode?.toUpperCase();
+  const wantOutlooks =
+    want.alerts && (cc ? US_LIKE.has(cc) : location.lon < -60 && location.lat > 20);
+  const [forecast, airQuality, alerts, outlooks] = await Promise.all([
     want.forecast
       ? attempt("open-meteo", errors, () =>
           fetchForecast(http, location, { refresh: opts.refresh }),
@@ -47,11 +49,12 @@ export async function buildReport(
     want.airQuality
       ? attempt("open-meteo-aq", errors, () => fetchAirQuality(http, location))
       : undefined,
-    wantNws
-      ? attempt("nws-alerts", errors, () =>
-          fetchNwsAlertsForPoint(http, location.lat, location.lon),
-        )
+    want.alerts
+      ? attempt(alertSource.provider, errors, () => alertSource.fetch(http, location))
       : Promise.resolve([]),
+    wantOutlooks
+      ? attempt("spc", errors, () => fetchOutlooks(http, "day1"))
+      : Promise.resolve(undefined),
   ]);
   return {
     schemaVersion: SCHEMA_VERSION,
@@ -62,6 +65,7 @@ export async function buildReport(
     airQuality,
     astronomy: computeAstronomy(location.lat, location.lon),
     alerts: alerts ?? [],
+    risks: outlooks ? risksAt(outlooks, location.lat, location.lon) : undefined,
     errors,
   };
 }

@@ -1,0 +1,42 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-92.581, 33.591],
+            [-92.574, 33.572],
+            [-92.607, 33.563],
+            [-92.624, 33.574],
+            [-92.599, 33.603],
+            [-92.581, 33.591]
+          ]
+        ]
+      },
+      "properties": {
+        "poly_IncidentName": "Bunker Fire",
+        "attr_IncidentSize": 2851,
+        "poly_GISAcres": 1,
+        "attr_UniqueFireIdentifier": "2026-ARARS-100236"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [[-117.865, 35.63], [-117.866, 35.63], [-117.866, 35.631], [-117.865, 35.63]]
+        ]
+      },
+      "properties": {
+        "poly_IncidentName": "MTZ/KRN/44A",
+        "attr_IncidentSize": 0.1,
+        "poly_GISAcres": 0.1,
+        "attr_UniqueFireIdentifier": "2026-CACDD-006826"
+      }
+    }
+  ]
+}
