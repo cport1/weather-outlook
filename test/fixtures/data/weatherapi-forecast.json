@@ -1,0 +1,135 @@
+{
+  "location": {
+    "name": "London",
+    "region": "City of London, Greater London",
+    "country": "United Kingdom",
+    "lat": 51.52,
+    "lon": -0.11,
+    "tz_id": "Europe/London",
+    "localtime_epoch": 1658522976,
+    "localtime": "2022-07-22 21:49"
+  },
+  "current": {
+    "last_updated_epoch": 1658522700,
+    "last_updated": "2022-07-22 21:45",
+    "temp_c": 17.0,
+    "temp_f": 62.6,
+    "is_day": 0,
+    "condition": {
+      "text": "Light rain shower",
+      "icon": "//cdn.weatherapi.com/weather/64x64/night/353.png",
+      "code": 1240
+    },
+    "wind_mph": 6.9,
+    "wind_kph": 11.2,
+    "wind_degree": 240,
+    "wind_dir": "WSW",
+    "pressure_mb": 1018.0,
+    "pressure_in": 30.06,
+    "precip_mm": 0.1,
+    "precip_in": 0.0,
+    "humidity": 77,
+    "cloud": 75,
+    "feelslike_c": 17.0,
+    "feelslike_f": 62.6,
+    "dewpoint_c": 12.9,
+    "vis_km": 10.0,
+    "vis_miles": 6.0,
+    "uv": 1.0,
+    "gust_mph": 9.4,
+    "gust_kph": 15.1
+  },
+  "forecast": {
+    "forecastday": [
+      {
+        "date": "2022-07-22",
+        "date_epoch": 1658448000,
+        "day": {
+          "maxtemp_c": 26.3,
+          "maxtemp_f": 79.3,
+          "mintemp_c": 15.4,
+          "mintemp_f": 59.7,
+          "avgtemp_c": 20.4,
+          "maxwind_mph": 11.6,
+          "maxwind_kph": 18.7,
+          "totalprecip_mm": 0.2,
+          "totalprecip_in": 0.01,
+          "avgvis_km": 9.9,
+          "avghumidity": 60.0,
+          "daily_will_it_rain": 1,
+          "daily_chance_of_rain": 89,
+          "daily_will_it_snow": 0,
+          "daily_chance_of_snow": 0,
+          "condition": {
+            "text": "Patchy rain possible",
+            "icon": "//cdn.weatherapi.com/weather/64x64/day/176.png",
+            "code": 1063
+          },
+          "uv": 6.0
+        },
+        "astro": {
+          "sunrise": "05:11 AM",
+          "sunset": "09:00 PM",
+          "moonrise": "12:44 AM",
+          "moonset": "04:31 PM",
+          "moon_phase": "Last Quarter",
+          "moon_illumination": "35"
+        },
+        "hour": [
+          {
+            "time_epoch": 1658444400,
+            "time": "2022-07-22 00:00",
+            "temp_c": 17.4,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            },
+            "wind_kph": 11.9,
+            "wind_degree": 268,
+            "pressure_mb": 1017.0,
+            "precip_mm": 0.0,
+            "humidity": 69,
+            "cloud": 13,
+            "feelslike_c": 17.4,
+            "dewpoint_c": 11.6,
+            "will_it_rain": 0,
+            "chance_of_rain": 0,
+            "will_it_snow": 0,
+            "chance_of_snow": 0,
+            "vis_km": 10.0,
+            "gust_kph": 18.4,
+            "uv": 1.0
+          },
+          {
+            "time_epoch": 1658491200,
+            "time": "2022-07-22 13:00",
+            "temp_c": 25.9,
+            "is_day": 1,
+            "condition": {
+              "text": "Patchy rain possible",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/176.png",
+              "code": 1063
+            },
+            "wind_kph": 16.9,
+            "wind_degree": 252,
+            "pressure_mb": 1016.0,
+            "precip_mm": 0.1,
+            "humidity": 45,
+            "cloud": 61,
+            "feelslike_c": 26.4,
+            "dewpoint_c": 13.0,
+            "will_it_rain": 1,
+            "chance_of_rain": 89,
+            "will_it_snow": 0,
+            "chance_of_snow": 0,
+            "vis_km": 10.0,
+            "gust_kph": 19.4,
+            "uv": 6.0
+          }
+        ]
+      }
+    ]
+  }
+}

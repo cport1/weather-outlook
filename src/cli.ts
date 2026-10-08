@@ -27,6 +27,7 @@ import { formatNeeds, renderFormat } from "./render/format.ts";
 import { renderHazardsOneShot } from "./render/hazards-oneshot.ts";
 import { renderCompact, renderOneShot } from "./render/oneshot.ts";
 import { defaultUnits, setUnitOverrides, type UnitOverrides } from "./render/units.ts";
+import { PROVIDER_IDS, resolveProvider } from "./providers/registry.ts";
 import { buildReport, fieldsNeeds, parseFields, projectReport } from "./report.ts";
 import { createHttpClient, type HttpClientOptions } from "./util/http.ts";
 
@@ -306,6 +307,11 @@ const main = defineCommand({
     },
     color: colorArg,
     refresh: { type: "boolean", alias: "r", description: "bypass the cache" },
+    provider: {
+      type: "string",
+      alias: "p",
+      description: `forecast source: ${PROVIDER_IDS.join(", ")} (keyed sources read e.g. OWM_API_KEY from env or config keys)`,
+    },
     images: {
       type: "enum",
       options: ["auto", "off"],
@@ -318,6 +324,8 @@ const main = defineCommand({
   async run({ args }) {
     const cfg = await effectiveConfig();
     setUnitOverrides(unitOverrides(cfg, args));
+    // Env vars win over config `keys`, as with getKey().
+    const provider = resolveProvider(args.provider ?? cfg.provider, { ...cfg.keys, ...process.env });
     const caps = detectCapabilities({
       color: args.color ? undefined : false,
       motion: args.motion ? undefined : false,
@@ -335,6 +343,7 @@ const main = defineCommand({
     if (args.format !== undefined) {
       const report = await buildReport(http, location, units, {
         refresh: args.refresh,
+        provider,
         include: formatNeeds(args.format),
       });
       process.stdout.write(`${renderFormat(args.format, report)}\n`);
@@ -346,6 +355,7 @@ const main = defineCommand({
       const fields = args.fields ? parseFields(args.fields) : undefined;
       const report = await buildReport(http, location, units, {
         refresh: args.refresh,
+        provider,
         include: fields ? fieldsNeeds(fields) : undefined,
       });
       const out = fields ? projectReport(report, fields) : report;
@@ -367,11 +377,12 @@ const main = defineCommand({
           l.location ? [{ ...l.location, source: "config" as const }] : [],
         ),
         images: images === "off" || images === "0" || images === "false" ? "off" : "auto",
+        provider,
       };
       await runDashboard(dashOpts as Parameters<typeof runDashboard>[0]);
       return;
     }
-    const report = await buildReport(http, location, units, { refresh: args.refresh });
+    const report = await buildReport(http, location, units, { refresh: args.refresh, provider });
     if (args.compact) process.stdout.write(`${renderCompact(report, caps)}\n`);
     else process.stdout.write(`${renderOneShot(report, caps)}\n`);
   },

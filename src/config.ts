@@ -37,6 +37,8 @@ export const Config = z.looseObject({
   clock: z.enum(["12h", "24h"]).optional(),
   /** Dashboard theme name; the dashboard decides which names exist. */
   theme: z.string().optional(),
+  /** Primary forecast provider id (open-meteo, openweathermap, tomorrow, …). */
+  provider: z.string().optional(),
   locations: z.array(SavedLocation).default([]),
   /** Provider API keys, e.g. { "OWM_API_KEY": "..." }. Env vars of the same name win. */
   keys: z.record(z.string(), z.string()).default({}),
@@ -44,7 +46,7 @@ export const Config = z.looseObject({
 export type Config = z.infer<typeof Config>;
 
 /** Scalar settings that `config get/set` and WEATHER_OUTLOOK_* env vars understand. */
-export const SETTINGS = ["units", "temp", "wind", "precip", "clock", "theme"] as const;
+export const SETTINGS = ["units", "temp", "wind", "precip", "clock", "theme", "provider"] as const;
 export type Setting = (typeof SETTINGS)[number];
 
 type Env = Record<string, string | undefined>;
@@ -86,7 +88,7 @@ export async function saveConfig(cfg: Config, path = configPath()): Promise<void
   await rename(tmp, path);
 }
 
-/** Apply WEATHER_OUTLOOK_UNITS, _TEMP, _WIND, _PRECIP, _CLOCK, _THEME on top of the file. */
+/** Apply WEATHER_OUTLOOK_UNITS, _TEMP, _WIND, _PRECIP, _CLOCK, _THEME, _PROVIDER on top of the file. */
 export function withEnv(cfg: Config, env: Env = process.env): Config {
   const out: Record<string, unknown> = { ...cfg };
   for (const key of SETTINGS) {
