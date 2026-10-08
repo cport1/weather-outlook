@@ -5,8 +5,10 @@ import {
   type RenderContext,
   RGBA,
 } from "@opentui/core";
+import { extend } from "@opentui/solid";
 import type { Cell } from "../render/canvas.ts";
 import type { RGB } from "../render/color.ts";
+import { gray, isMono } from "./theme.ts";
 
 /**
  * A renderable that delegates drawing to a callback each frame. Used for
@@ -31,6 +33,7 @@ const TRANSPARENT = RGBA.fromInts(0, 0, 0, 0);
 
 export function rgba(c: RGB | undefined, alpha = 1): RGBA {
   if (!c) return TRANSPARENT;
+  if (isMono()) c = gray(c);
   const key = `${c[0] | 0},${c[1] | 0},${c[2] | 0},${alpha}`;
   let v = cache.get(key);
   if (!v) {
@@ -41,13 +44,49 @@ export function rgba(c: RGB | undefined, alpha = 1): RGBA {
   return v;
 }
 
+// Every canvas that asked to animate, so they can all be paused together
+// (terminal lost focus) without each view having to know about it.
+const animated = new Set<CellCanvas>();
+let paused = false;
+
+/** Stop (or resume) every live canvas. With nothing live the renderer idles at 0 fps. */
+export function setAnimationsPaused(value: boolean): void {
+  if (paused === value) return;
+  paused = value;
+  for (const c of animated) c.syncLive();
+}
+
+export const animationsPaused = () => paused;
+
 export class CellCanvas extends Renderable {
   private _draw: CellCanvasOptions["draw"];
   private frameTimer: ReturnType<typeof setTimeout> | undefined;
+  declare private _wantLive: boolean | undefined;
 
   constructor(ctx: RenderContext, options: CellCanvasOptions) {
     super(ctx, options);
     this._draw = options.draw;
+  }
+
+  override get live(): boolean {
+    return super.live;
+  }
+
+  /** `live` is what the view asked for; the renderable only goes live when not paused. */
+  override set live(value: boolean) {
+    this._wantLive = value;
+    if (value) animated.add(this);
+    else animated.delete(this);
+    super.live = value && !paused;
+  }
+
+  syncLive(): void {
+    super.live = Boolean(this._wantLive) && !paused;
+  }
+
+  protected override destroySelf(): void {
+    animated.delete(this);
+    super.destroySelf();
   }
 
   set draw(fn: CellCanvasOptions["draw"]) {
@@ -106,5 +145,14 @@ export class CellCanvas extends Renderable {
       },
     };
     draw(api, w, h, deltaTime);
+  }
+}
+
+// Register the JSX intrinsic here so any view importing this module can use it.
+extend({ cell_canvas: CellCanvas });
+
+declare module "@opentui/solid" {
+  interface OpenTUIComponents {
+    cell_canvas: typeof CellCanvas;
   }
 }
