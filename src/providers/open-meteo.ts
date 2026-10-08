@@ -161,6 +161,27 @@ export async function fetchForecast(
   return parseForecast(raw);
 }
 
+/**
+ * IANA timezone for a coordinate. A forecast call with no variables is a few
+ * hundred bytes and Open-Meteo resolves `timezone=auto` for us.
+ */
+export async function lookupTimezone(
+  http: HttpClient,
+  loc: Pick<Location, "lat" | "lon">,
+): Promise<string | undefined> {
+  const params = new URLSearchParams({
+    latitude: loc.lat.toFixed(3),
+    longitude: loc.lon.toFixed(3),
+    timezone: "auto",
+  });
+  const raw = await http.json<{ timezone?: string }>(`${FORECAST_URL}?${params}`, {
+    ttlMs: 30 * 24 * 3600_000,
+    timeoutMs: 5_000,
+    retries: 0,
+  });
+  return raw.timezone && raw.timezone !== "GMT" ? raw.timezone : undefined;
+}
+
 interface AqResponse {
   current?: Record<string, number | string | null>;
 }
@@ -220,23 +241,45 @@ interface GeocodeResponse {
     country?: string;
     country_code?: string;
     admin1?: string;
+    population?: number;
   }>;
 }
 
-export async function geocode(http: HttpClient, query: string, count = 5): Promise<Location[]> {
+export interface GeocodeCandidate {
+  location: Location;
+  population?: number;
+}
+
+export function parseGeocode(raw: GeocodeResponse): GeocodeCandidate[] {
+  return (raw.results ?? []).map((r) => ({
+    location: {
+      name: r.name,
+      region: r.admin1,
+      country: r.country,
+      countryCode: r.country_code,
+      lat: r.latitude,
+      lon: r.longitude,
+      timezone: r.timezone,
+      elevation: r.elevation,
+      source: "geocode" as const,
+    },
+    population: r.population,
+  }));
+}
+
+/** Geocoder matches with population, used to judge whether a name is ambiguous. */
+export async function geocodeCandidates(
+  http: HttpClient,
+  query: string,
+  count = 5,
+): Promise<GeocodeCandidate[]> {
   const params = new URLSearchParams({ name: query, count: String(count), format: "json" });
   const raw = await http.json<GeocodeResponse>(`${GEOCODE_URL}?${params}`, {
     ttlMs: 30 * 24 * 3600_000,
   });
-  return (raw.results ?? []).map((r) => ({
-    name: r.name,
-    region: r.admin1,
-    country: r.country,
-    countryCode: r.country_code,
-    lat: r.latitude,
-    lon: r.longitude,
-    timezone: r.timezone,
-    elevation: r.elevation,
-    source: "geocode" as const,
-  }));
+  return parseGeocode(raw);
+}
+
+export async function geocode(http: HttpClient, query: string, count = 5): Promise<Location[]> {
+  return (await geocodeCandidates(http, query, count)).map((c) => c.location);
 }
