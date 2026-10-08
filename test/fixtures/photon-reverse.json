@@ -1,0 +1,27 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_type": "W",
+        "osm_id": 1475416531,
+        "osm_key": "highway",
+        "osm_value": "pedestrian",
+        "type": "street",
+        "name": "Bannock Street",
+        "district": "Civic Center",
+        "city": "Denver",
+        "state": "Colorado",
+        "country": "United States",
+        "postcode": "80274",
+        "countrycode": "US",
+        "extent": [-104.9902997, 39.7400023, -104.9902576, 39.7384658]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-104.9902627, 39.7392347]
+      }
+    }
+  ]
+}
